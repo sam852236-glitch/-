@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>另一個春天：旅行札記解謎</title>
+<style>
+:root {
+    --paper: #FBF6EB; --paper-deep: #F4ECD8;
+    --ink: #2C2520; --ink-soft: #6b5d4a;
+    --sea: #4A7C9D; --olive: #6E7E5F; --sunset: #D98A6C;
+    --border-color: #ddc9a3; --success-color: #6E7E5F; --error-color: #b5503f;
+    --shadow: 0 3px 22px rgba(44,37,32,0.14);
+}
+* { box-sizing: border-box; }
+body {
+    background-color: var(--paper); color: var(--ink);
+    font-family: "Noto Serif TC", "PingFang TC", "Microsoft JhengHei", serif;
+    padding: 20px; margin: 0; min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 12% 20%, rgba(217,138,108,0.06) 0%, transparent 45%),
+        radial-gradient(circle at 88% 80%, rgba(110,126,95,0.06) 0%, transparent 45%);
+}
+body.bg-ending { background: #241d16 !important; overflow: hidden !important; }
+body.bg-badend { background: #2a221a !important; }
+
+.journal { max-width: 720px; margin: 10px auto; background: var(--paper-deep); padding: 0; border-radius: 6px; border: 1px solid var(--border-color); box-shadow: var(--shadow); position: relative; transition: opacity .4s ease; }
+.journal.ending-fullscreen { max-width: 100% !important; margin: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; }
+.journal::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, transparent, rgba(217,138,108,0.5), transparent); border-radius: 6px 6px 0 0; }
+.journal-inner { padding: 26px; }
+
+.page-fade { animation: pageFlip .5s ease; }
+@keyframes pageFlip { 0% { opacity: 0; transform: translateX(10px) rotateY(-3deg); } 100% { opacity: 1; transform: translateX(0) rotateY(0); } }
+
+/* ===== 紙膠帶軟糖/冰淇淋欄 ===== */
+.tape-bar { position: relative; display: flex; justify-content: space-between; align-items: center; background: var(--paper); padding: 12px 18px; border-radius: 4px; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; border: 1px dashed var(--border-color); }
+.tape-bar::before { content: ""; position: absolute; top: -8px; left: 24px; width: 60px; height: 16px; background: rgba(217,138,108,0.35); transform: rotate(-2deg); border-radius: 2px; }
+.tape-bar::after { content: ""; position: absolute; top: -8px; right: 24px; width: 60px; height: 16px; background: rgba(74,124,157,0.3); transform: rotate(2deg); border-radius: 2px; }
+.location-badge { color: var(--sunset); font-weight: bold; font-size: 13.5px; display: flex; align-items: center; gap: 5px; }
+.consumables { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.candy-row, .icecream-row { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; }
+.candy-row { color: var(--olive); }
+.icecream-row { color: var(--sea); }
+.candy-icon, .icecream-icon { font-size: 18px; }
+.candy-icon.used { opacity: 0.25; filter: grayscale(1); }
+
+/* ===== 旅行地圖（羊皮紙風） ===== */
+.travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 16px; border-radius: 6px; margin: 0 26px 24px; box-shadow: inset 0 0 30px rgba(139,111,71,0.18); position: relative; }
+.travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 18px 6px rgba(139,111,71,0.25); pointer-events: none; }
+.map-title { font-size: 12px; color: var(--ink-soft); font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; text-align: center; }
+.map-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.map-cell { background: rgba(255,255,255,0.25); border: 1.5px dashed var(--ink-soft); padding: 9px 4px; border-radius: 50%; text-align: center; font-size: 10px; color: var(--ink-soft); cursor: not-allowed; transition: all 0.3s; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+.map-cell.unlocked { border-style: solid; border-color: var(--olive); color: var(--ink); cursor: pointer; background: rgba(110,126,95,0.1); }
+.map-cell.unlocked:hover { border-color: var(--sunset); }
+.map-cell.current { border-color: var(--sunset); border-style: solid; color: var(--sunset); font-weight: bold; background: rgba(217,138,108,0.15); cursor: pointer; animation: pinWiggle 1.6s infinite ease-in-out; }
+@keyframes pinWiggle { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+
+h1 { text-align: center; font-size: 25px; letter-spacing: 4px; margin-bottom: 4px; font-weight: 700; padding-top: 24px; }
+.subtitle { text-align: center; color: var(--ink-soft); margin-bottom: 22px; font-size: 13px; letter-spacing: 1px; }
+
+.story-box { background: rgba(217,138,108,0.07); border-left: 4px solid var(--sunset); padding: 14px 18px; margin-bottom: 18px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.85; }
+.story-text { font-size: 1.02em; line-height: 1.9; margin-bottom: 18px; padding: 22px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(255,255,255,0.45); text-align: left; white-space: pre-wrap; }
+.story-text .typewriter-line { opacity: 0; animation: lineRise .7s forwards; }
+@keyframes lineRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.doors-container { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 18px; }
+.door-card { background: rgba(255,255,255,0.4); border: 2px solid var(--border-color); border-radius: 8px; padding: 16px 14px; text-align: center; cursor: pointer; transition: all 0.3s; }
+.door-card:hover { border-color: var(--sunset); transform: translateY(-2px); }
+.door-name { font-weight: bold; color: var(--ink); font-size: 15px; }
+/* ===== 皮革背包道具欄 ===== */
+.satchel { background: linear-gradient(160deg, #8a6745, #6e4f32); border-radius: 8px; padding: 12px 16px; margin: 0 26px 22px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.15); }
+.satchel-label { font-size: 11px; color: #e8d7b8; opacity: 0.8; margin-bottom: 6px; letter-spacing: 1px; font-weight: bold; }
+.satchel-items { display: flex; gap: 10px; flex-wrap: wrap; min-height: 34px; align-items: center; }
+.satchel-item { background: rgba(255,255,255,0.92); border-radius: 8px; padding: 5px 9px; font-size: 20px; cursor: pointer; transition: transform .2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.satchel-item:hover { transform: translateY(-3px) scale(1.08); }
+.satchel-empty { color: #cbb792; font-size: 12px; font-style: italic; }
+
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30,22,14,0.78); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; }
+.item-box { background: var(--paper); border: 1px solid var(--sunset); padding: 28px; border-radius: 10px; text-align: center; width: 100%; max-width: 380px; position: relative; max-height: 88vh; overflow-y: auto; }
+.item-icon { font-size: 54px; margin-bottom: 12px; }
+.item-title { color: var(--sunset); font-size: 19px; font-weight: bold; margin-bottom: 12px; }
+.item-desc { font-size: 14px; line-height: 1.7; margin-bottom: 18px; }
+.inspect-text { color: var(--ink); font-weight: bold; font-size: 14px; line-height: 1.7; margin-top: 14px; padding: 14px; border: 1px dashed var(--sunset); background: rgba(217,138,108,0.06); border-radius: 8px; white-space: pre-wrap; text-align: left; }
+
+.quiz-card { background: rgba(255,255,255,0.4); padding: 22px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 18px; }
+.type-badge { display: inline-block; padding: 4px 10px; font-size: 11px; border-radius: 20px; font-weight: bold; margin-bottom: 14px; background: rgba(217,138,108,0.14); color: var(--sunset); border: 1px solid var(--sunset); }
+.question-text { font-size: 15.5px; font-weight: bold; line-height: 1.7; margin-bottom: 16px; white-space: pre-wrap; }
+.option-item { background: rgba(255,255,255,0.45); border: 1px solid var(--border-color); padding: 13px 16px; margin-bottom: 10px; border-radius: 6px; display: flex; align-items: center; cursor: pointer; transition: all 0.2s; text-align: left; }
+.option-item:hover { border-color: var(--sunset); background: rgba(217,138,108,0.05); }
+.option-item.disabled-opt { opacity: 0.32; text-decoration: line-through; cursor: not-allowed; pointer-events: none; }
+.option-item input { margin-right: 14px; transform: scale(1.2); cursor: pointer; }
+.sort-item { background: rgba(255,255,255,0.45); border: 1px solid var(--border-color); padding: 11px 16px; margin-bottom: 9px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+.sort-text { flex-grow: 1; padding-right: 14px; font-size: 13.5px; line-height: 1.6; }
+.sort-btns { display: flex; gap: 6px; }
+.sort-btn { background: rgba(217,138,108,0.12); color: var(--sunset); border: 1px solid var(--border-color); padding: 6px 11px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+input.text-input { width: 100%; padding: 13px; background: rgba(255,255,255,0.55); color: var(--ink); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 15px; text-align: center; font-family: inherit; }
+textarea.ta-input { width: 100%; height: 110px; background: rgba(255,255,255,0.55); color: var(--ink); border: 1px solid var(--border-color); border-radius: 6px; padding: 14px; box-sizing: border-box; resize: none; font-size: 14px; line-height: 1.6; font-family: inherit; }
+
+button.action-btn { background: transparent; color: var(--sunset); border: 2px solid var(--sunset); padding: 13px 18px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 14px; letter-spacing: 2px; transition: all 0.3s; font-family: inherit; }
+button.action-btn:hover:not(:disabled) { background: var(--sunset); color: #fff; }
+button.candy-btn { border-color: var(--olive); color: var(--olive); margin-bottom: 14px; display: none; }
+button.candy-btn:hover { background: var(--olive); color: #fff; }
+button.icecream-btn { border-color: var(--sea); color: var(--sea); margin-bottom: 14px; display: none; }
+button.icecream-btn:hover { background: var(--sea); color: #fff; }
+
+.message { margin-top: 18px; padding: 14px; border-radius: 6px; font-weight: bold; text-align: left; font-size: 14px; display: none; white-space: pre-wrap; line-height: 1.6; }
+.msg-success { display: block; background: rgba(110,126,95,0.12); color: var(--success-color); border: 1px solid var(--success-color); text-align: center; }
+.msg-error { display: block; background: rgba(181,80,63,0.1); color: var(--error-color); border: 1px solid var(--error-color); }
+.msg-hint { background: rgba(110,126,95,0.06); border: 1px dashed var(--success-color); padding: 11px; border-radius: 6px; font-weight: normal; margin-bottom: 9px; text-align: left; font-size: 13px; line-height: 1.6; }
+.hidden { display: none !important; }
+.word-count { text-align: right; font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
+
+/* ===== 作者書房：照片翻轉 ===== */
+.photo-flip-wrap { perspective: 1000px; max-width: 280px; margin: 0 auto 20px; }
+.photo-flip { position: relative; width: 100%; height: 200px; transition: transform 0.7s; transform-style: preserve-3d; cursor: pointer; }
+.photo-flip.flipped { transform: rotateY(180deg); }
+.photo-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; border: 6px solid #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 10px; text-align: center; }
+.photo-front { background: linear-gradient(135deg, #d8c49a, #c4a876); font-size: 46px; }
+.photo-back { background: var(--paper); transform: rotateY(180deg); font-size: 11.5px; line-height: 1.6; color: var(--ink); overflow-y: auto; }
+.photo-hint { text-align: center; font-size: 12px; color: var(--ink-soft); margin-bottom: 18px; }
+
+/* ===== 房5：麻繩書籤拉桿 ===== */
+.bookmark-wrap { position: relative; height: 240px; margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); background: linear-gradient(180deg, #f0e6cc 0%, #ddc9a3 100%); }
+.bookmark-veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(217,138,108,0) 0%, rgba(217,138,108,0.85) 100%); transition: clip-path .05s linear; clip-path: inset(0 0 100% 0); pointer-events: none; }
+.bookmark-hidden-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; font-size: 13.5px; line-height: 1.8; color: var(--ink); opacity: 0; transition: opacity .3s; }
+.bookmark-hidden-text.revealed { opacity: 1; }
+.bookmark-ribbon-track { position: absolute; top: 0; right: 28px; width: 4px; height: 100%; background: rgba(110,126,95,0.25); border-radius: 2px; }
+.bookmark-ribbon { position: absolute; top: 0; right: 16px; width: 28px; height: 60px; background: linear-gradient(180deg, #8a6745, #6e4f32); border-radius: 4px; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #f0e6cc; user-select: none; touch-action: none; }
+.bookmark-ribbon:active { cursor: grabbing; }
+.bookmark-prompt { text-align: center; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 18px; }
+
+/* ===== 房10：相片燒毀倒數 ===== */
+.photo-burn-wrap { text-align: center; margin-bottom: 20px; }
+.photo-burn { width: 200px; height: 150px; margin: 0 auto 14px; border-radius: 4px; border: 8px solid #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.3); background: linear-gradient(135deg, #e8c878, #d98a6c); display: flex; align-items: center; justify-content: center; font-size: 40px; transition: filter 1s linear, opacity 1s linear; }
+.burn-timer { font-family: "Courier New", monospace; font-size: 22px; font-weight: bold; color: var(--sunset); letter-spacing: 2px; background: rgba(0,0,0,0.06); display: inline-block; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border-color); }
+.burn-label { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+
+/* ===== 終局合成槽 ===== */
+.combine-container { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.combine-slot { flex: 1; min-width: 76px; border: 2px dashed var(--ink-soft); padding: 14px; border-radius: 8px; text-align: center; cursor: pointer; color: var(--ink-soft); font-weight: bold; background: rgba(255,255,255,0.3); transition: all 0.3s; font-size: 24px; min-height: 70px; display: flex; align-items: center; justify-content: center; }
+.combine-slot:hover { border-color: var(--sunset); color: var(--sunset); }
+.combine-slot.active-slot { border-color: var(--sunset); border-style: solid; background: rgba(217,138,108,0.08); color: var(--ink); transform: scale(1.04); }
+.combine-slot.filled { border-color: var(--success-color); border-style: solid; }
+
+/* ===== Bad End 回溯機制 ===== */
+.badend-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(20,16,12,0.92); z-index: 2000; display:flex; align-items:center; justify-content:center; padding: 20px; }
+.badend-box { max-width: 440px; width: 100%; text-align: center; color: #e8dcc4; }
+.badend-title { font-size: 22px; font-weight: 700; letter-spacing: 4px; margin-bottom: 14px; color: #d4a85a; }
+.badend-text { font-size: 14px; line-height: 2; margin-bottom: 28px; color: #c9bda0; }
+.film-strip { display: inline-block; width: 90px; height: 60px; background: repeating-linear-gradient(90deg, #3a3024, #3a3024 8px, #1c1812 8px, #1c1812 10px); border: 3px solid #d4a85a; border-radius: 4px; cursor: pointer; position: relative; box-shadow: 0 0 24px rgba(212,168,90,0.5); animation: filmGlow 1.5s infinite alternate; }
+@keyframes filmGlow { 0% { box-shadow: 0 0 14px rgba(212,168,90,0.4); } 100% { box-shadow: 0 0 30px rgba(212,168,90,0.8); } }
+.film-strip::after { content: "🎞️"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 28px; }
+.film-hint { font-size: 12px; color: #9c8e70; margin-top: 12px; letter-spacing: 1px; }
+
+/* ===== 結局動畫 ===== */
+.ending-stage { position: relative; min-height: 460px; width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px 24px; }
+.sunset-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 50% 75%, rgba(217,138,108,0.3) 0%, transparent 65%); animation: sunsetPulse 4s infinite alternate; }
+@keyframes sunsetPulse { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+.silhouette { font-size: 56px; opacity: 0; animation: lineFadeIn 1.4s forwards; animation-delay: .2s; position: relative; z-index: 2; margin-bottom: 16px; }
+.ending-line { opacity: 0; font-size: 14.5px; line-height: 2.1; color: #d8cab0; text-align: center; max-width: 460px; margin-bottom: 10px; animation: lineFadeIn 1.2s forwards; position: relative; z-index: 2; }
+@keyframes lineFadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+.ending-quote { font-size: 17px; font-weight: 700; color: #e8c878; margin: 22px 0; letter-spacing: 1px; opacity: 0; animation: lineFadeIn 1.2s forwards; position: relative; z-index: 2; text-shadow: 0 0 18px rgba(232,200,120,0.4); }
+.ending-final-title { font-size: 30px; font-weight: 700; letter-spacing: 6px; color: #f0dca0; margin-top: 24px; opacity: 0; animation: lineFadeIn 1.5s forwards; position: relative; z-index: 2; text-shadow: 0 0 24px rgba(240,220,160,0.5); }
+.ending-sub { font-size: 13px; color: #a8987a; margin-top: 10px; opacity: 0; animation: lineFadeIn 1.5s forwards; position: relative; z-index: 2; letter-spacing: 1px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="journal" id="main-journal">
+  <div class="journal-inner" id="journal-inner">
+
+  <div id="status-ui" class="tape-bar hidden">
+    <div class="location-badge" id="current-location">📍 載入中...</div>
+    <div class="consumables">
+      <div class="candy-row">🍬<span id="candy-count">0</span></div>
+      <div class="icecream-row">🍦<span id="icecream-count">0</span></div>
+    </div>
+  </div>
+
+  <div id="login-section">
+    <h1>另一個春天</h1>
+    <div class="subtitle">旅行札記 // 希臘的春天紀行</div>
+    <div class="quiz-card" style="text-align:center;">
+      <div class="story-box" style="text-align:left;">
+        【日記扉頁】... 翻開這本舊舊的旅行日記，紙頁間還留著淡淡的橄欖香氣。<br><br>
+        一位戴著老花眼鏡、背著舊藤袋的老太太，將要帶你走過希臘的春天，也走進她生命裡，那段關於勇氣與熱情的旅程。<br><br>
+        ⚠️ 請仔細閱讀每一段文字，蒐集信物，解開謎題，找回屬於老太太的「另一個春天」。
+      </div>
+      <div class="question-text">請在日記封面署名（班級座號姓名）：</div>
+      <input type="text" id="student-id" class="text-input" placeholder="例如：801號 王小明">
+      <button type="button" class="action-btn" onclick="startGame()">翻開日記，啟程 →</button>
+    </div>
+  </div>
+
+  <div id="game-content" class="hidden"></div>
+
+  </div>
+
+  <div id="map-ui" class="travel-map hidden">
+    <div class="map-title">🗺️ 旅程地圖（可回顧已造訪之地）</div>
+    <div class="map-grid" id="dynamic-map-grid"></div>
+  </div>
+
+  <div id="satchel-ui" class="satchel hidden">
+    <div class="satchel-label">🎒 旅行背包</div>
+    <div class="satchel-items" id="satchel-items"><span class="satchel-empty">尚未拾獲任何信物</span></div>
+  </div>
+
+</div>
+
+<div id="item-modal" class="modal-overlay hidden">
+  <div class="item-box">
+    <div style="position:absolute; top:14px; right:18px; cursor:pointer; font-size:22px; color:var(--ink-soft);" onclick="closeItemModal()">✖</div>
+    <div id="modal-icon" class="item-icon"></div>
+    <div id="modal-title" class="item-title"></div>
+    <div id="modal-desc" class="item-desc"></div>
+    <button type="button" id="modal-inspect-btn" class="action-btn" onclick="inspectItem()">🔍 仔細端詳</button>
+    <div id="modal-inspect-text" class="inspect-text hidden"></div>
+  </div>
+</div>
+
+<div id="badend-overlay" class="badend-overlay hidden">
+  <div class="badend-box">
+    <div class="badend-title">— 遺憾的片刻 —</div>
+    <div class="badend-text" id="badend-text"></div>
+    <div class="film-strip" onclick="rewindFilm()"></div>
+    <div class="film-hint">🎞️ 點擊底片，回溯時光，重新挑戰</div>
+  </div>
+</div>
+
+</body>
+</html>
+<script>
+// ================= 道具資料庫（9個信物） =================
+const itemDB = {
+  '🥽': { title:"老花眼鏡", desc:"老太太的老花眼鏡，象徵她已不再年輕，卻仍勇敢上路。", inspect:"鏡片擦亮後，內側刻著一行細字：『看得清世界，才看得清自己。』" },
+  '🧺': { title:"舊藤袋", desc:"老太太隨身攜帶的舊藤袋，邊角已經磨損，是她年邁卻仍堅持旅行的象徵。", inspect:"藤袋裡還殘留著淡淡的橄欖油氣味，似乎裝過不少乾糧。" },
+  '🍬': { title:"薄荷軟糖", desc:"老太太主動分享給作者的薄荷軟糖，是兩人初遇時善意的起點。", inspect:"糖紙上印著小小的希臘文字，包裝已經有些褪色。" },
+  '📷': { title:"老太太拍作者的照片", desc:"老太太偷拍作者的照片，翻到背面似乎還藏著別的東西。", inspect:"翻過來看看，背面或許藏著作者的介紹資料……" },
+  '💐': { title:"野雛菊花束", desc:"廣場上採來的野雛菊，用心包紮成一束花，準備送給老太太。", inspect:"花束雖然樸素，卻是作者表達善意與歉意的心意。" },
+  '🪨': { title:"塔列斯石刻", desc:"阿波羅神殿深處找到的古老石刻殘片，刻有一句千古箴言。", inspect:"石刻背面刻著：『認識你自己。』這正是德爾菲神殿最有名的箴言，也呼應了老太太面對生命的態度。" },
+  '🍦': { title:"冰淇淋（信物）", desc:"冰淇淋車給的紀念信物，包裝紙上似乎印著線索。", inspect:"包裝紙背面畫著一根石柱，柱子上有個記號：『第三根石柱的縫隙，藏著答案。』" },
+  '🍞': { title:"乾麵包與橘子", desc:"旅店餐廳裡，老太太為了省錢而打包的簡單午餐。", inspect:"麵包已經有點乾硬，卻是老太太為了實現夢想而甘願節儉的證明。" },
+  '💧': { title:"老太太的淚水", desc:"老太太收下卡帶後，悄悄滑落的淚水，凝結成一顆溫潤的水珠。", inspect:"水珠裡彷彿映照著老太太一路走來的身影——堅強、樂觀，卻也有著最柔軟的時刻。" }
+};
+
+function getItemInfo(rawIcon) {
+  const cleanStr = s => s ? s.replace(/\uFE0F/g, '').trim() : '';
+  const target = cleanStr(rawIcon);
+  for (let key in itemDB) { if (cleanStr(key) === target) return itemDB[key]; }
+  return { title:"未知信物", desc:"尚未能辨識的物件。", inspect:"沒有發現特別之處。" };
+}
+
+// ================= 字音字形題庫（7題，依序對應觸發點） =================
+// 第1-2題：雅典巴士 / 第3-4題：冰淇淋車 / 第5題：阿波羅神殿 / 第6-7題：競技場
+
+// ================= 10大景點資料 =================
+const rooms = {
+  // ---- 景點1：雅典巴士 ----
+  "r1_bus": {
+    name:"雅典巴士", type:"quiz", qIdx:"字音1",
+    story:"【場景】空盪盪的巴士車廂，引擎低鳴。你在後座夾縫中「鑽」進去，搜出一只舊藤袋，打開後找到一副老花眼鏡。鏡片上滿是霧氣，旁邊用鉛筆寫著一行小字：「請查明『陰霾』的注音，才能擦亮鏡片。」",
+    q:"陰「霾」的「霾」字注音是？", qType:"single",
+    opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"},{id:"D",text:"ㄋㄞˊ"}],
+    ans:"A", rewardItem:"🥽", onClear:"r1b_bus2"
+  },
+  "r1b_bus2": {
+    name:"雅典巴士（續）", type:"quiz", qIdx:"字音2",
+    story:"【鏡片微亮】霧氣散去一半，鏡片邊緣又浮現一行字：「遮『掩』不住的，又是哪個注音呢？」",
+    q:"「掩」不住的「掩」字注音是？", qType:"single",
+    opts:[{id:"A",text:"ㄧㄢˇ"},{id:"B",text:"ㄧㄢˋ"},{id:"C",text:"ㄧㄤˇ"},{id:"D",text:"ㄢˇ"}],
+    ans:"A", rewardItem:"🧺", onClear:"r1c_bus3"
+  },
+  "r1c_bus3": {
+    name:"雅典巴士（初遇）", type:"quiz", qIdx:2,
+    story:"【鏡片擦亮】霧氣全部散去，前座的老太太緩緩轉過頭來，對你露出靦腆的微笑，大方遞上一顆薄荷軟糖，又從舊藤袋裡翻出一張照片，順手交給了你。",
+    q:"關於老太太初遇時的外表與行為，下列敘述正確的有哪些？（複選）", qType:"multi",
+    opts:[{id:"A",text:"身形微胖"},{id:"B",text:"穿著時髦新潮"},{id:"C",text:"打扮略顯過時"},{id:"D",text:"神情略帶害羞"},{id:"E",text:"主動分享薄荷軟糖"},{id:"F",text:"態度十分高傲，不願與人交談"}],
+    ans:["A","C","D","E"], rewardItem:"📷", givesCandy:true, onClear:"r2_study"
+  },
+
+  // ---- 景點2：作者書房（獨立小房間） ----
+  "r2_study": {
+    name:"作者書房", type:"author",
+    story:"【場景】你捧著那張照片，眼前景象忽然一變——來到一間擺滿國際志工照片的書房。桌上的相框裡，正是老太太偷拍作者的那張照片。輕輕翻到背面，似乎藏著什麼……",
+    onClear:"r3_icecream"
+  },
+
+  // ---- 景點3：冰淇淋車（字音字形房1） ----
+  "r3_icecream": {
+    name:"冰淇淋車", type:"quiz", qIdx:"字音3",
+    story:"【場景】德爾菲廣場旁，一台無人看管的冰淇淋車安靜地停著。櫃子被一道轉盤密碼鎖鎖住，上面寫著形音義謎題。",
+    q:"「神采奕奕」的意思是？", qType:"single",
+    opts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"},{id:"D",text:"匆忙慌張，手足無措"}],
+    ans:"A", rewardItem:null, onClear:"r3b_icecream2"
+  },
+  "r3b_icecream2": {
+    name:"冰淇淋車（續）", type:"quiz", qIdx:"字音4",
+    story:"【第二道轉盤】轉盤上接著浮現第二道題目。",
+    q:"羞「赧」的「赧」字注音是？", qType:"single",
+    opts:[{id:"A",text:"ㄋㄢˇ"},{id:"B",text:"ㄈㄢˇ"},{id:"C",text:"ㄗㄢˇ"},{id:"D",text:"ㄉㄢˇ"}],
+    ans:"A", rewardItem:"🍦", givesIcecream:true, onClear:"r4_plaza"
+  },
+
+  // ---- 景點4：德爾菲廣場 ----
+  "r4_plaza": {
+    name:"德爾菲廣場", type:"quiz", qIdx:4,
+    story:"【場景】陽光灑落的歐洲小鎮廣場，老太太正站在中央，望著遠方的石階發呆。你在草叢裡「鑽」進去，採集到一束野雛菊，並用隨身的包裝紙仔細紮成一束花，準備送給她。",
+    q:"文本中，哪些作者的行為可以看出他具備「善意」？（複選）", qType:"multi",
+    opts:[{id:"A",text:"被偷拍沒有生氣，反而主動送花"},{id:"B",text:"耐心陪著老太太爬石階"},{id:"C",text:"離別時送上中文音樂卡帶"},{id:"D",text:"嫌棄老太太走得太慢而獨自離開"},{id:"E",text:"取笑老太太的穿著過時"}],
+    ans:["A","B","C"], rewardItem:"💐", onClear:"r5_temple"
+  },
+
+  // ---- 景點5：阿波羅神殿（麻繩書籤機關＋性格配對＋字音） ----
+  "r5_temple": {
+    name:"阿波羅神殿", type:"bookmark",
+    story:"【場景】壯麗的巨大石柱群矗立眼前，但陽光刺眼，你看不清石柱上的刻字。日記頁緣垂下一條麻繩書籤——試著把它輕輕拉下來，讓夕陽的暈染透出隱藏的字跡吧。",
+    revealText:"隨著書籤滑落，金黃色的光暈緩緩鋪展開來，石柱上的刻字逐漸清晰：\n\n『折半條軟糖分給作者，是慷慨；反覆撫摸石刻、若有所思，是求知的渴望；下雪時翻看照片回憶起希臘的春天，是用回憶滋養生命的方式。』\n\n你終於看懂了老太太每一個細微動作背後的心意。",
+    onClear:"r5b_temple2"
+  },
+  "r5b_temple2": {
+    name:"阿波羅神殿（性格配對）", type:"quiz", qIdx:3,
+    story:"【石柱顯字】手指拂過石柱上的刻痕，你開始思索老太太的行為與性格之間的關聯。",
+    q:"下列哪一項「行為」與「性格特質」的配對是正確的？", qType:"single",
+    opts:[{id:"A",text:"折半條軟糖分給作者 → 慷慨"},{id:"B",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"C",text:"下雪時看照片回憶春天 → 健忘"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
+    ans:"A", rewardItem:null, onClear:"r5c_temple3"
+  },
+  "r5c_temple3": {
+    name:"阿波羅神殿（石刻謎題）", type:"quiz", qIdx:"字音5",
+    story:"【深處的石刻】根據冰淇淋包裝紙上的線索，你找到第三根石柱的縫隙，「鑽」進殘壁深處，發現一片塔列斯石刻。石刻背後刻著任務：「要帶走我，請先查明『抑遏』的『遏』字注音。」",
+    q:"「抑遏」的「遏」字注音是？", qType:"single",
+    opts:[{id:"A",text:"ㄜˋ"},{id:"B",text:"ㄍㄜˊ"},{id:"C",text:"ㄧㄝˋ"},{id:"D",text:"ㄜˊ"}],
+    ans:"A", rewardItem:"🪨", onClear:"r6_theater"
+  },
+
+  // ---- 景點6：古劇場（排序題） ----
+  "r6_theater": {
+    name:"古劇場", type:"quiz", qIdx:1,
+    story:"【場景】環形的古希臘大劇場，中央矗立著四座巨大的圓形石台，各自刻著一段課文情節。你必須依照故事發生的時間順序，重新排列石台。",
+    q:"請依照故事發生順序排列下列情節：", qType:"sort",
+    opts:[
+      {id:"A",text:"在巴士上分享薄荷軟糖"},
+      {id:"D",text:"在廣場收下雛菊，陪伴爬石階"},
+      {id:"B",text:"在渡輪上吃乾麵包當午餐"},
+      {id:"C",text:"送上中文卡帶，老太太流淚分享哲學"}
+    ],
+    ans:["A","D","B","C"], rewardItem:null, onClear:"r7_arena"
+  },
+
+  // ---- 景點7：競技場（字音字形房2） ----
+  "r7_arena": {
+    name:"競技場", type:"quiz", qIdx:"字音6",
+    story:"【場景】荒涼的圓形競技場，終點是一道沉重的鐵柵欄。石壁上刻著最後一組形音義考題。",
+    q:"「拮据」的注音與意思，下列何者正確？", qType:"single",
+    opts:[{id:"A",text:"ㄐㄧㄝˊ ㄐㄩ，經濟困難"},{id:"B",text:"ㄐㄧㄝˊ ㄐㄩˋ，動作敏捷"},{id:"C",text:"ㄐㄧㄝˋ ㄐㄩ，借貸度日"},{id:"D",text:"ㄐㄧㄝˊ ㄍㄨ，緊張不安"}],
+    ans:"A", rewardItem:null, onClear:"r7b_arena2"
+  },
+  "r7b_arena2": {
+    name:"競技場（續）", type:"quiz", qIdx:"字音7",
+    story:"【鐵柵欄微微震動】只差最後一題，鐵柵欄就會應聲而起。",
+    q:"「潸潸」的注音與意思，下列何者正確？", qType:"single",
+    opts:[{id:"A",text:"ㄕㄢ ㄕㄢ，流淚的樣子"},{id:"B",text:"ㄕㄢˋ ㄕㄢˋ，閃爍的樣子"},{id:"C",text:"ㄔㄢˊ ㄔㄢˊ，緩慢的樣子"},{id:"D",text:"ㄕㄢ ㄕㄢˇ，搖晃的樣子"}],
+    ans:"A", rewardItem:null, onClear:"r8_ferry"
+  },
+
+  // ---- 景點8：愛琴海船上 ----
+  "r8_ferry": {
+    name:"愛琴海船上", type:"quiz", qIdx:5,
+    story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。老太太坐在甲板邊，望著海面，輕聲說了幾句話。",
+    q:"老太太說：「年輕人！值得用一輩子換的美景呢！我沒有時間流淚，也沒有時間悲傷，這就是我的哲學。」這段話最能呼應她怎樣的人生態度？", qType:"single",
+    opts:[{id:"A",text:"及時行樂，把握當下，積極樂觀地面對人生"},{id:"B",text:"凡事小心謹慎，避免犯錯"},{id:"C",text:"金錢至上，旅行只是炫耀的方式"},{id:"D",text:"消極悲觀，認為人生苦短不值得努力"}],
+    ans:"A", rewardItem:null, onClear:"r8b_ferry2"
+  },
+  "r8b_ferry2": {
+    name:"愛琴海船上（續）", type:"quiz", qIdx:7,
+    story:"【海風中的思索】望著老太太堅毅的側臉，你想起她一路走來的種種堅持。",
+    q:"下列哪些行為，讓作者體會到老太太的勇敢與生命的熱情？（複選）", qType:"multi",
+    opts:[{id:"A",text:"省吃儉用，靠乾麵包果腹"},{id:"B",text:"語言不通，仍獨自出國旅行"},{id:"C",text:"氣喘吁吁，仍堅持爬完神殿石階"},{id:"D",text:"抱怨旅途辛苦，後悔出門"},{id:"E",text:"依賴旅行團安排，從不獨立行動"}],
+    ans:["A","B","C"], rewardItem:null, onClear:"r9_restaurant"
+  },
+
+  // ---- 景點9：旅店餐廳 ----
+  "r9_restaurant": {
+    name:"旅店餐廳", type:"quiz", qIdx:6,
+    story:"【場景】陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，擺著老太太為了省錢而打包的簡單午餐——乾麵包和橘子。",
+    q:"老太太旅行的核心夢想是什麼？", qType:"single",
+    opts:[{id:"A",text:"成為知名的旅遊作家"},{id:"B",text:"在有限的生命裡，盡可能看看廣大的世界"},{id:"C",text:"找到一份穩定的工作"},{id:"D",text:"證明自己比年輕人更厲害"}],
+    ans:"B", rewardItem:"🍞", onClear:"r10_port"
+  },
+
+  // ---- 景點10：夕陽港口（終局） ----
+  "r10_port": {
+    name:"夕陽港口", type:"portstory",
+    story:"【場景】金黃色夕陽灑落的無人港口，遠處渡輪已緩緩駛離。你從背包取出中文音樂卡帶，輕輕交到老太太手中。她愣了一下，隨即眼眶泛紅，一滴淚水滑落臉頰，化成一顆溫潤的水珠。",
+    onClear:"r10b_safe"
+  },
+  "r10b_safe": {
+    name:"記憶的保險箱", type:"combine", target:["🪨","🍞","💧"], resIcon:"🔑", resName:"生命熱情之鑰", combineCount:3,
+    story:"【終極機關】港口邊有一只古老的保險箱，上面有三個凹槽。你必須將象徵老太太生命熱烈精神的三件信物，依序放入：塔列斯石刻（了解自我）、乾麵包與橘子（為夢想節儉）、老太太的淚水（感動與熱情）。",
+    onUnlock:"r10c_final"
+  },
+  "r10c_final": {
+    name:"終極思辨", type:"photoburn", qIdx:8,
+    story:"【保險箱開啟】箱中浮現出最後一道謎題，這是老太太想問你的話：",
+    q:"「另一個春天」的深層涵義是什麼？請寫下你的想法（至少15字）：", qType:"short", minW:15,
+    rewardItem:null, onClear:"r_end"
+  },
+  "r_end": { name:"日記終章", type:"end" }
+};
+
+const mapLayoutOrder = [
+  "r1_bus","r1b_bus2","r1c_bus3","r2_study","r3_icecream",
+  "r3b_icecream2","r4_plaza","r5_temple","r5b_temple2","r5c_temple3",
+  "r6_theater","r7_arena","r7b_arena2","r8_ferry","r8b_ferry2",
+  "r9_restaurant","r10_port","r10b_safe","r10c_final","r_end"
+];
+</script>
+<script>
+// ================= 全域狀態 =================
+let currentRoom = ""; let studentId = "";
+let itemCollection = []; let candies = 0; let icecreams = 0; let visitedNodes = new Set();
+let currentSortOrder = [];
+let activeCombineSlot = null; let combineSelected = [];
+let roomHintsProgress = {};
+let inspectingItem = "";
+let disabledOptions = {};
+let pendingBadEndRoom = null;
+let authorSolved = false;
+let burnInterval = null;
+let burnSecondsLeft = 45;
+
+const shortAnswerHints = {
+  "r10c_final": [
+    "💡 階段一：想想看，「春天」除了指自然界的季節，還能用來比喻什麼？例如人生中的某種狀態或心境。",
+    "💡 階段二：老太太雖然年紀大了，身形也不再年輕，但她仍然勇敢地出國旅行、追逐夢想。這種精神，是不是也是一種「春天」？",
+    "💡 階段三：試著把「希臘的春天」（外在景色）和「老太太的生命態度」（內在精神）兩者連結起來，寫成一句完整的話。"
+  ]
+};
+
+const badEndTexts = {
+  default: "你愣了一下，腦中閃過課文裡的畫面，卻一時想不起正確的答案……\n窗外的天色，忽然有些黯淡了下來。\n\n「年輕人，我沒有時間流淚，也沒有時間悲傷。」\n老太太的聲音彷彿在耳邊響起，提醒著你：別灰心，再試一次。"
+};
+function getBadEndText(qIdx) { return badEndTexts[qIdx] || badEndTexts.default; }
+
+// ================= 地圖更新 =================
+function updateTravelMap() {
+  const grid = document.getElementById('dynamic-map-grid');
+  if (!grid) return;
+  grid.innerHTML = "";
+  mapLayoutOrder.forEach(id => {
+    if (!rooms[id]) return;
+    let cell = document.createElement('div');
+    if (id === currentRoom) {
+      cell.className = "map-cell current"; cell.innerText = "📍";
+      cell.title = rooms[id].name;
+    } else if (visitedNodes.has(id)) {
+      cell.className = "map-cell unlocked"; cell.innerText = "✓";
+      cell.title = rooms[id].name;
+      cell.onclick = () => { renderEngine(id); };
+    } else {
+      cell.className = "map-cell"; cell.innerText = "？";
+    }
+    grid.appendChild(cell);
+  });
+}
+
+function updateSatchelUI() {
+  const wrap = document.getElementById('satchel-items');
+  if (!wrap) return;
+  if (itemCollection.length === 0) { wrap.innerHTML = '<span class="satchel-empty">尚未拾獲任何信物</span>'; return; }
+  let html = '';
+  itemCollection.forEach((icon, i) => { html += `<span class="satchel-item" title="點擊查看" onclick="handleInventoryClick(${i})">${icon}</span>`; });
+  wrap.innerHTML = html;
+}
+
+// ================= 核心渲染引擎 =================
+function renderEngine(roomId) {
+  try {
+    if (!rooms[roomId]) return;
+    currentRoom = roomId; const room = rooms[roomId]; visitedNodes.add(roomId);
+    document.getElementById('current-location').innerText = `📍 ${room.name}`;
+    document.body.className = room.type === "end" ? "bg-ending" : "";
+    const contentDiv = document.getElementById('game-content'); let html = "";
+    updateTravelMap();
+    uploadProgress(room.name);
+    if (burnInterval) { clearInterval(burnInterval); burnInterval = null; }
+
+    if (room.type === "author") {
+      authorSolved = false;
+      html = `<div class="story-box">${room.story}</div>
+              <div class="photo-flip-wrap">
+                <div class="photo-flip" id="photo-flip" onclick="flipPhoto()">
+                  <div class="photo-face photo-front">📷</div>
+                  <div class="photo-face photo-back" id="photo-back-content"></div>
+                </div>
+              </div>
+              <div class="photo-hint">👆 點擊照片，翻到背面看看</div>
+              <div id="author-quiz-area"></div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
+    if (room.type === "bookmark") {
+      html = `<div class="story-box">${room.story}</div>
+              <div class="bookmark-prompt">👇 用滑鼠（或手指）按住麻繩書籤，慢慢往下拉</div>
+              <div class="bookmark-wrap" id="bookmark-wrap">
+                <div class="bookmark-hidden-text" id="bookmark-hidden-text">${room.revealText}</div>
+                <div class="bookmark-veil" id="bookmark-veil"></div>
+                <div class="bookmark-ribbon-track"></div>
+                <div class="bookmark-ribbon" id="bookmark-ribbon">🎀</div>
+              </div>
+              <button type="button" class="action-btn hidden" id="bookmark-next-btn" onclick="renderEngine('${room.onClear}')">闔上書籤，繼續前行</button>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      initBookmarkDrag(room.onClear);
+      return;
+    }
+
+    if (room.type === "portstory") {
+      html = `<div class="story-box">${room.story}</div>
+              <button type="button" class="action-btn" onclick="renderEngine('${room.onClear}')">繼續前行 →</button>`;
+      if (!itemCollection.includes('💧')) itemCollection.push('💧');
+      updateSatchelUI();
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
+    if (room.type === "combine") {
+      activeCombineSlot = null;
+      let slotCount = room.combineCount || 2;
+      combineSelected = new Array(slotCount).fill(null);
+      html = `<h2 style="color:var(--error-color); text-align:center; font-size:18px;">${room.name}</h2>
+              <div class="story-text" style="text-align:center; white-space:pre-wrap;">${room.story}</div>
+              <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px; font-weight:bold; text-align:center;">
+                💡 點擊下方凹槽選定後，再點擊背包信物放入凹槽
+              </div>
+              <div class="combine-container">`;
+      for (let i = 1; i <= slotCount; i++) {
+        html += `<div class="combine-slot" id="slot-${i}" onclick="selectCombineSlot(${i})"><span style="font-size:12px;">凹槽 ${i}</span></div>`;
+        if (i < slotCount) html += `<div style="font-size:22px; color:var(--sunset);">+</div>`;
+      }
+      html += `</div>
+              <button type="button" class="action-btn" style="border-color:var(--error-color); color:var(--error-color); margin-top:18px;" onclick="attemptCombine('${roomId}')">融合信物</button>
+              <div id="combine-msg" class="message"></div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
+    if (room.type === "photoburn") {
+      burnSecondsLeft = 45;
+      html = `<div class="story-box">${room.story}</div>
+              <div class="photo-burn-wrap">
+                <div class="photo-burn" id="photo-burn-el">🌅</div>
+                <div class="burn-timer" id="burn-timer">00:45</div>
+                <div class="burn-label">老照片正緩緩褪色……把握當下，寫下你的想法</div>
+              </div>
+              <div class="quiz-card">
+                <div class="question-text">${room.q}</div>
+                <div id="hint-box" class="hidden"></div>
+                <button type="button" id="candy-btn" class="action-btn candy-btn" onclick="useCandy('${roomId}')">🍬 消耗 1 顆軟糖解鎖提示</button>
+                <textarea id="short-answer" class="ta-input" placeholder="請寫下你的想法..." oninput="updateWordCount(this)"></textarea>
+                <div id="word-count-div" class="word-count">字數：0</div>
+                <button type="button" class="action-btn" onclick="submitQuiz('${roomId}')">提交解答</button>
+                <div id="msg-box" class="message"></div>
+              </div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      let progress = roomHintsProgress[roomId] || 0;
+      let hints = shortAnswerHints[roomId];
+      if (hints && candies > 0 && progress < hints.length) { document.getElementById('candy-btn').style.display = 'block'; }
+      startPhotoBurn();
+      return;
+    }
+
+    if (room.type === "quiz") {
+      let progress = roomHintsProgress[roomId] || 0;
+      let hints = shortAnswerHints[roomId];
+      let showCandyBtn = (hints && candies > 0 && progress < hints.length) ? 'style="display:block;"' : 'style="display:none;"';
+      let showIcecreamBtn = (room.qType === "single" && icecreams > 0 && !disabledOptions[roomId]) ? 'style="display:block;"' : 'style="display:none;"';
+      let preHintsHtml = "";
+      if (hints && progress > 0) { for (let i=0;i<progress;i++) preHintsHtml += `<div class="msg-hint">${hints[i]}</div>`; }
+
+      html = `<div class="story-box">${room.story}</div>
+              <div class="quiz-card">
+                <div class="question-text">${room.q}</div>
+                <div id="hint-box" class="${progress > 0 ? '' : 'hidden'}">${preHintsHtml}</div>
+                <button type="button" id="candy-btn" class="action-btn candy-btn" ${showCandyBtn} onclick="useCandy('${roomId}')">🍬 消耗 1 顆軟糖解鎖提示</button>
+                <button type="button" id="icecream-btn" class="action-btn icecream-btn" ${showIcecreamBtn} onclick="useIcecream('${roomId}')">🍦 消耗 1 個冰淇淋刪除一個錯誤選項</button>
+                <div id="interactive-area" style="margin-top:18px;"></div>
+                <div id="word-count-div" class="word-count hidden">字數：0</div>
+                <button type="button" class="action-btn" onclick="submitQuiz('${roomId}')">提交解答</button>
+                <div id="msg-box" class="message"></div>
+              </div>`;
+    }
+    else if (room.type === "end") {
+      document.getElementById('status-ui').classList.add('hidden');
+      document.getElementById('map-ui').classList.add('hidden');
+      document.getElementById('satchel-ui').classList.add('hidden');
+      document.getElementById('main-journal').classList.add('ending-fullscreen');
+      uploadProgress("完成通關");
+
+      html = `
+        <div class="ending-stage">
+          <div class="sunset-glow"></div>
+          <div class="silhouette">🚶‍♀️🧳✈️</div>
+          <div class="ending-line" style="animation-delay:0.3s;">海平線上升起新的一天的朝陽。</div>
+          <div class="ending-line" style="animation-delay:1.3s;">那位戴著老花眼鏡、背著舊藤袋的老太太，</div>
+          <div class="ending-line" style="animation-delay:2.3s;">手裡緊緊握著那卷中文卡帶。</div>
+          <div class="ending-line" style="animation-delay:3.3s;">她的步伐雖然緩慢、身形雖然微胖，</div>
+          <div class="ending-line" style="animation-delay:4.3s;">但正一步步堅定地走向準備起飛的客機，迎向世界的下一個角落。</div>
+          <div class="ending-quote" style="animation-delay:5.6s;">「年輕人，我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！」</div>
+          <div class="ending-final-title" style="animation-delay:7s;">另一個春天</div>
+          <div class="ending-sub" style="animation-delay:7.8s;">恭喜你，勇敢的旅人 ${studentId ? '「'+studentId+'」' : ''}<br>你不僅走過了希臘的春天，更在老太太的身影中，<br>找到了屬於自己、永不老去的「另一個春天」。</div>
+        </div>`;
+    }
+
+    contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+
+    if (room.type === "quiz") {
+      const area = document.getElementById('interactive-area');
+      let disabled = disabledOptions[roomId] || [];
+      if (room.qType === "single") {
+        room.opts.forEach(opt => {
+          let isDisabled = disabled.includes(opt.id);
+          area.innerHTML += `<label class="option-item ${isDisabled ? 'disabled-opt' : ''}"><input type="radio" name="q-choice" value="${opt.id}" ${isDisabled ? 'disabled' : ''}><span>${opt.text}</span></label>`;
+        });
+      } else if (room.qType === "multi") {
+        room.opts.forEach(opt => { area.innerHTML += `<label class="option-item"><input type="checkbox" name="q-choice" value="${opt.id}"><span>${opt.text}</span></label>`; });
+      } else if (room.qType === "sort") {
+        currentSortOrder = [...room.opts]; shuffleArray(currentSortOrder); renderSortList();
+      }
+    }
+  } catch (error) { alert("系統載入異常，請重新整理！錯誤：" + error.message); }
+}
+</script>
+<script>
+// ================= 作者書房：照片翻轉 + 填空驗證 =================
+function flipPhoto() {
+  const flip = document.getElementById('photo-flip');
+  if (!flip.classList.contains('flipped')) {
+    flip.classList.add('flipped');
+    document.getElementById('photo-back-content').innerHTML =
+      "【作者介紹】<br>褚士瑩，知名旅行作家，長期投身國際NGO志工服務，足跡遍布世界各地。他的文字細膩，富有人文關懷，擅長從旅行的小事件中，挖掘深刻的生命哲理。<br><br>請翻回正面，回答下方問題以解鎖下一個景點。";
+    setTimeout(() => { renderAuthorQuiz(); }, 400);
+  } else {
+    flip.classList.remove('flipped');
+  }
+}
+
+function renderAuthorQuiz() {
+  if (authorSolved) return;
+  const area = document.getElementById('author-quiz-area');
+  area.innerHTML = `
+    <div class="quiz-card">
+      <div class="question-text">這位作者的姓名是？（請輸入全名）</div>
+      <input type="text" id="author-answer" class="text-input" placeholder="請輸入作者姓名...">
+      <button type="button" class="action-btn" onclick="submitAuthorAnswer()">提交解答</button>
+      <div id="author-msg" class="message"></div>
+    </div>`;
+}
+
+function submitAuthorAnswer() {
+  const field = document.getElementById('author-answer');
+  const val = field ? field.value.trim() : "";
+  if (val === "褚士瑩") {
+    authorSolved = true;
+    showMsg('author-msg', "🟢 答對了！書房的門悄然開啟……", true);
+    setTimeout(() => { renderEngine(rooms[currentRoom].onClear); }, 1300);
+  } else {
+    showMsg('author-msg', "❌ 答案不正確，請再仔細看看照片背面的介紹。", false);
+  }
+}
+
+// ================= 房5：麻繩書籤拉桿 =================
+function initBookmarkDrag(nextRoom) {
+  const ribbon = document.getElementById('bookmark-ribbon');
+  const wrap = document.getElementById('bookmark-wrap');
+  const veil = document.getElementById('bookmark-veil');
+  const hiddenText = document.getElementById('bookmark-hidden-text');
+  const nextBtn = document.getElementById('bookmark-next-btn');
+  if (!ribbon || !wrap) return;
+
+  let dragging = false;
+  let wrapHeight = wrap.offsetHeight;
+  let revealed = false;
+
+  function setProgress(percent) {
+    percent = Math.max(0, Math.min(100, percent));
+    let topPx = (percent / 100) * (wrapHeight - 60);
+    ribbon.style.top = topPx + 'px';
+    veil.style.clipPath = `inset(0 0 ${100 - percent}% 0)`;
+    if (percent >= 85 && !revealed) {
+      revealed = true;
+      hiddenText.classList.add('revealed');
+      nextBtn.classList.remove('hidden');
+    }
+  }
+
+  function getY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+
+  function onDown(e) { dragging = true; e.preventDefault(); }
+  function onMove(e) {
+    if (!dragging) return;
+    const rect = wrap.getBoundingClientRect();
+    const y = getY(e) - rect.top;
+    const percent = (y / wrapHeight) * 100;
+    setProgress(percent);
+  }
+  function onUp() { dragging = false; }
+
+  ribbon.addEventListener('mousedown', onDown);
+  ribbon.addEventListener('touchstart', onDown, {passive:false});
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', onMove, {passive:false});
+  window.addEventListener('mouseup', onUp);
+  window.addEventListener('touchend', onUp);
+
+  setProgress(0);
+}
+
+// ================= 房10：相片燒毀倒數（視覺氛圍，不鎖死作答） =================
+function startPhotoBurn() {
+  const photoEl = document.getElementById('photo-burn-el');
+  const timerEl = document.getElementById('burn-timer');
+  if (!photoEl || !timerEl) return;
+
+  burnInterval = setInterval(() => {
+    burnSecondsLeft--;
+    if (burnSecondsLeft <= 0) {
+      burnSecondsLeft = 0;
+      clearInterval(burnInterval);
+      photoEl.style.filter = "sepia(1) brightness(0.3) contrast(1.3)";
+      photoEl.style.opacity = "0.5";
+      timerEl.innerText = "00:00";
+      timerEl.style.color = "var(--error-color)";
+      return;
+    }
+    let m = Math.floor(burnSecondsLeft / 60).toString().padStart(2,'0');
+    let s = (burnSecondsLeft % 60).toString().padStart(2,'0');
+    timerEl.innerText = `${m}:${s}`;
+    let progress = 1 - (burnSecondsLeft / 45);
+    photoEl.style.filter = `sepia(${progress}) brightness(${1 - progress*0.5}) contrast(${1 + progress*0.2})`;
+    photoEl.style.opacity = `${1 - progress*0.45}`;
+  }, 1000);
+}
+
+// ================= 答題判定 =================
+function submitQuiz(roomId) {
+  const room = rooms[roomId]; let isCorrect = false;
+
+  if (room.qType === "single") {
+    const selected = document.querySelector('input[name="q-choice"]:checked');
+    if (!selected) { showMsg('msg-box', "⚠️ 請先選擇一個答案！", false); return; }
+    isCorrect = (selected.value === room.ans);
+  } else if (room.qType === "multi") {
+    const checkedBoxes = document.querySelectorAll('input[name="q-choice"]:checked');
+    const ansArray = Array.from(checkedBoxes).map(cb => cb.value);
+    if (ansArray.length === 0) { showMsg('msg-box', "⚠️ 請至少選擇一個答案！", false); return; }
+    isCorrect = ansArray.length === room.ans.length && ansArray.every(val => room.ans.includes(val));
+  } else if (room.qType === "sort") {
+    const ids = currentSortOrder.map(i => i.id);
+    isCorrect = ids.every((val, i) => val === room.ans[i]);
+  } else {
+    const field = document.getElementById('short-answer');
+    const ansStr = field ? field.value.trim() : "";
+    if (ansStr.length < room.minW) { showMsg('msg-box', `⚠️ 寫得還不夠完整（需至少 ${room.minW} 字）！`, false); return; }
+    isCorrect = true;
+  }
+
+  if (!isCorrect) {
+    if (room.qType === "single" || room.qType === "multi") {
+      triggerBadEnd(roomId);
+      return;
+    }
+    let errMsg = room.qType === "sort" ? "❌ 順序不正確，請重新調整！" : "❌ 答案不正確，再想想看！";
+    showMsg('msg-box', errMsg, false);
+    let progress = roomHintsProgress[roomId] || 0;
+    let hints = shortAnswerHints[roomId];
+    if (hints && candies > 0 && progress < hints.length) { document.getElementById('candy-btn').style.display = 'block'; }
+    return;
+  }
+
+  if (burnInterval) { clearInterval(burnInterval); burnInterval = null; }
+  showMsg('msg-box', "🟢 答對了！獲得線索與信物……", true);
+  if (room.rewardItem && !itemCollection.includes(room.rewardItem)) itemCollection.push(room.rewardItem);
+  if (room.givesCandy) { candies++; }
+  if (room.givesIcecream) { icecreams++; }
+  updateInventoryUI();
+
+  if (room.rewardItem) {
+    setTimeout(() => { showItemReward(roomId); }, 1200);
+  } else {
+    setTimeout(() => { renderEngine(room.onClear); }, 1200);
+  }
+}
+
+function showItemReward(roomId) {
+  const room = rooms[roomId]; const itemInfo = getItemInfo(room.rewardItem);
+  let html = `<div class="item-box" style="margin:0 auto;"><div class="item-icon">${room.rewardItem}</div><div class="item-title">獲得信物：【${itemInfo.title}】</div><div class="item-desc">${itemInfo.desc}</div></div>`;
+  if (room.givesCandy) { html += `<div style="color:var(--success-color); font-weight:bold; text-align:center; margin-top:18px; font-size:15px;">🎉 額外獲得【🍬 軟糖 x 1】</div>`; }
+  if (room.givesIcecream) { html += `<div style="color:var(--sea); font-weight:bold; text-align:center; margin-top:18px; font-size:15px;">🎉 額外獲得【🍦 冰淇淋 x 1】</div>`; }
+  html += `<button type="button" class="action-btn" style="margin-top:26px;" onclick="renderEngine('${room.onClear}')">收下信物，繼續前行</button>`;
+  document.getElementById('game-content').innerHTML = html;
+}
+
+// ================= Bad End 回溯機制 =================
+function triggerBadEnd(roomId) {
+  pendingBadEndRoom = roomId;
+  const room = rooms[roomId];
+  document.getElementById('badend-text').innerText = getBadEndText(room.qIdx);
+  document.getElementById('badend-overlay').classList.remove('hidden');
+  document.body.classList.add('bg-badend');
+}
+function rewindFilm() {
+  document.getElementById('badend-overlay').classList.add('hidden');
+  document.body.classList.remove('bg-badend');
+  if (pendingBadEndRoom) { renderEngine(pendingBadEndRoom); pendingBadEndRoom = null; }
+}
+
+// ================= 提示道具機制 =================
+function useCandy(roomId) {
+  let hints = shortAnswerHints[roomId];
+  if (!hints) return;
+  let progress = roomHintsProgress[roomId] || 0;
+  if (candies > 0 && progress < hints.length) {
+    candies--; updateInventoryUI();
+    let hintBox = document.getElementById('hint-box');
+    hintBox.innerHTML += `<div class="msg-hint">${hints[progress]}</div>`;
+    hintBox.classList.remove('hidden');
+    roomHintsProgress[roomId] = progress + 1;
+    if (roomHintsProgress[roomId] >= hints.length) { document.getElementById('candy-btn').style.display = 'none'; }
+  }
+}
+
+function useIcecream(roomId) {
+  const room = rooms[roomId];
+  if (icecreams <= 0 || room.qType !== "single") return;
+  if (disabledOptions[roomId]) return;
+  let wrongOpts = room.opts.filter(o => o.id !== room.ans);
+  if (wrongOpts.length === 0) return;
+  let toDisable = wrongOpts[Math.floor(Math.random() * wrongOpts.length)];
+  disabledOptions[roomId] = [toDisable.id];
+  icecreams--; updateInventoryUI();
+  document.getElementById('icecream-btn').style.display = 'none';
+  const labels = document.querySelectorAll('#interactive-area .option-item');
+  labels.forEach(label => {
+    const input = label.querySelector('input');
+    if (input && input.value === toDisable.id) { label.classList.add('disabled-opt'); input.disabled = true; }
+  });
+}
+
+// ================= 物品觀察 =================
+function inspectItem() {
+  document.getElementById('modal-inspect-btn').classList.add('hidden');
+  let textDiv = document.getElementById('modal-inspect-text');
+  let info = getItemInfo(inspectingItem);
+  textDiv.innerHTML = info.inspect;
+  textDiv.classList.remove('hidden');
+}
+
+// ================= 背包與合成 =================
+function handleInventoryClick(idx) {
+  const rawIcon = itemCollection[idx]; const room = rooms[currentRoom];
+  const cleanStr = s => s ? s.replace(/\uFE0F/g, '').trim() : '';
+
+  if (room && room.type === 'combine') {
+    if (activeCombineSlot) {
+      if (combineSelected.some(sel => sel && cleanStr(sel) === cleanStr(rawIcon))) {
+        showMsg('combine-msg', '⚠️ 這個信物已經放入凹槽了！', false); return;
+      }
+      combineSelected[activeCombineSlot-1] = rawIcon;
+      let slotElem = document.getElementById('slot-' + activeCombineSlot);
+      slotElem.innerText = rawIcon; slotElem.classList.remove('active-slot'); slotElem.classList.add('filled');
+      activeCombineSlot = null; hideMsg('combine-msg');
+    } else { openInspectModal(rawIcon); }
+  } else { openInspectModal(rawIcon); }
+}
+
+function openInspectModal(icon) {
+  inspectingItem = icon; const info = getItemInfo(icon);
+  document.getElementById('modal-icon').innerText = icon;
+  document.getElementById('modal-title').innerText = info.title;
+  document.getElementById('modal-desc').innerText = info.desc;
+  document.getElementById('modal-inspect-text').classList.add('hidden');
+  document.getElementById('modal-inspect-btn').classList.remove('hidden');
+  document.getElementById('item-modal').classList.remove('hidden');
+}
+
+function closeItemModal() { document.getElementById('item-modal').classList.add('hidden'); }
+function selectCombineSlot(n) {
+  activeCombineSlot = n;
+  for (let i = 1; i <= combineSelected.length; i++) { document.getElementById('slot-'+i).classList.remove('active-slot'); }
+  document.getElementById('slot-' + n).classList.add('active-slot'); hideMsg('combine-msg');
+}
+
+function attemptCombine(roomId) {
+  let room = rooms[roomId]; const cleanStr = s => s ? s.replace(/\uFE0F/g, '').trim() : '';
+  let target = room.target.map(cleanStr);
+  let selected = combineSelected.map(cleanStr).filter(Boolean);
+  let allFilled = combineSelected.every(s => s);
+  let allMatch = allFilled && target.length === selected.length && target.every(t => selected.includes(t)) && new Set(selected).size === selected.length;
+
+  if (allMatch) {
+    showMsg('combine-msg', `🟢 融合成功！煉成【${room.resName}】，前路已開啟！`, true);
+    if (!itemCollection.includes(room.resIcon)) { itemCollection.push(room.resIcon); updateInventoryUI(); }
+    setTimeout(() => { renderEngine(room.onUnlock); }, 1700);
+  } else {
+    showMsg('combine-msg', "❌ 融合失敗！這些信物似乎不合，請重新選擇。", false);
+    combineSelected = new Array(combineSelected.length).fill(null);
+    for (let i = 1; i <= combineSelected.length; i++) {
+      document.getElementById('slot-'+i).innerHTML = `<span style="font-size:12px;">凹槽 ${i}</span>`;
+      document.getElementById('slot-'+i).className = "combine-slot";
+    }
+  }
+}
+
+// ================= 工具函式 =================
+function updateInventoryUI() {
+  updateSatchelUI();
+  document.getElementById('candy-count').innerText = candies;
+  document.getElementById('icecream-count').innerText = icecreams;
+}
+function renderSortList() {
+  const area = document.getElementById('interactive-area'); area.innerHTML = "";
+  currentSortOrder.forEach((item, index) => {
+    area.innerHTML += `<div class="sort-item"><div class="sort-text">${item.text}</div><div class="sort-btns"><button type="button" class="sort-btn" onclick="moveItem(${index},-1)">▲</button><button type="button" class="sort-btn" onclick="moveItem(${index},1)">▼</button></div></div>`;
+  });
+}
+function moveItem(index, dir) {
+  const target = index + dir; if (target < 0 || target >= currentSortOrder.length) return;
+  [currentSortOrder[index], currentSortOrder[target]] = [currentSortOrder[target], currentSortOrder[index]];
+  renderSortList();
+}
+function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
+function updateWordCount(t) { document.getElementById('word-count-div').innerText = `字數：${t.value.length}`; }
+function showMsg(boxId, text, isSuccess) {
+  const box = document.getElementById(boxId);
+  if (box) { box.innerText = text; box.className = isSuccess ? "message msg-success" : "message msg-error"; }
+}
+function hideMsg(boxId) { const b = document.getElementById(boxId); if (b) b.className = "message hidden"; }
+
+// ================= 後台回傳（Google試算表）=================
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwVRw449jqTpHkQbSGhWR-VtyykbN6vlIiK_oxEl1dKqGewC75ToEWfnsnZl4GCE7Ur/exec";
+
+async function uploadProgress(roomName) {
+  if (!studentId || !WEBAPP_URL || WEBAPP_URL.indexOf("PASTE_YOUR") === 0) return;
+  try {
+    await fetch(WEBAPP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ student: studentId, room: roomName, time: new Date().toLocaleString() })
+    });
+  } catch (err) { console.error("後台回傳失敗:", err); }
+}
+
+function startGame() {
+  const inputField = document.getElementById('student-id');
+  studentId = inputField ? inputField.value.trim() : "";
+  if (!studentId) { alert("🚨 請先在日記封面署名！"); return; }
+  document.getElementById('login-section').classList.add('hidden');
+  document.getElementById('status-ui').classList.remove('hidden');
+  document.getElementById('map-ui').classList.remove('hidden');
+  document.getElementById('satchel-ui').classList.remove('hidden');
+  updateInventoryUI();
+  renderEngine("r1_bus");
+}
+</script>
