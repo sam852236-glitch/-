@@ -44,14 +44,14 @@ body.bg-badend { background: #2a221a !important; }
 .music-toggle-btn:hover { background: rgba(217,138,108,0.22); }
 .music-toggle-btn.playing { background: var(--sunset); color: #fff; }
 
-.travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 16px; border-radius: 6px; margin: 0 26px 24px; box-shadow: inset 0 0 30px rgba(139,111,71,0.18); position: relative; }
-.travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 18px 6px rgba(139,111,71,0.25); pointer-events: none; }
-.map-title { font-size: 12px; color: var(--ink-soft); font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; text-align: center; }
-.map-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-.map-cell { background: rgba(255,255,255,0.25); border: 1.5px dashed var(--ink-soft); padding: 9px 4px; border-radius: 50%; text-align: center; font-size: 10px; color: var(--ink-soft); cursor: not-allowed; transition: all 0.3s; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
-.map-cell.unlocked { border-style: solid; border-color: var(--olive); color: var(--ink); cursor: pointer; background: rgba(110,126,95,0.1); }
-.map-cell.unlocked:hover { border-color: var(--sunset); }
-.map-cell.current { border-color: var(--sunset); border-style: solid; color: var(--sunset); font-weight: bold; background: rgba(217,138,108,0.15); cursor: pointer; animation: pinWiggle 1.6s infinite ease-in-out; }
+.travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 6px; margin: 0 0 18px; box-shadow: inset 0 0 24px rgba(139,111,71,0.16); position: relative; }
+.travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 14px 4px rgba(139,111,71,0.22); pointer-events: none; }
+.map-title { font-size: 11px; color: var(--ink-soft); font-weight: bold; margin-bottom: 8px; letter-spacing: 1px; text-align: center; }
+.map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 5px; }
+.map-cell { background: rgba(255,255,255,0.3); border: 1px dashed var(--ink-soft); border-radius: 5px; text-align: center; font-size: 9.5px; line-height: 1.3; color: var(--ink-soft); cursor: not-allowed; transition: all 0.25s; padding: 5px 3px; min-height: 38px; display: flex; align-items: center; justify-content: center; word-break: break-all; }
+.map-cell.unlocked { border-style: solid; border-color: var(--olive); color: var(--ink); cursor: pointer; background: rgba(110,126,95,0.12); font-weight: 600; }
+.map-cell.unlocked:hover { border-color: var(--sunset); background: rgba(217,138,108,0.12); transform: translateY(-1px); }
+.map-cell.current { border-color: var(--sunset); border-style: solid; color: #fff; font-weight: bold; background: var(--sunset); cursor: pointer; box-shadow: 0 0 0 2px rgba(217,138,108,0.3); animation: pinWiggle 1.6s infinite ease-in-out; }
 @keyframes pinWiggle { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
 h1 { text-align: center; font-size: 25px; letter-spacing: 4px; margin-bottom: 4px; font-weight: 700; padding-top: 24px; }
@@ -135,6 +135,16 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 /* ===== 道具出示機關 ===== */
 .toll-gate { background: rgba(181,80,63,0.06); border: 1.5px dashed var(--error-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; text-align: center; }
 .toll-gate-label { font-size: 12.5px; color: var(--error-color); font-weight: bold; margin-bottom: 10px; }
+
+/* ===== 道具合成凹槽 ===== */
+.combine-container { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 18px 0; flex-wrap: wrap; }
+.combine-slot { flex: 1; min-width: 90px; min-height: 90px; border: 3px dashed var(--ink-soft); border-radius: 10px; background: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: 34px; cursor: pointer; transition: all .25s ease; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+.combine-slot:hover { border-color: var(--sunset); background: rgba(217,138,108,0.1); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(217,138,108,0.25); }
+.combine-slot span { font-size: 12.5px; color: var(--ink-soft); font-weight: bold; line-height: 1.4; pointer-events: none; }
+.combine-slot.active-slot { border-style: solid; border-color: var(--sunset); background: rgba(217,138,108,0.18); box-shadow: 0 0 0 4px rgba(217,138,108,0.25), 0 4px 10px rgba(217,138,108,0.3); animation: slotPulse 1.1s infinite alternate; }
+@keyframes slotPulse { 0% { box-shadow: 0 0 0 3px rgba(217,138,108,0.2); } 100% { box-shadow: 0 0 0 7px rgba(217,138,108,0.35); } }
+.combine-slot.filled { border-style: solid; border-color: var(--success-color); background: rgba(110,126,95,0.14); animation: none; box-shadow: 0 2px 6px rgba(110,126,95,0.25); }
+.combine-plus { font-size: 24px; color: var(--sunset); font-weight: bold; flex-shrink: 0; }
 .toll-target { font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; }
 .toll-present-btn { background: var(--error-color); color: #fff; border: none; padding: 11px 20px; border-radius: 6px; cursor: pointer; font-size: 13.5px; font-weight: bold; font-family: inherit; }
 .toll-present-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -183,8 +193,8 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
         一位戴著老花眼鏡、背著舊藤袋的老太太，將要帶你走過希臘的春天，也走進她生命裡，那段關於勇氣與熱情的旅程。<br><br>
         ⚠️ 在出發之前，請先把記憶的碎片重新拼回正確的順序，喚醒這段旅程的記憶。
       </div>
-      <div class="question-text">請在日記封面署名（班級座號姓名）：</div>
-      <input type="text" id="student-id" class="text-input" placeholder="例如：801號 王小明">
+      <div class="question-text">請在日記封面署名（座號＋姓名）：</div>
+      <input type="text" id="student-id" class="text-input" placeholder="例如：10301王大明">
       <button type="button" class="action-btn" onclick="startGame()">翻開日記，啟程 →</button>
     </div>
   </div>
@@ -228,17 +238,39 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 </body>
 </html>
 <script>
+/* ════════════════════════════════════════════════════════════════
+   📝 老師專用：文字修改指南
+   ════════════════════════════════════════════════════════════════
+   想修改任何故事文字或題目，請用文字編輯器「搜尋」下方關鍵字找到對應位置：
+
+   - 每個房間都用「房間代號」標示，例如 r3_temple_in 就是「阿波羅神殿」
+   - story 欄位＝場景故事文字（學生進入房間看到的敘述）
+   - q 欄位＝題目文字
+   - opts 欄位＝選項內容（text 後面的文字就是選項顯示內容）
+   - ans 欄位＝正確答案（請小心，改了 story/q 文字不會影響這裡，但如果
+     连選項代號 A/B/C/D 的「順序」被你刪改，要記得同步檢查 ans 是否還對應正確）
+
+   範例：要改「神殿大門」那段文字，搜尋 r3_temple_gate 即可找到。
+   要改「塔列斯石刻」的敘述，搜尋 r3b_stone 即可找到。
+
+   改完文字後，直接存檔，整個 final.html 重新上傳到 GitHub 覆蓋即可生效。
+   ════════════════════════════════════════════════════════════════ */
+
 // ================= 道具資料庫（9個信物） =================
 const itemDB = {
   '🧺': { title:"舊藤袋", desc:"老太太隨身攜帶的舊藤袋，是她年邁卻仍堅持旅行的象徵。", inspect:"藤袋裡還殘留著淡淡的橄欖油氣味，似乎裝過不少乾糧。" },
   '🍬': { title:"薄荷軟糖", desc:"老太太主動分享給作者的薄荷軟糖，是兩人初遇時善意的起點。", inspect:"糖紙上印著小小的希臘文字，包裝已經有些褪色。" },
   '💐': { title:"野雛菊花束", desc:"廣場上採來的野雛菊，用心包紮成一束花，準備送給老太太。", inspect:"花束雖然樸素，卻是作者表達善意的心意。" },
   '📷': { title:"老太太拍作者的照片", desc:"老太太偷拍作者的照片，翻到背面藏著作者介紹。", inspect:"翻過來看看，背面藏著作者的介紹資料，或許是進入神殿的關鍵。" },
-  '🪨': { title:"塔列斯石刻", desc:"阿波羅神殿深處找到的古老石刻殘片，刻有一句千古箴言。", inspect:"石刻背面刻著：『認識你自己。』這正是德爾菲神殿最有名的箴言，也呼應了老太太面對生命的態度。" },
+  '🪨': { title:"塔列斯石刻", desc:"阿波羅神殿深處找到的古老石刻殘片，刻有一句千古箴言。", inspect:"石刻背面刻著：『認識你自己。』這正是德爾菲神殿最有名的箴言，也呼應了老太太面對生命的態度。",
+          hasQuiz:true, quizQ:"石刻邊緣似乎還刻著另一個詞語，「神采奕奕」的意思是？",
+          quizOpts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"}], quizAns:"A" },
   '🍦': { title:"冰淇淋（信物）", desc:"冰淇淋車給的紀念信物，準備拿給山下等待的老太太。", inspect:"冰涼的觸感讓人聯想到希臘夏天的陽光。" },
   '🍞': { title:"乾麵包與橘子", desc:"旅店餐廳裡，老太太為了省錢而打包的簡單午餐。", inspect:"麵包已經有點乾硬，卻是老太太為了實現夢想而甘願節儉的證明。" },
   '💧': { title:"老太太的淚水", desc:"老太太收下卡帶後，悄悄滑落的淚水，凝結成一顆溫潤的水珠。", inspect:"水珠裡彷彿映照著老太太一路走來的身影——堅強、樂觀，卻也有著最柔軟的時刻。" },
-  '📼': { title:"中文音樂卡帶", desc:"作者準備送給老太太的告別禮物。", inspect:"卡帶背面寫著：『送給願意陪我看世界的人。』" }
+  '📼': { title:"中文音樂卡帶", desc:"作者準備送給老太太的告別禮物。", inspect:"卡帶背面寫著：『送給願意陪我看世界的人。』" },
+  '🧊': { title:"清涼提神包", desc:"用薄荷軟糖與冰淇淋融合而成的清涼小物，準備在山路上為老太太提神解暑。", inspect:"清涼的香氣撲鼻而來，似乎能讓人瞬間打起精神。" },
+  '🔑': { title:"生命熱情之鑰", desc:"融合塔列斯石刻與老太太的淚水而成的鑰匙，象徵了解自我與感動熱情的結合。", inspect:"鑰匙散發溫潤的光芒，似乎能開啟通往老太太內心世界的最後一道門。" }
 };
 
 function getItemInfo(rawIcon) {
@@ -264,11 +296,11 @@ const prologueAns = ["A","B","C","D","E","F","G","H"];
 // ================= 景點資料 =================
 const rooms = {
   // ---- 序章 ----
-  "r0_prologue": { name:"散落的手札", type:"prologue", onClear:"r1_bus" },
+  "r0_prologue": { name:"散落的手札", mapLabel:"序章", type:"prologue", onClear:"r1_bus" },
 
   // ---- 景點1：雅典巴士 ----
   "r1_bus": {
-    name:"雅典巴士", type:"nav",
+    name:"雅典巴士", mapLabel:"雅典巴士", type:"nav",
     story:"【場景】空盪盪的巴士車廂，引擎低鳴。羅盤的指針微微晃動，似乎在引導你選擇方向。",
     exits:[
       { dir:"向東探索", tag:"撞見行李堆（支線）", target:"r1_side" },
@@ -276,28 +308,28 @@ const rooms = {
     ]
   },
   "r1_side": {
-    name:"巴士行李堆（支線）", type:"quiz", qIdx:"字音-側", isSide:true,
+    name:"巴士行李堆（支線）", mapLabel:"行李堆", type:"quiz", qIdx:"字音-側1", isSide:true,
     story:"【支線】你撞上後座的行李堆，灰塵揚起。行李箱上貼著一張褪色的小紙條，寫著形音義謎題。",
     q:"陰「霾」的「霾」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"},{id:"D",text:"ㄋㄞˊ"}],
     ans:"A", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
   },
   "r1b_meet": {
-    name:"雅典巴士（初遇）", type:"quiz", qIdx:2,
+    name:"雅典巴士（初遇）", mapLabel:"初遇老太太", type:"quiz", qIdx:2,
     story:"【主線】你走向前座，發現一位戴著老花眼鏡、背著舊藤袋的老太太。她調查了一下藤袋，翻出一顆薄荷軟糖，大方遞給你，臉上帶著靦腆的微笑。",
     q:"關於老太太初遇時的外表與行為，下列敘述正確的有哪些？（複選）", qType:"multi",
     opts:[{id:"A",text:"身形微胖"},{id:"B",text:"穿著時髦新潮"},{id:"C",text:"打扮略顯過時"},{id:"D",text:"神情略帶害羞"},{id:"E",text:"主動分享薄荷軟糖"},{id:"F",text:"態度十分高傲，不願與人交談"}],
     ans:["A","C","D","E"], rewardItem:"🧺", givesCandy:true, onClear:"r1c_reward"
   },
   "r1c_reward": {
-    name:"雅典巴士（軟糖）", type:"itemget",
+    name:"雅典巴士（軟糖）", mapLabel:"獲得軟糖", type:"itemget",
     story:"【收穫】老太太笑著又掏出一顆薄荷軟糖塞進你手裡：『年輕人，路還長呢，吃顆糖吧！』",
     rewardItem:"🍬", onClear:"r2_plaza"
   },
 
   // ---- 景點2：德爾菲廣場 ----
   "r2_plaza": {
-    name:"德爾菲廣場", type:"nav",
+    name:"德爾菲廣場", mapLabel:"德爾菲廣場", type:"nav",
     story:"【場景】陽光灑落的歐洲小鎮廣場。羅盤又開始晃動，廣場上似乎有不只一個角落值得探索。",
     exits:[
       { dir:"向西搜尋", tag:"廣場長椅與草叢（主線）", target:"r2_gather" },
@@ -305,61 +337,70 @@ const rooms = {
     ]
   },
   "r2_gather": {
-    name:"廣場搜查", type:"quiz", qIdx:"字音1",
+    name:"廣場搜查", mapLabel:"廣場搜查", type:"quiz", qIdx:"字音1",
     story:"【搜查】你在廣場長椅拾取一張包裝紙，又在草叢裡採集到一束野雛菊，將兩者紮成一束花。一旁的告示牌上寫著形音義謎題，似乎要先解開才能繼續。",
     q:"遮「掩」不住的「掩」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄧㄢˇ"},{id:"B",text:"ㄧㄢˋ"},{id:"C",text:"ㄧㄤˇ"},{id:"D",text:"ㄢˇ"}],
     ans:"A", rewardItem:"💐", onClear:"r2b_photo"
   },
   "r2b_photo": {
-    name:"廣場中央（偷拍）", type:"quiz", qIdx:"字音2",
+    name:"廣場中央（偷拍）", mapLabel:"廣場偷拍", type:"quiz", qIdx:"字音2",
     story:"【喀擦！】廣場中央，老太太忽然拿起相機，對你按下快門。她有些不好意思地笑了笑。告示牌上又浮現一道謎題。",
     q:"羞「赧」的「赧」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄋㄢˇ"},{id:"B",text:"ㄈㄢˇ"},{id:"C",text:"ㄗㄢˇ"},{id:"D",text:"ㄉㄢˇ"}],
     ans:"A", rewardItem:"📷", onClear:"r2c_gift"
   },
   "r2c_gift": {
-    name:"獻上花束", type:"toll",
+    name:"獻上花束", mapLabel:"獻上花束", type:"toll",
     story:"【關鍵行動】老太太還因為偷拍而有些羞赧，你決定把手中的花束送給她，化解這份不好意思。",
     tollItem:"💐", tollPrompt:"請從背包中點選【野雛菊花束】，再按下「出示」獻給老太太",
     onUnlock:"r2d_author"
   },
   "r2d_author": {
-    name:"作者書房", type:"author",
+    name:"作者書房", mapLabel:"作者書房", type:"author",
     story:"【場景】老太太收下花束，笑得燦爛。她從藤袋裡又拿出那張偷拍的照片遞給你。你翻到背面，似乎藏著什麼——",
     onClear:"r2e_kindness"
   },
   "r2e_kindness": {
-    name:"德爾菲廣場（善意）", type:"quiz", qIdx:4,
+    name:"德爾菲廣場（善意）", mapLabel:"善意行為", type:"quiz", qIdx:4,
     story:"【善意的瞬間】老太太溫柔地看著你，彷彿在回憶這趟旅程中，你曾經做過的每一件小事。",
     q:"文本中，哪些作者的行為可以看出他具備「善意」？（複選）", qType:"multi",
     opts:[{id:"A",text:"被偷拍沒有生氣，反而主動送花"},{id:"B",text:"耐心陪著老太太爬石階"},{id:"C",text:"離別時送上中文音樂卡帶"},{id:"D",text:"嫌棄老太太走得太慢而獨自離開"},{id:"E",text:"取笑老太太的穿著過時"}],
-    ans:["A","B","C"], rewardItem:"📼", onClear:"r3_temple_gate"
+    ans:["A","B","C"], rewardItem:"📼", onClear:"r2f_litreview"
+  },
+
+  // ---- 新增：旅行文學知識房（主線必經） ----
+  "r2f_litreview": {
+    name:"旅行手札室", mapLabel:"旅遊文學", type:"quiz", qIdx:"旅遊文學",
+    story:"【場景】離開廣場前，你在路邊書攤翻到一本「課文補充資料」，上面寫著：\n\n旅行文學是一種書寫方式，又稱「旅遊文學」，是旅行者記錄見聞並抒發情感的書寫。通常有旅行時間、自然或人文景觀的描述、個人的自敘等元素。雖是經過想像與整理，但不能因此而消除旅行本身的記實性，因而曾有作家稱自己的旅行書寫，為旅行的再創作或再現。\n\n本課可歸屬於「旅行文學」之中，兼有「行動」和「文學」，亦即有實際旅行，並以文學手法敘述。內容包括踏上旅途前的期盼心情、旅行過程、見聞，以及旅行後的回憶等，其文體可以是散文、日記、書信、詩歌、歌詞等。",
+    q:"根據補充資料，旅行文學強調必須具備「實際旅遊」的＿＿？", qType:"single",
+    opts:[{id:"A",text:"行動／旅行經驗"},{id:"B",text:"想像力"},{id:"C",text:"文學修辭技巧"},{id:"D",text:"旅遊景點知名度"}],
+    ans:"A", rewardItem:null, onClear:"r3_temple_gate"
   },
 
   // ---- 景點3：阿波羅神殿（道具門票） ----
   "r3_temple_gate": {
-    name:"阿波羅神殿（神像守衛）", type:"toll",
+    name:"阿波羅神殿（神像守衛）", mapLabel:"神像守衛", type:"toll", checkpoint:"進度：阿波羅神殿（約1/3）",
     story:"【❌ 限制區域】陡峭的石階山腳下，一尊巨大的阿波羅神像擋住去路。神像低語：『要進入聖殿，需出示能證明你身分的信物。』",
     tollItem:"📷", tollPrompt:"請從背包中點選【老太太拍作者的照片】，出示給神像作為通行證",
     onUnlock:"r3_temple_in"
   },
   "r3_temple_in": {
-    name:"阿波羅神殿", type:"quiz", qIdx:"5上",
+    name:"阿波羅神殿", mapLabel:"神殿石階", type:"quiz", qIdx:"5上",
     story:"【場景】神殿大門開啟，但石階陡峭，老太太爬得氣喘吁吁，最後決定留在山下等你。臨別前，她推了你一把，笑著說：『年輕人！值得用一輩子換的美景呢！我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！』",
     q:"老太太這段話，最能呼應她怎樣的人生態度？", qType:"single",
     opts:[{id:"A",text:"及時行樂，把握當下，積極樂觀地面對人生"},{id:"B",text:"凡事小心謹慎，避免犯錯"},{id:"C",text:"金錢至上，旅行只是炫耀的方式"},{id:"D",text:"消極悲觀，認為人生苦短不值得努力"}],
     ans:"A", rewardItem:null, onClear:"r3b_stone"
   },
   "r3b_stone": {
-    name:"神殿廢墟（石刻）", type:"itemget",
-    story:"【拾獲】你獨自走進神殿廢墟的角落，發現一片古老的石刻殘片，輕輕拂去塵土，上面浮現一行字：『人需要了解自我。』",
+    name:"神殿廢墟（石刻）", mapLabel:"塔列斯石刻", type:"itemget",
+    story:"【拾獲】你獨自走進神殿廢墟的角落，發現一片古老的石刻殘片，輕輕拂去塵土，上面浮現一行字：『人需要了解自我。』\n\n💡 小提示：之後可以在背包中點擊這個信物，仔細端詳，或許還能發現額外的謎題。",
     rewardItem:"🪨", onClear:"r4_icecream_gate"
   },
 
   // ---- 景點4：冰淇淋車 ----
   "r4_icecream_gate": {
-    name:"小鎮出口", type:"nav",
+    name:"小鎮出口", mapLabel:"小鎮出口", type:"nav",
     story:"【場景】下山後，你來到德爾菲小鎮的出口。羅盤又開始晃動。",
     exits:[
       { dir:"向北深入", tag:"彩色冰淇淋車（主線）", target:"r4_icecream" },
@@ -367,29 +408,43 @@ const rooms = {
     ]
   },
   "r4_side": {
-    name:"巷弄石壁（支線）", type:"quiz", qIdx:"字音-側2", isSide:true,
+    name:"巷弄石壁（支線）", mapLabel:"巷弄石壁", type:"quiz", qIdx:"字音-側2", isSide:true,
     story:"【支線】巷弄深處的石壁上，刻著殘缺的字句，似乎在等待有人解開。",
     q:"「神采奕奕」的意思是？", qType:"single",
     opts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"},{id:"D",text:"匆忙慌張，手足無措"}],
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r4a_side2"
+  },
+  "r4a_side2": {
+    name:"巷弄石壁（續，支線）", mapLabel:"巷弄石壁2", type:"quiz", qIdx:"字音-側3", isSide:true,
+    story:"【支線】石壁的另一側，似乎還有殘留的字跡。",
+    q:"「拮据」的注音與意思，下列何者正確？", qType:"single",
+    opts:[{id:"A",text:"ㄐㄧㄝˊ ㄐㄩ，經濟困難"},{id:"B",text:"ㄐㄧㄝˊ ㄐㄩˋ，動作敏捷"},{id:"C",text:"ㄐㄧㄝˋ ㄐㄩ，借貸度日"},{id:"D",text:"ㄐㄧㄝˊ ㄍㄨ，緊張不安"}],
     ans:"A", rewardItem:null, givesCandy:true, onClear:"r4_icecream"
   },
   "r4_icecream": {
-    name:"冰淇淋車", type:"quiz", qIdx:"字音3",
+    name:"冰淇淋車", mapLabel:"冰淇淋車", type:"quiz", qIdx:"字音3",
     story:"【場景】一輛彩色的冰淇淋車安靜地停著。老闆笑咪咪地說：『校正一下招牌上的字，我請你吃冰淇淋！』",
     q:"「潸潸」的注音與意思，下列何者正確？", qType:"single",
     opts:[{id:"A",text:"ㄕㄢ ㄕㄢ，流淚的樣子"},{id:"B",text:"ㄕㄢˋ ㄕㄢˋ，閃爍的樣子"},{id:"C",text:"ㄔㄢˊ ㄔㄢˊ，緩慢的樣子"},{id:"D",text:"ㄕㄢ ㄕㄢˇ，搖晃的樣子"}],
-    ans:"A", rewardItem:"🍦", onClear:"r4b_deliver"
+    ans:"A", rewardItem:"🍦", onClear:"r4a_combine"
+  },
+
+  // ---- 新增：融合點2 ----
+  "r4a_combine": {
+    name:"清涼提神包", mapLabel:"融合：提神包", type:"combine", target:["🍬","🍦"], resIcon:"🧊", resName:"清涼提神包", combineCount:2,
+    story:"【小機關】你想到老太太爬山時氣喘吁吁的模樣，决定把手邊的薄荷軟糖和冰淇淋融合成清涼提神包，準備帶給她解暑提神。",
+    onUnlock:"r4b_deliver"
   },
   "r4b_deliver": {
-    name:"獻上冰淇淋", type:"toll",
-    story:"【關鍵行動】你拿著冰淇淋，快步走回山下，老太太正在等你。",
-    tollItem:"🍦", tollPrompt:"請從背包中點選【冰淇淋】，出示給山下等待的老太太",
+    name:"獻上冰淇淋", mapLabel:"獻上提神包", type:"toll",
+    story:"【關鍵行動】你拿著清涼提神包，快步走回山下，老太太正在等你。",
+    tollItem:"🧊", tollPrompt:"請從背包中點選【清涼提神包】，出示給山下等待的老太太",
     onUnlock:"r5_restaurant"
   },
 
   // ---- 景點5：旅店餐廳 ----
   "r5_restaurant": {
-    name:"旅店餐廳", type:"quiz", qIdx:6,
+    name:"旅店餐廳", mapLabel:"旅店餐廳", type:"quiz", qIdx:6,
     story:"【場景】傍晚時分，陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，老太太正打包著簡單的午餐——乾麵包和橘子。",
     q:"老太太旅行的核心夢想是什麼？", qType:"single",
     opts:[{id:"A",text:"成為知名的旅遊作家"},{id:"B",text:"在有限的生命裡，盡可能看看廣大的世界"},{id:"C",text:"找到一份穩定的工作"},{id:"D",text:"證明自己比年輕人更厲害"}],
@@ -398,40 +453,47 @@ const rooms = {
 
   // ---- 景點6：愛琴海船上 ----
   "r6_ferry": {
-    name:"愛琴海船上（再次相逢）", type:"quiz", qIdx:3,
+    name:"愛琴海船上（再次相逢）", mapLabel:"愛琴海", type:"quiz", qIdx:3,
     story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。甲板上，你又遇見了老太太，她正安靜地啃著打包的乾麵包和橘子。望著她專注的神情，你想起了一路上她的種種行為。",
     q:"下列哪一項「行為」與「性格特質」的配對是正確的？", qType:"single",
     opts:[{id:"A",text:"折半條軟糖分給作者 → 慷慨"},{id:"B",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"C",text:"下雪時看照片回憶春天 → 健忘"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
     ans:"A", rewardItem:null, onClear:"r6b_tears"
   },
   "r6b_tears": {
-    name:"愛琴海船上（淚水）", type:"itemget",
+    name:"愛琴海船上（淚水）", mapLabel:"老太太的淚水", type:"itemget",
     story:"【情節催化】你將隨身攜帶的中文音樂卡帶交給老太太。她愣了一下，隨即眼眶泛紅，一滴淚水滑落臉頰，化成一顆溫潤的水珠，自動收進了你的背包。",
     rewardItem:"💧", onClear:"r7_port_gate"
   },
 
   // ---- 景點7：夕陽港口（終極密室） ----
   "r7_port_gate": {
-    name:"夕陽港口", type:"quiz", qIdx:"字音4",
+    name:"夕陽港口", mapLabel:"夕陽港口", type:"quiz", qIdx:"字音4", checkpoint:"進度：夕陽港口（約2/3）",
     story:"【場景】巨輪靠岸，碼頭上人群雜沓，金黃色的夕陽灑落。你看見一只古老的黃銅保險箱，上面刻著形音義謎題。",
     q:"人群「雜沓」的「沓」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄊㄚˋ"},{id:"B",text:"ㄉㄚˊ"},{id:"C",text:"ㄋㄚˋ"},{id:"D",text:"ㄓㄚˊ"}],
-    ans:"A", rewardItem:null, onClear:"r7b_safe"
+    ans:"A", rewardItem:null, onClear:"r7a_side3"
+  },
+  "r7a_side3": {
+    name:"碼頭一隅（支線）", mapLabel:"碼頭石碑", type:"quiz", qIdx:"字音-側4", isSide:true,
+    story:"【支線】碼頭邊有一塊小石碑，似乎還留著最後一道謎題。",
+    q:"「抑遏」的意思，及「遏」字注音，下列何者正確？", qType:"single",
+    opts:[{id:"A",text:"壓制阻止，ㄜˋ"},{id:"B",text:"歡迎迎接，ㄍㄜˊ"},{id:"C",text:"讚美稱頌，ㄧㄝˋ"},{id:"D",text:"放任縱容，ㄜˊ"}],
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r7b_safe"
   },
   "r7b_safe": {
-    name:"記憶的保險箱", type:"combine", target:["🪨","💧"], resIcon:"🔑", resName:"生命熱情之鑰", combineCount:2,
+    name:"記憶的保險箱", mapLabel:"保險箱", type:"combine", target:["🪨","💧"], resIcon:"🔑", resName:"生命熱情之鑰", combineCount:2,
     story:"【終極機關】保險箱上有兩個凹槽。你必須將塔列斯石刻（了解自我）與老太太的淚水（感動與熱情）依序鑲入，箱子才會震動開啟。",
     onUnlock:"r7c_final1"
   },
   "r7c_final1": {
-    name:"保險箱開啟", type:"quiz", qIdx:"5下",
+    name:"保險箱開啟", mapLabel:"保險箱開啟", type:"quiz", qIdx:"5下",
     story:"【保險箱開啟】老太太的聲音彷彿在耳邊響起：『年輕人，我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！』",
     q:"老太太說「沒有時間流淚，也沒有時間悲傷」，這句話最能表現出她怎樣的生命態度？", qType:"single",
     opts:[{id:"A",text:"珍惜時間，把握當下，不沉溺於負面情緒"},{id:"B",text:"壓抑情感，假裝堅強"},{id:"C",text:"對悲傷的事毫不在乎"},{id:"D",text:"認為哭泣是軟弱的表現，應該避免"}],
     ans:"A", rewardItem:null, onClear:"r7d_final2"
   },
   "r7d_final2": {
-    name:"勇敢與熱情", type:"quiz", qIdx:7,
+    name:"勇敢與熱情", mapLabel:"勇敢與熱情", type:"quiz", qIdx:7,
     story:"【最後的提問】望著保險箱中的信物，你更加理解老太太一路走來的堅持。",
     q:"下列哪些行為，讓作者體會到老太太的勇敢與生命的熱情？（複選）", qType:"multi",
     opts:[{id:"A",text:"省吃儉用，靠乾麵包果腹"},{id:"B",text:"語言不通，仍獨自出國旅行"},{id:"C",text:"氣喘吁吁，仍堅持爬完神殿石階"},{id:"D",text:"抱怨旅途辛苦，後悔出門"},{id:"E",text:"依賴旅行團安排，從不獨立行動"}],
@@ -440,21 +502,21 @@ const rooms = {
 
   // ---- 終點站：旅行手札室 ----
   "r8_final": {
-    name:"旅行手札室", type:"quiz", qIdx:8,
+    name:"旅行手札室", mapLabel:"終極思辨", type:"quiz", qIdx:8, checkpoint:"進度：抵達終極思辨題（即將完成）",
     story:"【終章】老太太的身影漸漸遠去，消失在登機口的人群中。你翻開日記本的最後一頁，發光的簽名欄浮現出最後一個問題。",
     q:"「另一個春天」的深層涵義是什麼？請寫下你的想法（至少15字）：", qType:"short", minW:15,
     rewardItem:null, onClear:"r_end"
   },
-  "r_end": { name:"日記終章", type:"end" }
+  "r_end": { name:"日記終章", mapLabel:"終章", type:"end" }
 };
 
 const mapLayoutOrder = [
   "r0_prologue","r1_bus","r1_side","r1b_meet","r1c_reward",
   "r2_plaza","r2_gather","r2b_photo","r2c_gift","r2d_author",
-  "r2e_kindness","r3_temple_gate","r3_temple_in","r3b_stone","r4_icecream_gate",
-  "r4_side","r4_icecream","r4b_deliver","r5_restaurant","r6_ferry",
-  "r6b_tears","r7_port_gate","r7b_safe","r7c_final1","r7d_final2",
-  "r8_final","r_end"
+  "r2e_kindness","r2f_litreview","r3_temple_gate","r3_temple_in","r3b_stone",
+  "r4_icecream_gate","r4_side","r4a_side2","r4_icecream","r4a_combine",
+  "r4b_deliver","r5_restaurant","r6_ferry","r6b_tears","r7_port_gate",
+  "r7a_side3","r7b_safe","r7c_final1","r7d_final2","r8_final","r_end"
 ];
 </script>
 <script>
@@ -553,11 +615,12 @@ function updateTravelMap() {
   mapLayoutOrder.forEach(id => {
     if (!rooms[id]) return;
     let cell = document.createElement('div');
+    let shortName = rooms[id].mapLabel || rooms[id].name;
     if (id === currentRoom) {
-      cell.className = "map-cell current"; cell.innerText = "📍";
+      cell.className = "map-cell current"; cell.innerText = "📍 " + shortName;
       cell.title = rooms[id].name;
     } else if (visitedNodes.has(id)) {
-      cell.className = "map-cell unlocked"; cell.innerText = "✓";
+      cell.className = "map-cell unlocked"; cell.innerText = "✓ " + shortName;
       cell.title = rooms[id].name;
       cell.onclick = () => { renderEngine(id); };
     } else {
@@ -588,8 +651,8 @@ function renderEngine(roomId) {
     document.body.className = room.type === "end" ? "bg-ending" : "";
     const contentDiv = document.getElementById('game-content'); let html = "";
     updateTravelMap();
-    uploadProgress(room.name);
     selectedTollItem = null;
+    if (room.checkpoint) { uploadProgress(room.checkpoint); } // 重要節點回傳，兼顧低風險與進度可視度
 
     // ---- 序章排序拼圖 ----
     if (room.type === "prologue") {
@@ -667,12 +730,12 @@ function renderEngine(roomId) {
       html = `<h2 style="color:var(--error-color); text-align:center; font-size:18px;">${room.name}</h2>
               <div class="story-text" style="text-align:center; white-space:pre-wrap;">${room.story}</div>
               <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px; font-weight:bold; text-align:center;">
-                💡 點擊下方凹槽選定後，再點擊背包信物放入凹槽
+                💡 步驟一：點擊下方「凹槽」（會發光跳動）→ 步驟二：點擊上方背包中的信物放入
               </div>
               <div class="combine-container">`;
       for (let i = 1; i <= slotCount; i++) {
-        html += `<div class="combine-slot" id="slot-${i}" onclick="selectCombineSlot(${i})"><span style="font-size:12px;">凹槽 ${i}</span></div>`;
-        if (i < slotCount) html += `<div style="font-size:22px; color:var(--sunset);">+</div>`;
+        html += `<div class="combine-slot" id="slot-${i}" onclick="selectCombineSlot(${i})"><span>點擊選定<br>凹槽 ${i}</span></div>`;
+        if (i < slotCount) html += `<div class="combine-plus">+</div>`;
       }
       html += `</div>
               <button type="button" class="action-btn" style="border-color:var(--error-color); color:var(--error-color); margin-top:18px;" onclick="attemptCombine('${roomId}')">融合信物</button>
@@ -889,6 +952,8 @@ function presentTollItem(roomId) {
       return;
     }
   }
+  const btn = document.getElementById('toll-btn');
+  if (btn) btn.disabled = true;
   showMsg('toll-msg', "🟢 信物的氣息與場景共鳴，機關「喀嗒」一聲開啟了！", true);
   setTimeout(() => { selectedTollItem = null; renderEngine(room.onUnlock); }, 1400);
 }
@@ -933,6 +998,8 @@ function submitAuthorAnswer() {
 // ================= 答題判定 =================
 function submitQuiz(roomId) {
   const room = rooms[roomId]; let isCorrect = false;
+  const submitBtnEl = document.querySelector('#game-content .quiz-card > button.action-btn');
+  if (submitBtnEl && submitBtnEl.disabled) return; // 防止重複提交
 
   if (room.qType === "single") {
     const selected = document.querySelector('input[name="q-choice"]:checked');
@@ -966,6 +1033,7 @@ function submitQuiz(roomId) {
   if (room.givesCandy) { candies++; }
   if (room.givesIcecream) { icecreams++; }
   updateInventoryUI();
+  if (submitBtnEl) submitBtnEl.disabled = true;
 
   if (room.rewardItem) {
     setTimeout(() => { showItemReward(roomId); }, 1200);
@@ -1029,13 +1097,52 @@ function useIcecream(roomId) {
   });
 }
 
-// ================= 物品觀察 =================
+// ================= 物品觀察（含道具解題互動） =================
+let itemQuizSolved = {}; // 記錄已解開的道具謎題
+
 function inspectItem() {
   document.getElementById('modal-inspect-btn').classList.add('hidden');
   let textDiv = document.getElementById('modal-inspect-text');
   let info = getItemInfo(inspectingItem);
-  textDiv.innerHTML = info.inspect;
-  textDiv.classList.remove('hidden');
+  let html = info.inspect;
+
+  if (info.hasQuiz && !itemQuizSolved[inspectingItem]) {
+    html += `<div style="margin-top:16px; padding-top:14px; border-top:1px dashed var(--sunset);">
+      <div style="font-size:13px; color:var(--sunset); font-weight:bold; margin-bottom:10px;">🔍 隱藏謎題：${info.quizQ}</div>
+      <div id="item-quiz-opts"></div>
+      <div id="item-quiz-msg" class="message"></div>
+    </div>`;
+    textDiv.innerHTML = html;
+    textDiv.classList.remove('hidden');
+    const optsDiv = document.getElementById('item-quiz-opts');
+    info.quizOpts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = "button";
+      btn.className = "action-btn";
+      btn.style.cssText = "margin-top:6px; font-size:13px; padding:9px 12px;";
+      btn.innerText = opt.text;
+      btn.onclick = () => submitItemQuiz(opt.id, info.quizAns);
+      optsDiv.appendChild(btn);
+    });
+  } else if (info.hasQuiz && itemQuizSolved[inspectingItem]) {
+    html += `<div style="margin-top:14px; color:var(--success-color); font-weight:bold; font-size:13px;">✅ 隱藏謎題已解開</div>`;
+    textDiv.innerHTML = html;
+    textDiv.classList.remove('hidden');
+  } else {
+    textDiv.innerHTML = html;
+    textDiv.classList.remove('hidden');
+  }
+}
+
+function submitItemQuiz(choiceId, correctId) {
+  if (choiceId === correctId) {
+    itemQuizSolved[inspectingItem] = true;
+    candies++; updateInventoryUI();
+    showMsg('item-quiz-msg', "🟢 答對了！額外獲得【🍬 軟糖 x 1】", true);
+    setTimeout(() => { inspectItem(); }, 1300);
+  } else {
+    showMsg('item-quiz-msg', "❌ 答案不正確，再想想看！", false);
+  }
 }
 
 // ================= 背包互動（依房間類型分流） =================
@@ -1088,12 +1195,14 @@ function attemptCombine(roomId) {
   if (allMatch) {
     showMsg('combine-msg', `🟢 融合成功！煉成【${room.resName}】，前路已開啟！`, true);
     if (!itemCollection.includes(room.resIcon)) { itemCollection.push(room.resIcon); updateInventoryUI(); }
+    const combineBtn = document.querySelector('#game-content > button.action-btn');
+    if (combineBtn) combineBtn.disabled = true;
     setTimeout(() => { renderEngine(room.onUnlock); }, 1700);
   } else {
     showMsg('combine-msg', "❌ 融合失敗！這些信物似乎不合，請重新選擇。", false);
     combineSelected = new Array(combineSelected.length).fill(null);
     for (let i = 1; i <= combineSelected.length; i++) {
-      document.getElementById('slot-'+i).innerHTML = `<span style="font-size:12px;">凹槽 ${i}</span>`;
+      document.getElementById('slot-'+i).innerHTML = `<span>點擊選定<br>凹槽 ${i}</span>`;
       document.getElementById('slot-'+i).className = "combine-slot";
     }
   }
@@ -1136,6 +1245,7 @@ function startGame() {
   document.getElementById('map-ui').classList.remove('hidden');
   document.getElementById('satchel-ui').classList.remove('hidden');
   updateInventoryUI();
+  uploadProgress("開始遊戲"); // 簡化模式：只回傳開始與完成通關兩個關鍵節點
   renderEngine("r0_prologue");
 }
 </script>
