@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>另一個春天：旅行札記解謎</title>
+<title>另一個春天：旅行札記解謎 2.0</title>
 <style>
 :root {
     --paper: #FBF6EB; --paper-deep: #F4ECD8;
@@ -32,7 +32,6 @@ body.bg-badend { background: #2a221a !important; }
 .page-fade { animation: pageFlip .5s ease; }
 @keyframes pageFlip { 0% { opacity: 0; transform: translateX(10px) rotateY(-3deg); } 100% { opacity: 1; transform: translateX(0) rotateY(0); } }
 
-/* ===== 紙膠帶軟糖/冰淇淋欄 ===== */
 .tape-bar { position: relative; display: flex; justify-content: space-between; align-items: center; background: var(--paper); padding: 12px 18px; border-radius: 4px; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; border: 1px dashed var(--border-color); }
 .tape-bar::before { content: ""; position: absolute; top: -8px; left: 24px; width: 60px; height: 16px; background: rgba(217,138,108,0.35); transform: rotate(-2deg); border-radius: 2px; }
 .tape-bar::after { content: ""; position: absolute; top: -8px; right: 24px; width: 60px; height: 16px; background: rgba(74,124,157,0.3); transform: rotate(2deg); border-radius: 2px; }
@@ -41,10 +40,7 @@ body.bg-badend { background: #2a221a !important; }
 .candy-row, .icecream-row { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; }
 .candy-row { color: var(--olive); }
 .icecream-row { color: var(--sea); }
-.candy-icon, .icecream-icon { font-size: 18px; }
-.candy-icon.used { opacity: 0.25; filter: grayscale(1); }
 
-/* ===== 旅行地圖（羊皮紙風） ===== */
 .travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 16px; border-radius: 6px; margin: 0 26px 24px; box-shadow: inset 0 0 30px rgba(139,111,71,0.18); position: relative; }
 .travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 18px 6px rgba(139,111,71,0.25); pointer-events: none; }
 .map-title { font-size: 12px; color: var(--ink-soft); font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; text-align: center; }
@@ -60,19 +56,19 @@ h1 { text-align: center; font-size: 25px; letter-spacing: 4px; margin-bottom: 4p
 
 .story-box { background: rgba(217,138,108,0.07); border-left: 4px solid var(--sunset); padding: 14px 18px; margin-bottom: 18px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.85; }
 .story-text { font-size: 1.02em; line-height: 1.9; margin-bottom: 18px; padding: 22px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(255,255,255,0.45); text-align: left; white-space: pre-wrap; }
-.story-text .typewriter-line { opacity: 0; animation: lineRise .7s forwards; }
-@keyframes lineRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-.doors-container { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 18px; }
-.door-card { background: rgba(255,255,255,0.4); border: 2px solid var(--border-color); border-radius: 8px; padding: 16px 14px; text-align: center; cursor: pointer; transition: all 0.3s; }
+.doors-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+.door-card { background: rgba(255,255,255,0.4); border: 2px solid var(--border-color); border-radius: 8px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.3s; }
 .door-card:hover { border-color: var(--sunset); transform: translateY(-2px); }
-.door-name { font-weight: bold; color: var(--ink); font-size: 15px; }
-/* ===== 皮革背包道具欄 ===== */
+.door-card .compass-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+.door-name { font-weight: bold; color: var(--ink); font-size: 14px; }
+.door-tag { font-size: 10.5px; color: var(--ink-soft); margin-top: 3px; }
 .satchel { background: linear-gradient(160deg, #8a6745, #6e4f32); border-radius: 8px; padding: 12px 16px; margin: 0 26px 22px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.15); }
 .satchel-label { font-size: 11px; color: #e8d7b8; opacity: 0.8; margin-bottom: 6px; letter-spacing: 1px; font-weight: bold; }
 .satchel-items { display: flex; gap: 10px; flex-wrap: wrap; min-height: 34px; align-items: center; }
-.satchel-item { background: rgba(255,255,255,0.92); border-radius: 8px; padding: 5px 9px; font-size: 20px; cursor: pointer; transition: transform .2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.satchel-item { background: rgba(255,255,255,0.92); border-radius: 8px; padding: 5px 9px; font-size: 20px; cursor: pointer; transition: transform .2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; }
 .satchel-item:hover { transform: translateY(-3px) scale(1.08); }
+.satchel-item.selected { box-shadow: 0 0 0 3px var(--sunset), 0 2px 4px rgba(0,0,0,0.2); }
 .satchel-empty { color: #cbb792; font-size: 12px; font-style: italic; }
 
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30,22,14,0.78); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -98,6 +94,7 @@ textarea.ta-input { width: 100%; height: 110px; background: rgba(255,255,255,0.5
 
 button.action-btn { background: transparent; color: var(--sunset); border: 2px solid var(--sunset); padding: 13px 18px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 14px; letter-spacing: 2px; transition: all 0.3s; font-family: inherit; }
 button.action-btn:hover:not(:disabled) { background: var(--sunset); color: #fff; }
+button.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 button.candy-btn { border-color: var(--olive); color: var(--olive); margin-bottom: 14px; display: none; }
 button.candy-btn:hover { background: var(--olive); color: #fff; }
 button.icecream-btn { border-color: var(--sea); color: var(--sea); margin-bottom: 14px; display: none; }
@@ -110,6 +107,13 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 .hidden { display: none !important; }
 .word-count { text-align: right; font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
 
+/* ===== 序章：散落的羊皮紙排序拼圖 ===== */
+.scroll-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+.scroll-card { background: linear-gradient(135deg, #f0e6cc, #e3d4ab); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+.scroll-num { width: 26px; height: 26px; border-radius: 50%; background: var(--sunset); color: #fff; font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.scroll-text { flex: 1; font-size: 13.5px; line-height: 1.5; }
+.scroll-btns { display: flex; gap: 5px; flex-shrink: 0; }
+
 /* ===== 作者書房：照片翻轉 ===== */
 .photo-flip-wrap { perspective: 1000px; max-width: 280px; margin: 0 auto 20px; }
 .photo-flip { position: relative; width: 100%; height: 200px; transition: transform 0.7s; transform-style: preserve-3d; cursor: pointer; }
@@ -119,28 +123,18 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 .photo-back { background: var(--paper); transform: rotateY(180deg); font-size: 11.5px; line-height: 1.6; color: var(--ink); overflow-y: auto; }
 .photo-hint { text-align: center; font-size: 12px; color: var(--ink-soft); margin-bottom: 18px; }
 
-/* ===== 房5：麻繩書籤拉桿 ===== */
-.bookmark-wrap { position: relative; height: 240px; margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); background: linear-gradient(180deg, #f0e6cc 0%, #ddc9a3 100%); }
-.bookmark-veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(217,138,108,0) 0%, rgba(217,138,108,0.85) 100%); transition: clip-path .05s linear; clip-path: inset(0 0 100% 0); pointer-events: none; }
-.bookmark-hidden-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; font-size: 13.5px; line-height: 1.8; color: var(--ink); opacity: 0; transition: opacity .3s; }
-.bookmark-hidden-text.revealed { opacity: 1; }
-.bookmark-ribbon-track { position: absolute; top: 0; right: 28px; width: 4px; height: 100%; background: rgba(110,126,95,0.25); border-radius: 2px; }
-.bookmark-ribbon { position: absolute; top: 0; right: 16px; width: 28px; height: 60px; background: linear-gradient(180deg, #8a6745, #6e4f32); border-radius: 4px; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #f0e6cc; user-select: none; touch-action: none; }
-.bookmark-ribbon:active { cursor: grabbing; }
-.bookmark-prompt { text-align: center; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 18px; }
+/* ===== 羅盤探索機制 ===== */
+.compass-wrap { text-align: center; margin-bottom: 16px; }
+.compass-dial { font-size: 38px; display: inline-block; animation: compassSway 3s ease-in-out infinite; }
+@keyframes compassSway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.compass-label { font-size: 11.5px; color: var(--ink-soft); margin-top: 4px; letter-spacing: 1px; }
 
-/* ===== 房10：相片燒毀倒數 ===== */
-.photo-burn-wrap { text-align: center; margin-bottom: 20px; }
-.photo-burn { width: 200px; height: 150px; margin: 0 auto 14px; border-radius: 4px; border: 8px solid #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.3); background: linear-gradient(135deg, #e8c878, #d98a6c); display: flex; align-items: center; justify-content: center; font-size: 40px; transition: filter 1s linear, opacity 1s linear; }
-.burn-timer { font-family: "Courier New", monospace; font-size: 22px; font-weight: bold; color: var(--sunset); letter-spacing: 2px; background: rgba(0,0,0,0.06); display: inline-block; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border-color); }
-.burn-label { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
-
-/* ===== 終局合成槽 ===== */
-.combine-container { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
-.combine-slot { flex: 1; min-width: 76px; border: 2px dashed var(--ink-soft); padding: 14px; border-radius: 8px; text-align: center; cursor: pointer; color: var(--ink-soft); font-weight: bold; background: rgba(255,255,255,0.3); transition: all 0.3s; font-size: 24px; min-height: 70px; display: flex; align-items: center; justify-content: center; }
-.combine-slot:hover { border-color: var(--sunset); color: var(--sunset); }
-.combine-slot.active-slot { border-color: var(--sunset); border-style: solid; background: rgba(217,138,108,0.08); color: var(--ink); transform: scale(1.04); }
-.combine-slot.filled { border-color: var(--success-color); border-style: solid; }
+/* ===== 道具出示機關 ===== */
+.toll-gate { background: rgba(181,80,63,0.06); border: 1.5px dashed var(--error-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; text-align: center; }
+.toll-gate-label { font-size: 12.5px; color: var(--error-color); font-weight: bold; margin-bottom: 10px; }
+.toll-target { font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; }
+.toll-present-btn { background: var(--error-color); color: #fff; border: none; padding: 11px 20px; border-radius: 6px; cursor: pointer; font-size: 13.5px; font-weight: bold; font-family: inherit; }
+.toll-present-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ===== Bad End 回溯機制 ===== */
 .badend-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(20,16,12,0.92); z-index: 2000; display:flex; align-items:center; justify-content:center; padding: 20px; }
@@ -152,16 +146,15 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 .film-strip::after { content: "🎞️"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 28px; }
 .film-hint { font-size: 12px; color: #9c8e70; margin-top: 12px; letter-spacing: 1px; }
 
-/* ===== 結局動畫 ===== */
-.ending-stage { position: relative; min-height: 460px; width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px 24px; }
-.sunset-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 50% 75%, rgba(217,138,108,0.3) 0%, transparent 65%); animation: sunsetPulse 4s infinite alternate; }
-@keyframes sunsetPulse { 0% { opacity: 0.5; } 100% { opacity: 1; } }
-.silhouette { font-size: 56px; opacity: 0; animation: lineFadeIn 1.4s forwards; animation-delay: .2s; position: relative; z-index: 2; margin-bottom: 16px; }
-.ending-line { opacity: 0; font-size: 14.5px; line-height: 2.1; color: #d8cab0; text-align: center; max-width: 460px; margin-bottom: 10px; animation: lineFadeIn 1.2s forwards; position: relative; z-index: 2; }
+/* ===== 結局動畫（含插畫） ===== */
+.ending-stage { position: relative; width: 100%; max-width: 640px; display: flex; flex-direction: column; align-items: center; padding: 10px 20px 30px; }
+.ending-illustration { width: 100%; max-width: 560px; border-radius: 10px; overflow: hidden; opacity: 0; animation: illustFadeIn 2s forwards; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+@keyframes illustFadeIn { 0% { opacity: 0; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
+.ending-line { opacity: 0; font-size: 14px; line-height: 2; color: #d8cab0; text-align: center; max-width: 460px; margin-top: 10px; animation: lineFadeIn 1.2s forwards; }
 @keyframes lineFadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
-.ending-quote { font-size: 17px; font-weight: 700; color: #e8c878; margin: 22px 0; letter-spacing: 1px; opacity: 0; animation: lineFadeIn 1.2s forwards; position: relative; z-index: 2; text-shadow: 0 0 18px rgba(232,200,120,0.4); }
-.ending-final-title { font-size: 30px; font-weight: 700; letter-spacing: 6px; color: #f0dca0; margin-top: 24px; opacity: 0; animation: lineFadeIn 1.5s forwards; position: relative; z-index: 2; text-shadow: 0 0 24px rgba(240,220,160,0.5); }
-.ending-sub { font-size: 13px; color: #a8987a; margin-top: 10px; opacity: 0; animation: lineFadeIn 1.5s forwards; position: relative; z-index: 2; letter-spacing: 1px; text-align: center; }
+.ending-quote { font-size: 16px; font-weight: 700; color: #e8c878; margin: 18px 0 6px; letter-spacing: 1px; opacity: 0; animation: lineFadeIn 1.2s forwards; text-shadow: 0 0 18px rgba(232,200,120,0.4); text-align: center; }
+.ending-final-title { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: #f0dca0; margin-top: 18px; opacity: 0; animation: lineFadeIn 1.5s forwards; text-shadow: 0 0 24px rgba(240,220,160,0.5); }
+.ending-sub { font-size: 12.5px; color: #a8987a; margin-top: 10px; opacity: 0; animation: lineFadeIn 1.5s forwards; letter-spacing: 1px; text-align: center; }
 </style>
 </head>
 <body>
@@ -179,12 +172,12 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 
   <div id="login-section">
     <h1>另一個春天</h1>
-    <div class="subtitle">旅行札記 // 希臘的春天紀行</div>
+    <div class="subtitle">旅行札記 2.0 // 希臘的春天紀行</div>
     <div class="quiz-card" style="text-align:center;">
       <div class="story-box" style="text-align:left;">
-        【日記扉頁】... 翻開這本舊舊的旅行日記，紙頁間還留著淡淡的橄欖香氣。<br><br>
+        【日記扉頁】... 翻開這本舊舊的旅行日記，紙頁卻散落了一地，順序全都亂了。<br><br>
         一位戴著老花眼鏡、背著舊藤袋的老太太，將要帶你走過希臘的春天，也走進她生命裡，那段關於勇氣與熱情的旅程。<br><br>
-        ⚠️ 請仔細閱讀每一段文字，蒐集信物，解開謎題，找回屬於老太太的「另一個春天」。
+        ⚠️ 在出發之前，請先把記憶的碎片重新拼回正確的順序，喚醒這段旅程的記憶。
       </div>
       <div class="question-text">請在日記封面署名（班級座號姓名）：</div>
       <input type="text" id="student-id" class="text-input" placeholder="例如：801號 王小明">
@@ -233,15 +226,15 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 <script>
 // ================= 道具資料庫（9個信物） =================
 const itemDB = {
-  '🥽': { title:"老花眼鏡", desc:"老太太的老花眼鏡，象徵她已不再年輕，卻仍勇敢上路。", inspect:"鏡片擦亮後，內側刻著一行細字：『看得清世界，才看得清自己。』" },
-  '🧺': { title:"舊藤袋", desc:"老太太隨身攜帶的舊藤袋，邊角已經磨損，是她年邁卻仍堅持旅行的象徵。", inspect:"藤袋裡還殘留著淡淡的橄欖油氣味，似乎裝過不少乾糧。" },
+  '🧺': { title:"舊藤袋", desc:"老太太隨身攜帶的舊藤袋，是她年邁卻仍堅持旅行的象徵。", inspect:"藤袋裡還殘留著淡淡的橄欖油氣味，似乎裝過不少乾糧。" },
   '🍬': { title:"薄荷軟糖", desc:"老太太主動分享給作者的薄荷軟糖，是兩人初遇時善意的起點。", inspect:"糖紙上印著小小的希臘文字，包裝已經有些褪色。" },
-  '📷': { title:"老太太拍作者的照片", desc:"老太太偷拍作者的照片，翻到背面似乎還藏著別的東西。", inspect:"翻過來看看，背面或許藏著作者的介紹資料……" },
-  '💐': { title:"野雛菊花束", desc:"廣場上採來的野雛菊，用心包紮成一束花，準備送給老太太。", inspect:"花束雖然樸素，卻是作者表達善意與歉意的心意。" },
+  '💐': { title:"野雛菊花束", desc:"廣場上採來的野雛菊，用心包紮成一束花，準備送給老太太。", inspect:"花束雖然樸素，卻是作者表達善意的心意。" },
+  '📷': { title:"老太太拍作者的照片", desc:"老太太偷拍作者的照片，翻到背面藏著作者介紹。", inspect:"翻過來看看，背面藏著作者的介紹資料，或許是進入神殿的關鍵。" },
   '🪨': { title:"塔列斯石刻", desc:"阿波羅神殿深處找到的古老石刻殘片，刻有一句千古箴言。", inspect:"石刻背面刻著：『認識你自己。』這正是德爾菲神殿最有名的箴言，也呼應了老太太面對生命的態度。" },
-  '🍦': { title:"冰淇淋（信物）", desc:"冰淇淋車給的紀念信物，包裝紙上似乎印著線索。", inspect:"包裝紙背面畫著一根石柱，柱子上有個記號：『第三根石柱的縫隙，藏著答案。』" },
+  '🍦': { title:"冰淇淋（信物）", desc:"冰淇淋車給的紀念信物，準備拿給山下等待的老太太。", inspect:"冰涼的觸感讓人聯想到希臘夏天的陽光。" },
   '🍞': { title:"乾麵包與橘子", desc:"旅店餐廳裡，老太太為了省錢而打包的簡單午餐。", inspect:"麵包已經有點乾硬，卻是老太太為了實現夢想而甘願節儉的證明。" },
-  '💧': { title:"老太太的淚水", desc:"老太太收下卡帶後，悄悄滑落的淚水，凝結成一顆溫潤的水珠。", inspect:"水珠裡彷彿映照著老太太一路走來的身影——堅強、樂觀，卻也有著最柔軟的時刻。" }
+  '💧': { title:"老太太的淚水", desc:"老太太收下卡帶後，悄悄滑落的淚水，凝結成一顆溫潤的水珠。", inspect:"水珠裡彷彿映照著老太太一路走來的身影——堅強、樂觀，卻也有著最柔軟的時刻。" },
+  '📼': { title:"中文音樂卡帶", desc:"作者準備送給老太太的告別禮物。", inspect:"卡帶背面寫著：『送給願意陪我看世界的人。』" }
 };
 
 function getItemInfo(rawIcon) {
@@ -251,157 +244,201 @@ function getItemInfo(rawIcon) {
   return { title:"未知信物", desc:"尚未能辨識的物件。", inspect:"沒有發現特別之處。" };
 }
 
-// ================= 字音字形題庫（7題，依序對應觸發點） =================
-// 第1-2題：雅典巴士 / 第3-4題：冰淇淋車 / 第5題：阿波羅神殿 / 第6-7題：競技場
+// ================= 序章：8大事件排序 =================
+const prologueEvents = [
+  {id:"A",text:"巴士上遇見老太太"},
+  {id:"B",text:"老太太偷拍作者"},
+  {id:"C",text:"作者送她一束野雛菊"},
+  {id:"D",text:"一同參觀阿波羅神殿"},
+  {id:"E",text:"老太太留在山下等作者"},
+  {id:"F",text:"愛琴海上再次相逢"},
+  {id:"G",text:"老太太省下午餐錢繼續旅行"},
+  {id:"H",text:"老太太談起自己的旅行哲學"}
+];
+const prologueAns = ["A","B","C","D","E","F","G","H"];
 
-// ================= 10大景點資料 =================
+// ================= 景點資料 =================
 const rooms = {
+  // ---- 序章 ----
+  "r0_prologue": { name:"散落的手札", type:"prologue", onClear:"r1_bus" },
+
   // ---- 景點1：雅典巴士 ----
   "r1_bus": {
-    name:"雅典巴士", type:"quiz", qIdx:"字音1",
-    story:"【場景】空盪盪的巴士車廂，引擎低鳴。你在後座夾縫中「鑽」進去，搜出一只舊藤袋，打開後找到一副老花眼鏡。鏡片上滿是霧氣，旁邊用鉛筆寫著一行小字：「請查明『陰霾』的注音，才能擦亮鏡片。」",
+    name:"雅典巴士", type:"nav",
+    story:"【場景】空盪盪的巴士車廂，引擎低鳴。羅盤的指針微微晃動，似乎在引導你選擇方向。",
+    exits:[
+      { dir:"向東探索", tag:"撞見行李堆（支線）", target:"r1_side" },
+      { dir:"向北深入", tag:"走向前座（主線）", target:"r1b_meet" }
+    ]
+  },
+  "r1_side": {
+    name:"巴士行李堆（支線）", type:"quiz", qIdx:"字音-側", isSide:true,
+    story:"【支線】你撞上後座的行李堆，灰塵揚起。行李箱上貼著一張褪色的小紙條，寫著形音義謎題。",
     q:"陰「霾」的「霾」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"},{id:"D",text:"ㄋㄞˊ"}],
-    ans:"A", rewardItem:"🥽", onClear:"r1b_bus2"
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
   },
-  "r1b_bus2": {
-    name:"雅典巴士（續）", type:"quiz", qIdx:"字音2",
-    story:"【鏡片微亮】霧氣散去一半，鏡片邊緣又浮現一行字：「遮『掩』不住的，又是哪個注音呢？」",
-    q:"「掩」不住的「掩」字注音是？", qType:"single",
-    opts:[{id:"A",text:"ㄧㄢˇ"},{id:"B",text:"ㄧㄢˋ"},{id:"C",text:"ㄧㄤˇ"},{id:"D",text:"ㄢˇ"}],
-    ans:"A", rewardItem:"🧺", onClear:"r1c_bus3"
-  },
-  "r1c_bus3": {
+  "r1b_meet": {
     name:"雅典巴士（初遇）", type:"quiz", qIdx:2,
-    story:"【鏡片擦亮】霧氣全部散去，前座的老太太緩緩轉過頭來，對你露出靦腆的微笑，大方遞上一顆薄荷軟糖，又從舊藤袋裡翻出一張照片，順手交給了你。",
+    story:"【主線】你走向前座，發現一位戴著老花眼鏡、背著舊藤袋的老太太。她調查了一下藤袋，翻出一顆薄荷軟糖，大方遞給你，臉上帶著靦腆的微笑。",
     q:"關於老太太初遇時的外表與行為，下列敘述正確的有哪些？（複選）", qType:"multi",
     opts:[{id:"A",text:"身形微胖"},{id:"B",text:"穿著時髦新潮"},{id:"C",text:"打扮略顯過時"},{id:"D",text:"神情略帶害羞"},{id:"E",text:"主動分享薄荷軟糖"},{id:"F",text:"態度十分高傲，不願與人交談"}],
-    ans:["A","C","D","E"], rewardItem:"📷", givesCandy:true, onClear:"r2_study"
+    ans:["A","C","D","E"], rewardItem:"🧺", givesCandy:true, onClear:"r1c_reward"
+  },
+  "r1c_reward": {
+    name:"雅典巴士（軟糖）", type:"itemget",
+    story:"【收穫】老太太笑著又掏出一顆薄荷軟糖塞進你手裡：『年輕人，路還長呢，吃顆糖吧！』",
+    rewardItem:"🍬", onClear:"r2_plaza"
   },
 
-  // ---- 景點2：作者書房（獨立小房間） ----
-  "r2_study": {
-    name:"作者書房", type:"author",
-    story:"【場景】你捧著那張照片，眼前景象忽然一變——來到一間擺滿國際志工照片的書房。桌上的相框裡，正是老太太偷拍作者的那張照片。輕輕翻到背面，似乎藏著什麼……",
-    onClear:"r3_icecream"
+  // ---- 景點2：德爾菲廣場 ----
+  "r2_plaza": {
+    name:"德爾菲廣場", type:"nav",
+    story:"【場景】陽光灑落的歐洲小鎮廣場。羅盤又開始晃動，廣場上似乎有不只一個角落值得探索。",
+    exits:[
+      { dir:"向西搜尋", tag:"廣場長椅與草叢（主線）", target:"r2_gather" },
+      { dir:"向北深入", tag:"廣場中央（後續劇情）", target:"r2_gather" }
+    ]
   },
-
-  // ---- 景點3：冰淇淋車（字音字形房1） ----
-  "r3_icecream": {
-    name:"冰淇淋車", type:"quiz", qIdx:"字音3",
-    story:"【場景】德爾菲廣場旁，一台無人看管的冰淇淋車安靜地停著。櫃子被一道轉盤密碼鎖鎖住，上面寫著形音義謎題。",
-    q:"「神采奕奕」的意思是？", qType:"single",
-    opts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"},{id:"D",text:"匆忙慌張，手足無措"}],
-    ans:"A", rewardItem:null, onClear:"r3b_icecream2"
+  "r2_gather": {
+    name:"廣場搜查", type:"quiz", qIdx:"字音1",
+    story:"【搜查】你在廣場長椅拾取一張包裝紙，又在草叢裡採集到一束野雛菊，將兩者紮成一束花。一旁的告示牌上寫著形音義謎題，似乎要先解開才能繼續。",
+    q:"遮「掩」不住的「掩」字注音是？", qType:"single",
+    opts:[{id:"A",text:"ㄧㄢˇ"},{id:"B",text:"ㄧㄢˋ"},{id:"C",text:"ㄧㄤˇ"},{id:"D",text:"ㄢˇ"}],
+    ans:"A", rewardItem:"💐", onClear:"r2b_photo"
   },
-  "r3b_icecream2": {
-    name:"冰淇淋車（續）", type:"quiz", qIdx:"字音4",
-    story:"【第二道轉盤】轉盤上接著浮現第二道題目。",
+  "r2b_photo": {
+    name:"廣場中央（偷拍）", type:"quiz", qIdx:"字音2",
+    story:"【喀擦！】廣場中央，老太太忽然拿起相機，對你按下快門。她有些不好意思地笑了笑。告示牌上又浮現一道謎題。",
     q:"羞「赧」的「赧」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄋㄢˇ"},{id:"B",text:"ㄈㄢˇ"},{id:"C",text:"ㄗㄢˇ"},{id:"D",text:"ㄉㄢˇ"}],
-    ans:"A", rewardItem:"🍦", givesIcecream:true, onClear:"r4_plaza"
+    ans:"A", rewardItem:"📷", onClear:"r2c_gift"
   },
-
-  // ---- 景點4：德爾菲廣場 ----
-  "r4_plaza": {
-    name:"德爾菲廣場", type:"quiz", qIdx:4,
-    story:"【場景】陽光灑落的歐洲小鎮廣場，老太太正站在中央，望著遠方的石階發呆。你在草叢裡「鑽」進去，採集到一束野雛菊，並用隨身的包裝紙仔細紮成一束花，準備送給她。",
+  "r2c_gift": {
+    name:"獻上花束", type:"toll",
+    story:"【關鍵行動】老太太還因為偷拍而有些羞赧，你決定把手中的花束送給她，化解這份不好意思。",
+    tollItem:"💐", tollPrompt:"請從背包中點選【野雛菊花束】，再按下「出示」獻給老太太",
+    onUnlock:"r2d_author"
+  },
+  "r2d_author": {
+    name:"作者書房", type:"author",
+    story:"【場景】老太太收下花束，笑得燦爛。她從藤袋裡又拿出那張偷拍的照片遞給你。你翻到背面，似乎藏著什麼——",
+    onClear:"r2e_kindness"
+  },
+  "r2e_kindness": {
+    name:"德爾菲廣場（善意）", type:"quiz", qIdx:4,
+    story:"【善意的瞬間】老太太溫柔地看著你，彷彿在回憶這趟旅程中，你曾經做過的每一件小事。",
     q:"文本中，哪些作者的行為可以看出他具備「善意」？（複選）", qType:"multi",
     opts:[{id:"A",text:"被偷拍沒有生氣，反而主動送花"},{id:"B",text:"耐心陪著老太太爬石階"},{id:"C",text:"離別時送上中文音樂卡帶"},{id:"D",text:"嫌棄老太太走得太慢而獨自離開"},{id:"E",text:"取笑老太太的穿著過時"}],
-    ans:["A","B","C"], rewardItem:"💐", onClear:"r5_temple"
+    ans:["A","B","C"], rewardItem:"📼", onClear:"r3_temple_gate"
   },
 
-  // ---- 景點5：阿波羅神殿（麻繩書籤機關＋性格配對＋字音） ----
-  "r5_temple": {
-    name:"阿波羅神殿", type:"bookmark",
-    story:"【場景】壯麗的巨大石柱群矗立眼前，但陽光刺眼，你看不清石柱上的刻字。日記頁緣垂下一條麻繩書籤——試著把它輕輕拉下來，讓夕陽的暈染透出隱藏的字跡吧。",
-    revealText:"隨著書籤滑落，金黃色的光暈緩緩鋪展開來，石柱上的刻字逐漸清晰：\n\n『折半條軟糖分給作者，是慷慨；反覆撫摸石刻、若有所思，是求知的渴望；下雪時翻看照片回憶起希臘的春天，是用回憶滋養生命的方式。』\n\n你終於看懂了老太太每一個細微動作背後的心意。",
-    onClear:"r5b_temple2"
+  // ---- 景點3：阿波羅神殿（道具門票） ----
+  "r3_temple_gate": {
+    name:"阿波羅神殿（神像守衛）", type:"toll",
+    story:"【❌ 限制區域】陡峭的石階山腳下，一尊巨大的阿波羅神像擋住去路。神像低語：『要進入聖殿，需出示能證明你身分的信物。』",
+    tollItem:"📷", tollPrompt:"請從背包中點選【老太太拍作者的照片】，出示給神像作為通行證",
+    extraCheck:"author_name", extraPrompt:"神像又問：『這位作者的姓名是？』",
+    onUnlock:"r3_temple_in"
   },
-  "r5b_temple2": {
-    name:"阿波羅神殿（性格配對）", type:"quiz", qIdx:3,
-    story:"【石柱顯字】手指拂過石柱上的刻痕，你開始思索老太太的行為與性格之間的關聯。",
-    q:"下列哪一項「行為」與「性格特質」的配對是正確的？", qType:"single",
-    opts:[{id:"A",text:"折半條軟糖分給作者 → 慷慨"},{id:"B",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"C",text:"下雪時看照片回憶春天 → 健忘"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
-    ans:"A", rewardItem:null, onClear:"r5c_temple3"
+  "r3_temple_in": {
+    name:"阿波羅神殿", type:"quiz", qIdx:"5上",
+    story:"【場景】神殿大門開啟，但石階陡峭，老太太爬得氣喘吁吁，最後決定留在山下等你。臨別前，她推了你一把，笑著說：『年輕人！值得用一輩子換的美景呢！我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！』",
+    q:"老太太這段話，最能呼應她怎樣的人生態度？", qType:"single",
+    opts:[{id:"A",text:"及時行樂，把握當下，積極樂觀地面對人生"},{id:"B",text:"凡事小心謹慎，避免犯錯"},{id:"C",text:"金錢至上，旅行只是炫耀的方式"},{id:"D",text:"消極悲觀，認為人生苦短不值得努力"}],
+    ans:"A", rewardItem:null, onClear:"r3b_stone"
   },
-  "r5c_temple3": {
-    name:"阿波羅神殿（石刻謎題）", type:"quiz", qIdx:"字音5",
-    story:"【深處的石刻】根據冰淇淋包裝紙上的線索，你找到第三根石柱的縫隙，「鑽」進殘壁深處，發現一片塔列斯石刻。石刻背後刻著任務：「要帶走我，請先查明『抑遏』的『遏』字注音。」",
-    q:"「抑遏」的「遏」字注音是？", qType:"single",
-    opts:[{id:"A",text:"ㄜˋ"},{id:"B",text:"ㄍㄜˊ"},{id:"C",text:"ㄧㄝˋ"},{id:"D",text:"ㄜˊ"}],
-    ans:"A", rewardItem:"🪨", onClear:"r6_theater"
-  },
-
-  // ---- 景點6：古劇場（排序題） ----
-  "r6_theater": {
-    name:"古劇場", type:"quiz", qIdx:1,
-    story:"【場景】環形的古希臘大劇場，中央矗立著四座巨大的圓形石台，各自刻著一段課文情節。你必須依照故事發生的時間順序，重新排列石台。",
-    q:"請依照故事發生順序排列下列情節：", qType:"sort",
-    opts:[
-      {id:"A",text:"在巴士上分享薄荷軟糖"},
-      {id:"D",text:"在廣場收下雛菊，陪伴爬石階"},
-      {id:"B",text:"在渡輪上吃乾麵包當午餐"},
-      {id:"C",text:"送上中文卡帶，老太太流淚分享哲學"}
-    ],
-    ans:["A","D","B","C"], rewardItem:null, onClear:"r7_arena"
+  "r3b_stone": {
+    name:"神殿廢墟（石刻）", type:"itemget",
+    story:"【拾獲】你獨自走進神殿廢墟的角落，發現一片古老的石刻殘片，輕輕拂去塵土，上面浮現一行字：『人需要了解自我。』",
+    rewardItem:"🪨", onClear:"r4_icecream_gate"
   },
 
-  // ---- 景點7：競技場（字音字形房2） ----
-  "r7_arena": {
-    name:"競技場", type:"quiz", qIdx:"字音6",
-    story:"【場景】荒涼的圓形競技場，終點是一道沉重的鐵柵欄。石壁上刻著最後一組形音義考題。",
-    q:"「拮据」的注音與意思，下列何者正確？", qType:"single",
-    opts:[{id:"A",text:"ㄐㄧㄝˊ ㄐㄩ，經濟困難"},{id:"B",text:"ㄐㄧㄝˊ ㄐㄩˋ，動作敏捷"},{id:"C",text:"ㄐㄧㄝˋ ㄐㄩ，借貸度日"},{id:"D",text:"ㄐㄧㄝˊ ㄍㄨ，緊張不安"}],
-    ans:"A", rewardItem:null, onClear:"r7b_arena2"
+  // ---- 景點4：冰淇淋車 ----
+  "r4_icecream_gate": {
+    name:"小鎮出口", type:"nav",
+    story:"【場景】下山後，你來到德爾菲小鎮的出口。羅盤又開始晃動。",
+    exits:[
+      { dir:"向北深入", tag:"彩色冰淇淋車（主線）", target:"r4_icecream" },
+      { dir:"向東探索", tag:"巷弄裡的石壁（支線）", target:"r4_side" }
+    ]
   },
-  "r7b_arena2": {
-    name:"競技場（續）", type:"quiz", qIdx:"字音7",
-    story:"【鐵柵欄微微震動】只差最後一題，鐵柵欄就會應聲而起。",
+  "r4_side": {
+    name:"巷弄石壁（支線）", type:"quiz", qIdx:"字音-側2", isSide:true,
+    story:"【支線】巷弄深處的石壁上，刻著殘缺的字句，似乎在等待有人解開。",
+    q:"「神采奕奕」的意思是？", qType:"single",
+    opts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"},{id:"D",text:"匆忙慌張，手足無措"}],
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r4_icecream"
+  },
+  "r4_icecream": {
+    name:"冰淇淋車", type:"quiz", qIdx:"字音3",
+    story:"【場景】一輛彩色的冰淇淋車安靜地停著。老闆笑咪咪地說：『校正一下招牌上的字，我請你吃冰淇淋！』",
     q:"「潸潸」的注音與意思，下列何者正確？", qType:"single",
     opts:[{id:"A",text:"ㄕㄢ ㄕㄢ，流淚的樣子"},{id:"B",text:"ㄕㄢˋ ㄕㄢˋ，閃爍的樣子"},{id:"C",text:"ㄔㄢˊ ㄔㄢˊ，緩慢的樣子"},{id:"D",text:"ㄕㄢ ㄕㄢˇ，搖晃的樣子"}],
-    ans:"A", rewardItem:null, onClear:"r8_ferry"
+    ans:"A", rewardItem:"🍦", onClear:"r4b_deliver"
+  },
+  "r4b_deliver": {
+    name:"獻上冰淇淋", type:"toll",
+    story:"【關鍵行動】你拿著冰淇淋，快步走回山下，老太太正在等你。",
+    tollItem:"🍦", tollPrompt:"請從背包中點選【冰淇淋】，出示給山下等待的老太太",
+    onUnlock:"r5_restaurant"
   },
 
-  // ---- 景點8：愛琴海船上 ----
-  "r8_ferry": {
-    name:"愛琴海船上", type:"quiz", qIdx:5,
-    story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。老太太坐在甲板邊，望著海面，輕聲說了幾句話。",
-    q:"老太太說：「年輕人！值得用一輩子換的美景呢！我沒有時間流淚，也沒有時間悲傷，這就是我的哲學。」這段話最能呼應她怎樣的人生態度？", qType:"single",
-    opts:[{id:"A",text:"及時行樂，把握當下，積極樂觀地面對人生"},{id:"B",text:"凡事小心謹慎，避免犯錯"},{id:"C",text:"金錢至上，旅行只是炫耀的方式"},{id:"D",text:"消極悲觀，認為人生苦短不值得努力"}],
-    ans:"A", rewardItem:null, onClear:"r8b_ferry2"
-  },
-  "r8b_ferry2": {
-    name:"愛琴海船上（續）", type:"quiz", qIdx:7,
-    story:"【海風中的思索】望著老太太堅毅的側臉，你想起她一路走來的種種堅持。",
-    q:"下列哪些行為，讓作者體會到老太太的勇敢與生命的熱情？（複選）", qType:"multi",
-    opts:[{id:"A",text:"省吃儉用，靠乾麵包果腹"},{id:"B",text:"語言不通，仍獨自出國旅行"},{id:"C",text:"氣喘吁吁，仍堅持爬完神殿石階"},{id:"D",text:"抱怨旅途辛苦，後悔出門"},{id:"E",text:"依賴旅行團安排，從不獨立行動"}],
-    ans:["A","B","C"], rewardItem:null, onClear:"r9_restaurant"
-  },
-
-  // ---- 景點9：旅店餐廳 ----
-  "r9_restaurant": {
+  // ---- 景點5：旅店餐廳 ----
+  "r5_restaurant": {
     name:"旅店餐廳", type:"quiz", qIdx:6,
-    story:"【場景】陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，擺著老太太為了省錢而打包的簡單午餐——乾麵包和橘子。",
+    story:"【場景】傍晚時分，陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，老太太正打包著簡單的午餐——乾麵包和橘子。",
     q:"老太太旅行的核心夢想是什麼？", qType:"single",
     opts:[{id:"A",text:"成為知名的旅遊作家"},{id:"B",text:"在有限的生命裡，盡可能看看廣大的世界"},{id:"C",text:"找到一份穩定的工作"},{id:"D",text:"證明自己比年輕人更厲害"}],
-    ans:"B", rewardItem:"🍞", onClear:"r10_port"
+    ans:"B", rewardItem:"🍞", onClear:"r6_ferry"
   },
 
-  // ---- 景點10：夕陽港口（終局） ----
-  "r10_port": {
-    name:"夕陽港口", type:"portstory",
-    story:"【場景】金黃色夕陽灑落的無人港口，遠處渡輪已緩緩駛離。你從背包取出中文音樂卡帶，輕輕交到老太太手中。她愣了一下，隨即眼眶泛紅，一滴淚水滑落臉頰，化成一顆溫潤的水珠。",
-    onClear:"r10b_safe"
+  // ---- 景點6：愛琴海船上 ----
+  "r6_ferry": {
+    name:"愛琴海船上（再次相逢）", type:"quiz", qIdx:3,
+    story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。甲板上，你又遇見了老太太，她正安靜地啃著打包的乾麵包和橘子。望著她專注的神情，你想起了一路上她的種種行為。",
+    q:"下列哪一項「行為」與「性格特質」的配對是正確的？", qType:"single",
+    opts:[{id:"A",text:"折半條軟糖分給作者 → 慷慨"},{id:"B",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"C",text:"下雪時看照片回憶春天 → 健忘"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
+    ans:"A", rewardItem:null, onClear:"r6b_tears"
   },
-  "r10b_safe": {
-    name:"記憶的保險箱", type:"combine", target:["🪨","🍞","💧"], resIcon:"🔑", resName:"生命熱情之鑰", combineCount:3,
-    story:"【終極機關】港口邊有一只古老的保險箱，上面有三個凹槽。你必須將象徵老太太生命熱烈精神的三件信物，依序放入：塔列斯石刻（了解自我）、乾麵包與橘子（為夢想節儉）、老太太的淚水（感動與熱情）。",
-    onUnlock:"r10c_final"
+  "r6b_tears": {
+    name:"愛琴海船上（淚水）", type:"itemget",
+    story:"【情節催化】你將隨身攜帶的中文音樂卡帶交給老太太。她愣了一下，隨即眼眶泛紅，一滴淚水滑落臉頰，化成一顆溫潤的水珠，自動收進了你的背包。",
+    rewardItem:"💧", onClear:"r7_port_gate"
   },
-  "r10c_final": {
-    name:"終極思辨", type:"photoburn", qIdx:8,
-    story:"【保險箱開啟】箱中浮現出最後一道謎題，這是老太太想問你的話：",
+
+  // ---- 景點7：夕陽港口（終極密室） ----
+  "r7_port_gate": {
+    name:"夕陽港口", type:"quiz", qIdx:"字音4",
+    story:"【場景】巨輪靠岸，碼頭上人群雜沓，金黃色的夕陽灑落。你看見一只古老的黃銅保險箱，上面刻著形音義謎題。",
+    q:"人群「雜沓」的「沓」字注音是？", qType:"single",
+    opts:[{id:"A",text:"ㄊㄚˋ"},{id:"B",text:"ㄉㄚˊ"},{id:"C",text:"ㄋㄚˋ"},{id:"D",text:"ㄓㄚˊ"}],
+    ans:"A", rewardItem:null, onClear:"r7b_safe"
+  },
+  "r7b_safe": {
+    name:"記憶的保險箱", type:"combine", target:["🪨","💧"], resIcon:"🔑", resName:"生命熱情之鑰", combineCount:2,
+    story:"【終極機關】保險箱上有兩個凹槽。你必須將塔列斯石刻（了解自我）與老太太的淚水（感動與熱情）依序鑲入，箱子才會震動開啟。",
+    onUnlock:"r7c_final1"
+  },
+  "r7c_final1": {
+    name:"保險箱開啟", type:"quiz", qIdx:"5下",
+    story:"【保險箱開啟】老太太的聲音彷彿在耳邊響起：『年輕人，我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！』",
+    q:"老太太說「沒有時間流淚，也沒有時間悲傷」，這句話最能表現出她怎樣的生命態度？", qType:"single",
+    opts:[{id:"A",text:"珍惜時間，把握當下，不沉溺於負面情緒"},{id:"B",text:"壓抑情感，假裝堅強"},{id:"C",text:"對悲傷的事毫不在乎"},{id:"D",text:"認為哭泣是軟弱的表現，應該避免"}],
+    ans:"A", rewardItem:null, onClear:"r7d_final2"
+  },
+  "r7d_final2": {
+    name:"勇敢與熱情", type:"quiz", qIdx:7,
+    story:"【最後的提問】望著保險箱中的信物，你更加理解老太太一路走來的堅持。",
+    q:"下列哪些行為，讓作者體會到老太太的勇敢與生命的熱情？（複選）", qType:"multi",
+    opts:[{id:"A",text:"省吃儉用，靠乾麵包果腹"},{id:"B",text:"語言不通，仍獨自出國旅行"},{id:"C",text:"氣喘吁吁，仍堅持爬完神殿石階"},{id:"D",text:"抱怨旅途辛苦，後悔出門"},{id:"E",text:"依賴旅行團安排，從不獨立行動"}],
+    ans:["A","B","C"], rewardItem:null, onClear:"r8_final"
+  },
+
+  // ---- 終點站：旅行手札室 ----
+  "r8_final": {
+    name:"旅行手札室", type:"quiz", qIdx:8,
+    story:"【終章】老太太的身影漸漸遠去，消失在登機口的人群中。你翻開日記本的最後一頁，發光的簽名欄浮現出最後一個問題。",
     q:"「另一個春天」的深層涵義是什麼？請寫下你的想法（至少15字）：", qType:"short", minW:15,
     rewardItem:null, onClear:"r_end"
   },
@@ -409,28 +446,91 @@ const rooms = {
 };
 
 const mapLayoutOrder = [
-  "r1_bus","r1b_bus2","r1c_bus3","r2_study","r3_icecream",
-  "r3b_icecream2","r4_plaza","r5_temple","r5b_temple2","r5c_temple3",
-  "r6_theater","r7_arena","r7b_arena2","r8_ferry","r8b_ferry2",
-  "r9_restaurant","r10_port","r10b_safe","r10c_final","r_end"
+  "r0_prologue","r1_bus","r1_side","r1b_meet","r1c_reward",
+  "r2_plaza","r2_gather","r2b_photo","r2c_gift","r2d_author",
+  "r2e_kindness","r3_temple_gate","r3_temple_in","r3b_stone","r4_icecream_gate",
+  "r4_side","r4_icecream","r4b_deliver","r5_restaurant","r6_ferry",
+  "r6b_tears","r7_port_gate","r7b_safe","r7c_final1","r7d_final2",
+  "r8_final","r_end"
 ];
+</script>
+<script>
+const endingIllustrationSVG = `
+<svg width="100%" viewBox="0 0 680 480" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>老太太背著舊藤袋走向飛機，迎向夕陽的插畫風剪影</title>
+<defs>
+<linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#f4d9a8"/>
+<stop offset="40%" stop-color="#e8a87c"/>
+<stop offset="75%" stop-color="#d98a6c"/>
+<stop offset="100%" stop-color="#c97456"/>
+</linearGradient>
+<linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#e8956b"/>
+<stop offset="100%" stop-color="#a85d52"/>
+</linearGradient>
+<radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#fff3da" stop-opacity="0.95"/>
+<stop offset="60%" stop-color="#f7c873" stop-opacity="0.5"/>
+<stop offset="100%" stop-color="#f7c873" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect x="0" y="0" width="680" height="320" fill="url(#skyGrad)"/>
+<rect x="0" y="320" width="680" height="160" fill="url(#seaGrad)"/>
+<circle cx="490" cy="230" r="95" fill="url(#sunGlow)"/>
+<circle cx="490" cy="230" r="48" fill="#fbe7b8"/>
+<g opacity="0.35">
+<ellipse cx="120" cy="90" rx="70" ry="14" fill="#fff3da"/>
+<ellipse cx="170" cy="100" rx="50" ry="11" fill="#fff3da"/>
+<ellipse cx="560" cy="70" rx="60" ry="12" fill="#fff3da"/>
+</g>
+<path d="M0 330 Q170 312 340 328 T680 322 L680 340 Q510 350 340 340 T0 348 Z" fill="#c9684f" opacity="0.55"/>
+<path d="M0 345 Q200 330 400 345 T680 340 L680 360 Q480 372 280 358 T0 366 Z" fill="#b85c46" opacity="0.6"/>
+<g transform="translate(560,150)">
+<path d="M0 0 L130 18 L132 26 L40 22 L18 40 L4 38 L14 22 L-30 18 Z" fill="#5a3d34" opacity="0.85"/>
+<path d="M40 22 L60 -14 L70 -12 L56 23 Z" fill="#5a3d34" opacity="0.85"/>
+<path d="M44 24 L70 50 L62 52 L36 27 Z" fill="#5a3d34" opacity="0.85"/>
+</g>
+<g transform="translate(258,300)">
+<ellipse cx="40" cy="148" rx="46" ry="9" fill="#6e4f32" opacity="0.3"/>
+<path d="M16 60 Q10 95 16 140 L26 140 Q24 100 30 64 Z" fill="#3a3028"/>
+<path d="M54 60 Q60 98 56 140 L46 140 Q48 100 42 64 Z" fill="#2e261f"/>
+<path d="M8 18 Q4 55 14 70 Q36 80 60 68 Q68 50 62 16 Q50 2 36 2 Q18 2 8 18 Z" fill="#7a5440"/>
+<path d="M58 30 Q82 22 92 38 Q90 46 78 46 Q64 44 56 36 Z" fill="#6e4630"/>
+<circle cx="34" cy="-10" r="17" fill="#e8b896"/>
+<path d="M18 -16 Q20 -32 36 -32 Q52 -30 52 -14 Q48 -22 36 -22 Q22 -22 18 -16 Z" fill="#d8d2c4"/>
+<rect x="22" y="-2" width="24" height="7" rx="2" fill="#2c2520" opacity="0.7"/>
+<circle cx="28" cy="1" r="3" fill="none" stroke="#2c2520" stroke-width="1"/>
+<circle cx="40" cy="1" r="3" fill="none" stroke="#2c2520" stroke-width="1"/>
+<g transform="translate(60,40) rotate(18)">
+<circle cx="0" cy="0" r="7" fill="#f6e6c8"/>
+<circle cx="-5" cy="9" r="7" fill="#fff"/>
+<circle cx="6" cy="10" r="6" fill="#f6e6c8"/>
+<path d="M0 16 L2 30" stroke="#7a8c5a" stroke-width="2"/>
+</g>
+</g>
+<g opacity="0.9">
+<path d="M120 380 Q200 360 290 380 T460 378" fill="none" stroke="#fff3da" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+</g>
+</svg>
+`;
 </script>
 <script>
 // ================= 全域狀態 =================
 let currentRoom = ""; let studentId = "";
 let itemCollection = []; let candies = 0; let icecreams = 0; let visitedNodes = new Set();
-let currentSortOrder = [];
+let currentSortOrder = []; let prologueOrder = [];
 let activeCombineSlot = null; let combineSelected = [];
 let roomHintsProgress = {};
 let inspectingItem = "";
 let disabledOptions = {};
 let pendingBadEndRoom = null;
 let authorSolved = false;
-let burnInterval = null;
-let burnSecondsLeft = 45;
+let selectedTollItem = null;
+let authorNameVerified = false;
 
 const shortAnswerHints = {
-  "r10c_final": [
+  "r8_final": [
     "💡 階段一：想想看，「春天」除了指自然界的季節，還能用來比喻什麼？例如人生中的某種狀態或心境。",
     "💡 階段二：老太太雖然年紀大了，身形也不再年輕，但她仍然勇敢地出國旅行、追逐夢想。這種精神，是不是也是一種「春天」？",
     "💡 階段三：試著把「希臘的春天」（外在景色）和「老太太的生命態度」（內在精神）兩者連結起來，寫成一句完整的話。"
@@ -469,7 +569,10 @@ function updateSatchelUI() {
   if (!wrap) return;
   if (itemCollection.length === 0) { wrap.innerHTML = '<span class="satchel-empty">尚未拾獲任何信物</span>'; return; }
   let html = '';
-  itemCollection.forEach((icon, i) => { html += `<span class="satchel-item" title="點擊查看" onclick="handleInventoryClick(${i})">${icon}</span>`; });
+  itemCollection.forEach((icon, i) => {
+    let isSelected = selectedTollItem === i;
+    html += `<span class="satchel-item ${isSelected ? 'selected' : ''}" title="點擊查看" onclick="handleInventoryClick(${i})">${icon}</span>`;
+  });
   wrap.innerHTML = html;
 }
 
@@ -483,8 +586,61 @@ function renderEngine(roomId) {
     const contentDiv = document.getElementById('game-content'); let html = "";
     updateTravelMap();
     uploadProgress(room.name);
-    if (burnInterval) { clearInterval(burnInterval); burnInterval = null; }
+    selectedTollItem = null;
 
+    // ---- 序章排序拼圖 ----
+    if (room.type === "prologue") {
+      prologueOrder = [...prologueEvents]; shuffleArray(prologueOrder);
+      html = `<div class="story-box">【記憶碎片】這些是散落一地的旅行手札，請依照故事發生的正確順序，重新排列它們，喚醒這段旅程的記憶。</div>
+              <div class="scroll-list" id="prologue-list"></div>
+              <button type="button" class="action-btn" onclick="submitPrologue()">拼合手札，喚醒記憶</button>
+              <div id="prologue-msg" class="message"></div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      renderPrologueList();
+      return;
+    }
+
+    // ---- 羅盤探索（nav） ----
+    if (room.type === "nav") {
+      html = `<div class="compass-wrap"><div class="compass-dial">🧭</div><div class="compass-label">復古黃銅羅盤正微微晃動</div></div>
+              <div class="story-text" style="text-align:center; font-style:italic;">${room.story}</div>
+              <div class="doors-container">`;
+      room.exits.forEach(ex => {
+        html += `<div class="door-card" onclick="renderEngine('${ex.target}')">
+                  <span class="compass-icon">🧭</span>
+                  <div class="door-name">${ex.dir}</div>
+                  <div class="door-tag">${ex.tag}</div>
+                </div>`;
+      });
+      html += `</div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
+    // ---- 純拾取道具（itemget） ----
+    if (room.type === "itemget") {
+      html = `<div class="story-box">${room.story}</div>
+              <button type="button" class="action-btn" onclick="grantItemAndProceed('${roomId}')">收下信物，繼續前行</button>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
+    // ---- 道具出示機關（toll） ----
+    if (room.type === "toll") {
+      authorNameVerified = false;
+      html = `<div class="story-box">${room.story}</div>
+              <div class="toll-gate">
+                <div class="toll-gate-label">🔒 此處需要出示信物</div>
+                <div class="toll-target">${room.tollPrompt}</div>
+                ${room.extraCheck === 'author_name' ? `<div style="margin-bottom:12px;"><div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:8px;">${room.extraPrompt}</div><input type="text" id="toll-author-input" class="text-input" placeholder="請輸入作者姓名..."></div>` : ''}
+                <button type="button" class="toll-present-btn" id="toll-btn" onclick="presentTollItem('${roomId}')" disabled>請先在背包中選定信物</button>
+              </div>
+              <div id="toll-msg" class="message"></div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
+    // ---- 作者書房 ----
     if (room.type === "author") {
       authorSolved = false;
       html = `<div class="story-box">${room.story}</div>
@@ -500,30 +656,7 @@ function renderEngine(roomId) {
       return;
     }
 
-    if (room.type === "bookmark") {
-      html = `<div class="story-box">${room.story}</div>
-              <div class="bookmark-prompt">👇 用滑鼠（或手指）按住麻繩書籤，慢慢往下拉</div>
-              <div class="bookmark-wrap" id="bookmark-wrap">
-                <div class="bookmark-hidden-text" id="bookmark-hidden-text">${room.revealText}</div>
-                <div class="bookmark-veil" id="bookmark-veil"></div>
-                <div class="bookmark-ribbon-track"></div>
-                <div class="bookmark-ribbon" id="bookmark-ribbon">🎀</div>
-              </div>
-              <button type="button" class="action-btn hidden" id="bookmark-next-btn" onclick="renderEngine('${room.onClear}')">闔上書籤，繼續前行</button>`;
-      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
-      initBookmarkDrag(room.onClear);
-      return;
-    }
-
-    if (room.type === "portstory") {
-      html = `<div class="story-box">${room.story}</div>
-              <button type="button" class="action-btn" onclick="renderEngine('${room.onClear}')">繼續前行 →</button>`;
-      if (!itemCollection.includes('💧')) itemCollection.push('💧');
-      updateSatchelUI();
-      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
-      return;
-    }
-
+    // ---- 合成 ----
     if (room.type === "combine") {
       activeCombineSlot = null;
       let slotCount = room.combineCount || 2;
@@ -545,31 +678,7 @@ function renderEngine(roomId) {
       return;
     }
 
-    if (room.type === "photoburn") {
-      burnSecondsLeft = 45;
-      html = `<div class="story-box">${room.story}</div>
-              <div class="photo-burn-wrap">
-                <div class="photo-burn" id="photo-burn-el">🌅</div>
-                <div class="burn-timer" id="burn-timer">00:45</div>
-                <div class="burn-label">老照片正緩緩褪色……把握當下，寫下你的想法</div>
-              </div>
-              <div class="quiz-card">
-                <div class="question-text">${room.q}</div>
-                <div id="hint-box" class="hidden"></div>
-                <button type="button" id="candy-btn" class="action-btn candy-btn" onclick="useCandy('${roomId}')">🍬 消耗 1 顆軟糖解鎖提示</button>
-                <textarea id="short-answer" class="ta-input" placeholder="請寫下你的想法..." oninput="updateWordCount(this)"></textarea>
-                <div id="word-count-div" class="word-count">字數：0</div>
-                <button type="button" class="action-btn" onclick="submitQuiz('${roomId}')">提交解答</button>
-                <div id="msg-box" class="message"></div>
-              </div>`;
-      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
-      let progress = roomHintsProgress[roomId] || 0;
-      let hints = shortAnswerHints[roomId];
-      if (hints && candies > 0 && progress < hints.length) { document.getElementById('candy-btn').style.display = 'block'; }
-      startPhotoBurn();
-      return;
-    }
-
+    // ---- 答題（quiz） ----
     if (room.type === "quiz") {
       let progress = roomHintsProgress[roomId] || 0;
       let hints = shortAnswerHints[roomId];
@@ -589,32 +698,8 @@ function renderEngine(roomId) {
                 <button type="button" class="action-btn" onclick="submitQuiz('${roomId}')">提交解答</button>
                 <div id="msg-box" class="message"></div>
               </div>`;
-    }
-    else if (room.type === "end") {
-      document.getElementById('status-ui').classList.add('hidden');
-      document.getElementById('map-ui').classList.add('hidden');
-      document.getElementById('satchel-ui').classList.add('hidden');
-      document.getElementById('main-journal').classList.add('ending-fullscreen');
-      uploadProgress("完成通關");
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
 
-      html = `
-        <div class="ending-stage">
-          <div class="sunset-glow"></div>
-          <div class="silhouette">🚶‍♀️🧳✈️</div>
-          <div class="ending-line" style="animation-delay:0.3s;">海平線上升起新的一天的朝陽。</div>
-          <div class="ending-line" style="animation-delay:1.3s;">那位戴著老花眼鏡、背著舊藤袋的老太太，</div>
-          <div class="ending-line" style="animation-delay:2.3s;">手裡緊緊握著那卷中文卡帶。</div>
-          <div class="ending-line" style="animation-delay:3.3s;">她的步伐雖然緩慢、身形雖然微胖，</div>
-          <div class="ending-line" style="animation-delay:4.3s;">但正一步步堅定地走向準備起飛的客機，迎向世界的下一個角落。</div>
-          <div class="ending-quote" style="animation-delay:5.6s;">「年輕人，我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！」</div>
-          <div class="ending-final-title" style="animation-delay:7s;">另一個春天</div>
-          <div class="ending-sub" style="animation-delay:7.8s;">恭喜你，勇敢的旅人 ${studentId ? '「'+studentId+'」' : ''}<br>你不僅走過了希臘的春天，更在老太太的身影中，<br>找到了屬於自己、永不老去的「另一個春天」。</div>
-        </div>`;
-    }
-
-    contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
-
-    if (room.type === "quiz") {
       const area = document.getElementById('interactive-area');
       let disabled = disabledOptions[roomId] || [];
       if (room.qType === "single") {
@@ -624,14 +709,110 @@ function renderEngine(roomId) {
         });
       } else if (room.qType === "multi") {
         room.opts.forEach(opt => { area.innerHTML += `<label class="option-item"><input type="checkbox" name="q-choice" value="${opt.id}"><span>${opt.text}</span></label>`; });
-      } else if (room.qType === "sort") {
-        currentSortOrder = [...room.opts]; shuffleArray(currentSortOrder); renderSortList();
+      } else if (room.qType === "short") {
+        document.getElementById('word-count-div').classList.remove('hidden');
+        area.innerHTML = `<textarea id="short-answer" class="ta-input" placeholder="請寫下你的想法..." oninput="updateWordCount(this)"></textarea>`;
       }
+      return;
+    }
+
+    // ---- 結局 ----
+    if (room.type === "end") {
+      document.getElementById('status-ui').classList.add('hidden');
+      document.getElementById('map-ui').classList.add('hidden');
+      document.getElementById('satchel-ui').classList.add('hidden');
+      document.getElementById('main-journal').classList.add('ending-fullscreen');
+      uploadProgress("完成通關");
+
+      html = `
+        <div class="ending-stage">
+          <div class="ending-illustration">${endingIllustrationSVG}</div>
+          <div class="ending-line" style="animation-delay:1s;">那位戴著老花眼鏡、背著舊藤袋的老太太，</div>
+          <div class="ending-line" style="animation-delay:2s;">手裡緊緊握著那卷中文卡帶，懷裡抱著野雛菊。</div>
+          <div class="ending-line" style="animation-delay:3s;">她的步伐雖然緩慢、身形雖然微胖，</div>
+          <div class="ending-line" style="animation-delay:4s;">但正一步步堅定地走向準備起飛的客機，迎向世界的下一個角落。</div>
+          <div class="ending-quote" style="animation-delay:5.3s;">「年輕人，我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！」</div>
+          <div class="ending-final-title" style="animation-delay:6.6s;">另一個春天</div>
+          <div class="ending-sub" style="animation-delay:7.4s;">恭喜你，勇敢的旅人 ${studentId ? '「'+studentId+'」' : ''}<br>你不僅走過了希臘的春天，更在老太太的身影中，<br>找到了屬於自己、永不老去的「另一個春天」。</div>
+        </div>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
     }
   } catch (error) { alert("系統載入異常，請重新整理！錯誤：" + error.message); }
 }
 </script>
 <script>
+// ================= 序章：排序拼圖 =================
+function renderPrologueList() {
+  const area = document.getElementById('prologue-list'); area.innerHTML = "";
+  prologueOrder.forEach((item, index) => {
+    area.innerHTML += `<div class="scroll-card">
+      <div class="scroll-num">${index+1}</div>
+      <div class="scroll-text">${item.text}</div>
+      <div class="scroll-btns">
+        <button type="button" class="sort-btn" onclick="movePrologue(${index},-1)">▲</button>
+        <button type="button" class="sort-btn" onclick="movePrologue(${index},1)">▼</button>
+      </div>
+    </div>`;
+  });
+}
+function movePrologue(index, dir) {
+  const target = index + dir; if (target < 0 || target >= prologueOrder.length) return;
+  [prologueOrder[index], prologueOrder[target]] = [prologueOrder[target], prologueOrder[index]];
+  renderPrologueList();
+}
+function submitPrologue() {
+  const ids = prologueOrder.map(i => i.id);
+  const isCorrect = ids.every((val, i) => val === prologueAns[i]);
+  if (isCorrect) {
+    showMsg('prologue-msg', "🟢 記憶喚醒了！手札緩緩合攏，旅程正式開始……", true);
+    if (!itemCollection.includes('🧺')) {}
+    setTimeout(() => { renderEngine(rooms['r0_prologue'].onClear); }, 1500);
+  } else {
+    showMsg('prologue-msg', "❌ 順序似乎不太對，再仔細想想故事發生的先後吧！", false);
+  }
+}
+
+// ================= 拾取道具並前進 =================
+function grantItemAndProceed(roomId) {
+  const room = rooms[roomId];
+  if (room.rewardItem && !itemCollection.includes(room.rewardItem)) itemCollection.push(room.rewardItem);
+  updateInventoryUI();
+  renderEngine(room.onClear);
+}
+
+// ================= 道具出示機關（toll） =================
+function handleTollSelection(idx) {
+  const room = rooms[currentRoom];
+  const cleanStr = s => s ? s.replace(/\uFE0F/g, '').trim() : '';
+  selectedTollItem = idx;
+  updateSatchelUI();
+  const btn = document.getElementById('toll-btn');
+  if (!btn) return;
+  let icon = itemCollection[idx];
+  if (cleanStr(icon) === cleanStr(room.tollItem)) {
+    btn.disabled = false;
+    btn.innerText = "✋ 出示「" + getItemInfo(icon).title + "」";
+  } else {
+    btn.disabled = true;
+    btn.innerText = "這個信物似乎不太對……";
+  }
+}
+
+function presentTollItem(roomId) {
+  const room = rooms[roomId];
+  if (room.extraCheck === 'author_name') {
+    const field = document.getElementById('toll-author-input');
+    const val = field ? field.value.trim() : "";
+    if (val !== "褚士瑩") {
+      showMsg('toll-msg', "❌ 神像沉默不語，這個名字似乎不正確……", false);
+      return;
+    }
+  }
+  showMsg('toll-msg', "🟢 信物的氣息與場景共鳴，機關「喀嗒」一聲開啟了！", true);
+  setTimeout(() => { selectedTollItem = null; renderEngine(room.onUnlock); }, 1400);
+}
+
 // ================= 作者書房：照片翻轉 + 填空驗證 =================
 function flipPhoto() {
   const flip = document.getElementById('photo-flip');
@@ -669,79 +850,6 @@ function submitAuthorAnswer() {
   }
 }
 
-// ================= 房5：麻繩書籤拉桿 =================
-function initBookmarkDrag(nextRoom) {
-  const ribbon = document.getElementById('bookmark-ribbon');
-  const wrap = document.getElementById('bookmark-wrap');
-  const veil = document.getElementById('bookmark-veil');
-  const hiddenText = document.getElementById('bookmark-hidden-text');
-  const nextBtn = document.getElementById('bookmark-next-btn');
-  if (!ribbon || !wrap) return;
-
-  let dragging = false;
-  let wrapHeight = wrap.offsetHeight;
-  let revealed = false;
-
-  function setProgress(percent) {
-    percent = Math.max(0, Math.min(100, percent));
-    let topPx = (percent / 100) * (wrapHeight - 60);
-    ribbon.style.top = topPx + 'px';
-    veil.style.clipPath = `inset(0 0 ${100 - percent}% 0)`;
-    if (percent >= 85 && !revealed) {
-      revealed = true;
-      hiddenText.classList.add('revealed');
-      nextBtn.classList.remove('hidden');
-    }
-  }
-
-  function getY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
-
-  function onDown(e) { dragging = true; e.preventDefault(); }
-  function onMove(e) {
-    if (!dragging) return;
-    const rect = wrap.getBoundingClientRect();
-    const y = getY(e) - rect.top;
-    const percent = (y / wrapHeight) * 100;
-    setProgress(percent);
-  }
-  function onUp() { dragging = false; }
-
-  ribbon.addEventListener('mousedown', onDown);
-  ribbon.addEventListener('touchstart', onDown, {passive:false});
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('touchmove', onMove, {passive:false});
-  window.addEventListener('mouseup', onUp);
-  window.addEventListener('touchend', onUp);
-
-  setProgress(0);
-}
-
-// ================= 房10：相片燒毀倒數（視覺氛圍，不鎖死作答） =================
-function startPhotoBurn() {
-  const photoEl = document.getElementById('photo-burn-el');
-  const timerEl = document.getElementById('burn-timer');
-  if (!photoEl || !timerEl) return;
-
-  burnInterval = setInterval(() => {
-    burnSecondsLeft--;
-    if (burnSecondsLeft <= 0) {
-      burnSecondsLeft = 0;
-      clearInterval(burnInterval);
-      photoEl.style.filter = "sepia(1) brightness(0.3) contrast(1.3)";
-      photoEl.style.opacity = "0.5";
-      timerEl.innerText = "00:00";
-      timerEl.style.color = "var(--error-color)";
-      return;
-    }
-    let m = Math.floor(burnSecondsLeft / 60).toString().padStart(2,'0');
-    let s = (burnSecondsLeft % 60).toString().padStart(2,'0');
-    timerEl.innerText = `${m}:${s}`;
-    let progress = 1 - (burnSecondsLeft / 45);
-    photoEl.style.filter = `sepia(${progress}) brightness(${1 - progress*0.5}) contrast(${1 + progress*0.2})`;
-    photoEl.style.opacity = `${1 - progress*0.45}`;
-  }, 1000);
-}
-
 // ================= 答題判定 =================
 function submitQuiz(roomId) {
   const room = rooms[roomId]; let isCorrect = false;
@@ -755,10 +863,7 @@ function submitQuiz(roomId) {
     const ansArray = Array.from(checkedBoxes).map(cb => cb.value);
     if (ansArray.length === 0) { showMsg('msg-box', "⚠️ 請至少選擇一個答案！", false); return; }
     isCorrect = ansArray.length === room.ans.length && ansArray.every(val => room.ans.includes(val));
-  } else if (room.qType === "sort") {
-    const ids = currentSortOrder.map(i => i.id);
-    isCorrect = ids.every((val, i) => val === room.ans[i]);
-  } else {
+  } else if (room.qType === "short") {
     const field = document.getElementById('short-answer');
     const ansStr = field ? field.value.trim() : "";
     if (ansStr.length < room.minW) { showMsg('msg-box', `⚠️ 寫得還不夠完整（需至少 ${room.minW} 字）！`, false); return; }
@@ -767,18 +872,15 @@ function submitQuiz(roomId) {
 
   if (!isCorrect) {
     if (room.qType === "single" || room.qType === "multi") {
+      if (room.isSide) {
+        showMsg('msg-box', "❌ 答案不正確，再想想看！", false);
+        return;
+      }
       triggerBadEnd(roomId);
       return;
     }
-    let errMsg = room.qType === "sort" ? "❌ 順序不正確，請重新調整！" : "❌ 答案不正確，再想想看！";
-    showMsg('msg-box', errMsg, false);
-    let progress = roomHintsProgress[roomId] || 0;
-    let hints = shortAnswerHints[roomId];
-    if (hints && candies > 0 && progress < hints.length) { document.getElementById('candy-btn').style.display = 'block'; }
-    return;
   }
 
-  if (burnInterval) { clearInterval(burnInterval); burnInterval = null; }
   showMsg('msg-box', "🟢 答對了！獲得線索與信物……", true);
   if (room.rewardItem && !itemCollection.includes(room.rewardItem)) itemCollection.push(room.rewardItem);
   if (room.givesCandy) { candies++; }
@@ -856,10 +958,15 @@ function inspectItem() {
   textDiv.classList.remove('hidden');
 }
 
-// ================= 背包與合成 =================
+// ================= 背包互動（依房間類型分流） =================
 function handleInventoryClick(idx) {
   const rawIcon = itemCollection[idx]; const room = rooms[currentRoom];
   const cleanStr = s => s ? s.replace(/\uFE0F/g, '').trim() : '';
+
+  if (room && room.type === 'toll') {
+    handleTollSelection(idx);
+    return;
+  }
 
   if (room && room.type === 'combine') {
     if (activeCombineSlot) {
@@ -918,17 +1025,6 @@ function updateInventoryUI() {
   document.getElementById('candy-count').innerText = candies;
   document.getElementById('icecream-count').innerText = icecreams;
 }
-function renderSortList() {
-  const area = document.getElementById('interactive-area'); area.innerHTML = "";
-  currentSortOrder.forEach((item, index) => {
-    area.innerHTML += `<div class="sort-item"><div class="sort-text">${item.text}</div><div class="sort-btns"><button type="button" class="sort-btn" onclick="moveItem(${index},-1)">▲</button><button type="button" class="sort-btn" onclick="moveItem(${index},1)">▼</button></div></div>`;
-  });
-}
-function moveItem(index, dir) {
-  const target = index + dir; if (target < 0 || target >= currentSortOrder.length) return;
-  [currentSortOrder[index], currentSortOrder[target]] = [currentSortOrder[target], currentSortOrder[index]];
-  renderSortList();
-}
 function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
 function updateWordCount(t) { document.getElementById('word-count-div').innerText = `字數：${t.value.length}`; }
 function showMsg(boxId, text, isSuccess) {
@@ -960,6 +1056,6 @@ function startGame() {
   document.getElementById('map-ui').classList.remove('hidden');
   document.getElementById('satchel-ui').classList.remove('hidden');
   updateInventoryUI();
-  renderEngine("r1_bus");
+  renderEngine("r0_prologue");
 }
 </script>
