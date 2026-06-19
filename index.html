@@ -40,6 +40,9 @@ body.bg-badend { background: #2a221a !important; }
 .candy-row, .icecream-row { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; }
 .candy-row { color: var(--olive); }
 .icecream-row { color: var(--sea); }
+.music-toggle-btn { background: rgba(217,138,108,0.12); border: 1px solid var(--sunset); color: var(--sunset); border-radius: 20px; padding: 5px 10px; font-size: 15px; cursor: pointer; line-height: 1; transition: all .2s; display: flex; align-items: center; }
+.music-toggle-btn:hover { background: rgba(217,138,108,0.22); }
+.music-toggle-btn.playing { background: var(--sunset); color: #fff; }
 
 .travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 16px; border-radius: 6px; margin: 0 26px 24px; box-shadow: inset 0 0 30px rgba(139,111,71,0.18); position: relative; }
 .travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 18px 6px rgba(139,111,71,0.25); pointer-events: none; }
@@ -63,7 +66,7 @@ h1 { text-align: center; font-size: 25px; letter-spacing: 4px; margin-bottom: 4p
 .door-card .compass-icon { font-size: 22px; margin-bottom: 6px; display: block; }
 .door-name { font-weight: bold; color: var(--ink); font-size: 14px; }
 .door-tag { font-size: 10.5px; color: var(--ink-soft); margin-top: 3px; }
-.satchel { background: linear-gradient(160deg, #8a6745, #6e4f32); border-radius: 8px; padding: 12px 16px; margin: 0 26px 22px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.15); }
+.satchel { background: linear-gradient(160deg, #8a6745, #6e4f32); border-radius: 8px; padding: 12px 16px; margin: 0 0 18px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.15); }
 .satchel-label { font-size: 11px; color: #e8d7b8; opacity: 0.8; margin-bottom: 6px; letter-spacing: 1px; font-weight: bold; }
 .satchel-items { display: flex; gap: 10px; flex-wrap: wrap; min-height: 34px; align-items: center; }
 .satchel-item { background: rgba(255,255,255,0.92); border-radius: 8px; padding: 5px 9px; font-size: 20px; cursor: pointer; transition: transform .2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; }
@@ -165,6 +168,7 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
   <div id="status-ui" class="tape-bar hidden">
     <div class="location-badge" id="current-location">📍 載入中...</div>
     <div class="consumables">
+      <button type="button" class="music-toggle-btn" id="music-toggle-btn" onclick="toggleMusic()">🔇</button>
       <div class="candy-row">🍬<span id="candy-count">0</span></div>
       <div class="icecream-row">🍦<span id="icecream-count">0</span></div>
     </div>
@@ -185,6 +189,11 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
     </div>
   </div>
 
+  <div id="satchel-ui" class="satchel hidden">
+    <div class="satchel-label">🎒 旅行背包</div>
+    <div class="satchel-items" id="satchel-items"><span class="satchel-empty">尚未拾獲任何信物</span></div>
+  </div>
+
   <div id="game-content" class="hidden"></div>
 
   </div>
@@ -192,11 +201,6 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
   <div id="map-ui" class="travel-map hidden">
     <div class="map-title">🗺️ 旅程地圖（可回顧已造訪之地）</div>
     <div class="map-grid" id="dynamic-map-grid"></div>
-  </div>
-
-  <div id="satchel-ui" class="satchel hidden">
-    <div class="satchel-label">🎒 旅行背包</div>
-    <div class="satchel-items" id="satchel-items"><span class="satchel-empty">尚未拾獲任何信物</span></div>
   </div>
 
 </div>
@@ -338,7 +342,6 @@ const rooms = {
     name:"阿波羅神殿（神像守衛）", type:"toll",
     story:"【❌ 限制區域】陡峭的石階山腳下，一尊巨大的阿波羅神像擋住去路。神像低語：『要進入聖殿，需出示能證明你身分的信物。』",
     tollItem:"📷", tollPrompt:"請從背包中點選【老太太拍作者的照片】，出示給神像作為通行證",
-    extraCheck:"author_name", extraPrompt:"神像又問：『這位作者的姓名是？』",
     onUnlock:"r3_temple_in"
   },
   "r3_temple_in": {
@@ -723,9 +726,11 @@ function renderEngine(roomId) {
       document.getElementById('satchel-ui').classList.add('hidden');
       document.getElementById('main-journal').classList.add('ending-fullscreen');
       uploadProgress("完成通關");
+      setMusicMode("ending");
 
       html = `
         <div class="ending-stage">
+          <button type="button" class="music-toggle-btn" id="music-toggle-btn-end" onclick="toggleMusic(); syncEndMusicBtn();" style="position:absolute; top:0; right:10px; z-index:5;">${musicPlaying ? '🔈' : '🔇'}</button>
           <div class="ending-illustration">${endingIllustrationSVG}</div>
           <div class="ending-line" style="animation-delay:1s;">那位戴著老花眼鏡、背著舊藤袋的老太太，</div>
           <div class="ending-line" style="animation-delay:2s;">手裡緊緊握著那卷中文卡帶，懷裡抱著野雛菊。</div>
@@ -739,6 +744,81 @@ function renderEngine(roomId) {
       return;
     }
   } catch (error) { alert("系統載入異常，請重新整理！錯誤：" + error.message); }
+}
+</script>
+<script>
+// ================= 背景音樂引擎（Web Audio API 程式合成） =================
+let audioCtx = null;
+let musicPlaying = false;
+let musicScheduler = null;
+let currentMusicMode = "normal"; // normal | ending
+
+// 主旋律：溫暖的大調琶音（C大調系，木箱琴/鋼片琴音色）
+const normalChordSets = [
+  [261.63, 329.63, 392.00, 523.25],   // C E G C
+  [349.23, 440.00, 523.25, 659.25],   // F A C E
+  [392.00, 493.88, 587.33, 783.99],   // G B D G
+  [293.66, 369.99, 440.00, 587.33]    // D F# A D
+];
+// 結局：明亮、稍微上揚的和弦進行（加入更高音域，營造甦醒/感動氛圍）
+const endingChordSets = [
+  [392.00, 493.88, 587.33, 783.99],   // G B D G
+  [440.00, 554.37, 659.25, 880.00],   // A C# E A
+  [523.25, 659.25, 783.99, 1046.50],  // C E G C(高)
+  [349.23, 440.00, 523.25, 698.46]    // F A C F
+];
+
+function playTone(freq, startTime, duration, vol) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(vol, startTime + 0.6);
+  gain.gain.linearRampToValueAtTime(vol * 0.6, startTime + duration * 0.6);
+  gain.gain.linearRampToValueAtTime(0, startTime + duration);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(startTime); osc.stop(startTime + duration + 0.1);
+}
+
+function scheduleMusicLoop() {
+  if (!audioCtx || !musicPlaying) return;
+  const chordSets = currentMusicMode === "ending" ? endingChordSets : normalChordSets;
+  const noteDuration = 3.2;
+  const chord = chordSets[Math.floor(Math.random() * chordSets.length)];
+  const now = audioCtx.currentTime;
+  chord.forEach((freq, i) => {
+    playTone(freq, now + i * 0.18, noteDuration, 0.045);
+  });
+  musicScheduler = setTimeout(scheduleMusicLoop, noteDuration * 1000 * 0.7);
+}
+
+function toggleMusic() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContextClass();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  musicPlaying = !musicPlaying;
+  const btn = document.getElementById('music-toggle-btn');
+  if (musicPlaying) {
+    btn.innerText = "🔈"; btn.classList.add('playing');
+    scheduleMusicLoop();
+  } else {
+    btn.innerText = "🔇"; btn.classList.remove('playing');
+    if (musicScheduler) { clearTimeout(musicScheduler); musicScheduler = null; }
+  }
+}
+
+function setMusicMode(mode) {
+  currentMusicMode = mode;
+}
+
+function syncEndMusicBtn() {
+  const btn = document.getElementById('music-toggle-btn-end');
+  if (btn) { btn.innerText = musicPlaying ? "🔈" : "🔇"; btn.classList.toggle('playing', musicPlaying); }
 }
 </script>
 <script>
