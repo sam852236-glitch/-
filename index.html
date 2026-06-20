@@ -50,9 +50,14 @@ body.bg-badend { background: #2a221a !important; }
 
 .travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 6px; margin: 0 0 18px; box-shadow: inset 0 0 24px rgba(139,111,71,0.16); position: relative; }
 .travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 14px 4px rgba(139,111,71,0.22); pointer-events: none; }
-.map-title { font-size: 11px; color: var(--ink-soft); font-weight: bold; margin-bottom: 8px; letter-spacing: 1px; text-align: center; }
-.map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 5px; }
-.map-cell { background: rgba(255,255,255,0.3); border: 1px dashed var(--ink-soft); border-radius: 5px; text-align: center; font-size: 9.5px; line-height: 1.3; color: var(--ink-soft); cursor: not-allowed; transition: all 0.25s; padding: 5px 3px; min-height: 38px; display: flex; align-items: center; justify-content: center; word-break: break-all; }
+.map-title-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+.map-title { font-size: 11px; color: var(--ink-soft); font-weight: bold; letter-spacing: 1px; text-align: center; }
+.map-compass { font-size: 16px; animation: pinWiggle 2.4s infinite ease-in-out; }
+.map-scroll-wrap { overflow-x: auto; padding-bottom: 4px; }
+.map-grid { display: grid; grid-template-columns: repeat(9, 56px); grid-auto-rows: 44px; gap: 4px; min-width: max-content; }
+.map-cell { background: rgba(255,255,255,0.3); border: 1px dashed var(--ink-soft); border-radius: 5px; text-align: center; font-size: 8.5px; line-height: 1.25; color: var(--ink-soft); cursor: not-allowed; transition: all 0.25s; padding: 3px 2px; display: flex; align-items: center; justify-content: center; word-break: break-all; overflow: hidden; }
+.map-cell-void { background: transparent; border: none; cursor: default; }
+.map-cell-empty { opacity: 0.55; font-style: italic; }
 .map-cell.unlocked { border-style: solid; border-color: var(--olive); color: var(--ink); cursor: pointer; background: rgba(110,126,95,0.12); font-weight: 600; }
 .map-cell.unlocked:hover { border-color: var(--sunset); background: rgba(217,138,108,0.12); transform: translateY(-1px); }
 .map-cell.current { border-color: var(--sunset); border-style: solid; color: #fff; font-weight: bold; background: var(--sunset); cursor: pointer; box-shadow: 0 0 0 2px rgba(217,138,108,0.3); animation: pinWiggle 1.6s infinite ease-in-out; }
@@ -254,8 +259,13 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
   </div>
 
   <div id="map-ui" class="travel-map hidden">
-    <div class="map-title">🗺️ 旅程地圖（可回顧已造訪之地）</div>
-    <div class="map-grid" id="dynamic-map-grid"></div>
+    <div class="map-title-row">
+      <span class="map-compass">🧭</span>
+      <div class="map-title">旅程地圖（9×6 棋盤，可橫向捲動，可回顧已造訪之地）</div>
+    </div>
+    <div class="map-scroll-wrap">
+      <div class="map-grid" id="dynamic-map-grid"></div>
+    </div>
   </div>
 
 </div>
@@ -700,8 +710,28 @@ const rooms = {
     q:"「另一個春天」的深層涵義是什麼？請寫下你的想法（至少15字）：", qType:"short", minW:15,
     rewardItem:null, onClear:"r_end"
   },
-  "r_end": { name:"日記終章", mapLabel:"終章", type:"end" }
+  "r_end": { name:"日記終章", mapLabel:"終章", type:"end" },
+
+  // ---- 純風景空地（補滿地圖棋盤格，不影響進度，無法從劇情房間直接走到） ----
+  "rx_empty1": { name:"無人的小巷", mapLabel:"小巷", type:"flavorRead", onClear:"r1c_reward",
+    story:"【空地】這是一條安靜的小巷，午後陽光斜斜灑落在石板路上，偶爾有微風吹過，捲起幾片落葉。這裡似乎沒有什麼特別的事情發生……" },
+  "rx_empty2": { name:"廢棄的長椅", mapLabel:"長椅", type:"flavorRead", onClear:"r1c_reward",
+    story:"【空地】一張褪色的木製長椅靜靜立在路旁，椅腳爬滿藤蔓。你坐下來歇了一會兒，望著遠方的山丘，心情莫名地平靜下來。" },
+  "rx_empty3": { name:"安靜的轉角", mapLabel:"轉角", type:"flavorRead", onClear:"r1c_reward",
+    story:"【空地】轉過街角，眼前是一片尋常的住宅區，貓咪在牆頭曬著太陽，對你投以好奇又懶洋洋的一瞥。這裡似乎也沒有什麼特別的事情發生……" }
 };
+
+// ================= 地圖座標系統（9欄×6列棋盤，用於視覺呈現方向關係） =================
+const roomCoords = {
+  "r0_prologue": { x:0, y:0 }, "r1_bus": { x:1, y:0 }, "r1_side": { x:2, y:0 }, "r1_side2": { x:3, y:0 }, "r1b_meet": { x:4, y:0 }, "r1c_reward": { x:5, y:0 },
+  "rx_empty1": { x:6, y:0 }, "rx_empty2": { x:7, y:0 }, "rx_empty3": { x:8, y:0 },
+  "r2_plaza": { x:0, y:1 }, "r2_side": { x:1, y:1 }, "r2_gather": { x:2, y:1 }, "r2b_photo": { x:3, y:1 }, "r2c_gift": { x:4, y:1 }, "r2d_author": { x:5, y:1 }, "r2d_author_main": { x:6, y:1 }, "r2d_side": { x:7, y:1 }, "r2e_kindness": { x:8, y:1 },
+  "r2f_litreview": { x:0, y:2 }, "r2g_delphi_gate": { x:1, y:2 }, "r2g_side": { x:2, y:2 }, "r3_temple_gate": { x:3, y:2 }, "r3_side_apollo": { x:4, y:2 }, "r3_temple_gate_main": { x:5, y:2 }, "r3_temple_in": { x:6, y:2 }, "r3a_ruins_gate": { x:7, y:2 }, "r3a_side_ruins": { x:8, y:2 },
+  "r3b_stone": { x:0, y:3 }, "r3b_side_thales": { x:1, y:3 }, "r3b_stone_main": { x:2, y:3 }, "r4_icecream_gate": { x:3, y:3 }, "r4_side": { x:4, y:3 }, "r4a_side2": { x:5, y:3 }, "r4_icecream_pre": { x:6, y:3 }, "r4_side_delphi": { x:7, y:3 }, "r4_icecream": { x:8, y:3 },
+  "r4a_combine": { x:0, y:4 }, "r4b_deliver": { x:1, y:4 }, "r4c_arena_gate": { x:2, y:4 }, "r4c_side_arena": { x:3, y:4 }, "r4c_arena": { x:4, y:4 }, "r4d_arena_challenge": { x:5, y:4 }, "r5_restaurant": { x:6, y:4 }, "r6_ferry_gate": { x:7, y:4 }, "r6_side_aegean": { x:8, y:4 },
+  "r6_ferry": { x:0, y:5 }, "r6b_tears": { x:1, y:5 }, "r7_port_gate": { x:2, y:5 }, "r7a_side3": { x:3, y:5 }, "r7b_safe": { x:4, y:5 }, "r7c_final1": { x:5, y:5 }, "r7d_final2": { x:6, y:5 }, "r8_final": { x:7, y:5 }, "r_end": { x:8, y:5 }
+};
+const MAP_COLS = 9, MAP_ROWS = 6;
 
 const mapLayoutOrder = [
   "r0_prologue","r1_bus","r1_side","r1_side2","r1b_meet","r1c_reward",
@@ -911,22 +941,38 @@ function updateTravelMap() {
   const grid = document.getElementById('dynamic-map-grid');
   if (!grid) return;
   grid.innerHTML = "";
-  mapLayoutOrder.forEach(id => {
-    if (!rooms[id]) return;
-    let cell = document.createElement('div');
-    let shortName = rooms[id].mapLabel || rooms[id].name;
-    if (id === currentRoom) {
-      cell.className = "map-cell current"; cell.innerText = "📍 " + shortName;
-      cell.title = rooms[id].name;
-    } else if (visitedNodes.has(id)) {
-      cell.className = "map-cell unlocked"; cell.innerText = "✓ " + shortName;
-      cell.title = rooms[id].name;
-      cell.onclick = () => { renderEngine(id); };
-    } else {
-      cell.className = "map-cell"; cell.innerText = "？";
-    }
-    grid.appendChild(cell);
+
+  // 依座標建立 9x6 棋盤，每個格子對應 roomCoords 中的房間
+  let coordToId = {};
+  Object.keys(roomCoords).forEach(id => {
+    let c = roomCoords[id];
+    coordToId[c.x + ',' + c.y] = id;
   });
+
+  for (let y = 0; y < MAP_ROWS; y++) {
+    for (let x = 0; x < MAP_COLS; x++) {
+      let id = coordToId[x + ',' + y];
+      let cell = document.createElement('div');
+      if (!id || !rooms[id]) { cell.className = "map-cell map-cell-void"; cell.innerText = ""; grid.appendChild(cell); continue; }
+
+      let shortName = rooms[id].mapLabel || rooms[id].name;
+      let isEmptySpot = id.startsWith('rx_empty');
+
+      if (id === currentRoom) {
+        cell.className = "map-cell current"; cell.innerText = "📍 " + shortName;
+        cell.title = rooms[id].name;
+      } else if (visitedNodes.has(id)) {
+        cell.className = "map-cell unlocked" + (isEmptySpot ? " map-cell-empty" : "");
+        cell.innerText = "✓ " + shortName;
+        cell.title = rooms[id].name;
+        cell.onclick = () => { renderEngine(id); };
+      } else {
+        cell.className = "map-cell" + (isEmptySpot ? " map-cell-empty" : "");
+        cell.innerText = isEmptySpot ? "·" : "？";
+      }
+      grid.appendChild(cell);
+    }
+  }
 }
 
 function updateSatchelUI() {
