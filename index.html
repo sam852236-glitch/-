@@ -71,7 +71,7 @@ h1 { text-align: center; font-size: 25px; letter-spacing: 4px; margin-bottom: 4p
 .story-box { background: rgba(217,138,108,0.07); border-left: 4px solid var(--sunset); padding: 14px 18px; margin-bottom: 18px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.85; }
 .story-text { font-size: 1.02em; line-height: 1.9; margin-bottom: 18px; padding: 22px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(255,255,255,0.45); text-align: left; white-space: pre-wrap; }
 
-.doors-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+.doors-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 18px; }
 .door-card { background: rgba(255,255,255,0.4); border: 2px solid var(--border-color); border-radius: 8px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.3s; }
 .door-card:hover { border-color: var(--sunset); transform: translateY(-2px); }
 .door-card .compass-icon { font-size: 22px; margin-bottom: 6px; display: block; }
@@ -362,14 +362,14 @@ const prologueAns = ["A","B","C","D","E","F","G","H"];
 // ================= 競技場：可重複挑戰刷糖果的字音字形題庫 =================
 const arenaTrapDB = [
   { q:"陰「霾」的「霾」字注音是？", opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"}], ans:"A" },
-  { q:"遮「掩」不住的「掩」字注音是？", opts:[{id:"A",text:"ㄧㄢˇ"},{id:"B",text:"ㄧㄢˋ"},{id:"C",text:"ㄢˇ"}], ans:"A" },
-  { q:"羞「赧」的「赧」字注音是？", opts:[{id:"A",text:"ㄋㄢˇ"},{id:"B",text:"ㄈㄢˇ"},{id:"C",text:"ㄉㄢˇ"}], ans:"A" },
+  { q:"遮「掩」不住的「掩」字注音是？", opts:[{id:"A",text:"ㄧㄢˋ"},{id:"B",text:"ㄧㄢˇ"},{id:"C",text:"ㄢˇ"}], ans:"B" },
+  { q:"羞「赧」的「赧」字注音是？", opts:[{id:"A",text:"ㄈㄢˇ"},{id:"B",text:"ㄉㄢˇ"},{id:"C",text:"ㄋㄢˇ"}], ans:"C" },
   { q:"「拮据」的意思是？", opts:[{id:"A",text:"經濟困難"},{id:"B",text:"動作敏捷"},{id:"C",text:"緊張不安"}], ans:"A" },
-  { q:"「神采奕奕」的意思是？", opts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"}], ans:"A" },
-  { q:"「潸潸」的意思是？", opts:[{id:"A",text:"流淚的樣子"},{id:"B",text:"閃爍的樣子"},{id:"C",text:"搖晃的樣子"}], ans:"A" },
+  { q:"「神采奕奕」的意思是？", opts:[{id:"A",text:"愁眉不展，無精打采"},{id:"B",text:"精神飽滿，容光煥發"},{id:"C",text:"沉默寡言，不發一語"}], ans:"B" },
+  { q:"「潸潸」的意思是？", opts:[{id:"A",text:"閃爍的樣子"},{id:"B",text:"搖晃的樣子"},{id:"C",text:"流淚的樣子"}], ans:"C" },
   { q:"「抑遏」的意思是？", opts:[{id:"A",text:"壓制阻止"},{id:"B",text:"歡迎迎接"},{id:"C",text:"放任縱容"}], ans:"A" },
-  { q:"人群「雜沓」的「沓」字注音是？", opts:[{id:"A",text:"ㄊㄚˋ"},{id:"B",text:"ㄉㄚˊ"},{id:"C",text:"ㄋㄚˋ"}], ans:"A" },
-  { q:"「怯生生」形容的是？", opts:[{id:"A",text:"害羞畏懼的樣子"},{id:"B",text:"自信大方的樣子"},{id:"C",text:"生氣憤怒的樣子"}], ans:"A" }
+  { q:"人群「雜沓」的「沓」字注音是？", opts:[{id:"A",text:"ㄉㄚˊ"},{id:"B",text:"ㄊㄚˋ"},{id:"C",text:"ㄋㄚˋ"}], ans:"B" },
+  { q:"「怯生生」形容的是？", opts:[{id:"A",text:"自信大方的樣子"},{id:"B",text:"生氣憤怒的樣子"},{id:"C",text:"害羞畏懼的樣子"}], ans:"C" }
 ];
 
 // ================= 景點資料 =================
@@ -391,15 +391,15 @@ const rooms = {
     name:"巴士行李堆（支線）", mapLabel:"行李堆", type:"quiz", qIdx:"字音-側1", isSide:true,
     story:"【支線】你撞上後座的行李堆，灰塵揚起。行李箱上貼著一張褪色的小紙條，寫著形音義謎題。",
     q:"陰「霾」的「霾」字注音是？", qType:"single",
-    opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"},{id:"D",text:"ㄋㄞˊ"}],
-    ans:"A", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
+    opts:[{id:"A",text:"ㄌㄧˊ"},{id:"B",text:"ㄇㄞˊ"},{id:"C",text:"ㄇㄟˊ"},{id:"D",text:"ㄋㄞˊ"}],
+    ans:"B", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
   },
   "r1_side2": {
     name:"車窗外的告示（支線）", mapLabel:"東德背景", type:"quiz", qIdx:"字音-側東德", isSide:true,
     story:"【支線】車窗外掠過一塊褪色的歷史告示牌，上面寫著一段關於老太太家鄉的小知識：\n\n「東德」原指二次世界大戰以後成立的共產極權國家，但東德與西德已於一九九〇年統一，因此在課文中指的是德國東部。",
     q:"根據告示牌內容，課文中提到的「東德」，現在指的是？", qType:"single",
-    opts:[{id:"A",text:"德國東部"},{id:"B",text:"一個仍然獨立存在的國家"},{id:"C",text:"希臘的一個地區"},{id:"D",text:"奧地利的舊稱"}],
-    ans:"A", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
+    opts:[{id:"A",text:"一個仍然獨立存在的國家"},{id:"B",text:"希臘的一個地區"},{id:"C",text:"德國東部"},{id:"D",text:"奧地利的舊稱"}],
+    ans:"C", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
   },
   "r1b_meet": {
     name:"雅典巴士（初遇）", mapLabel:"初遇老太太", type:"quiz", qIdx:2,
@@ -427,8 +427,8 @@ const rooms = {
     name:"廣場告示欄（支線）", mapLabel:"怯生生", type:"quiz", qIdx:"字音-側怯", isSide:true,
     story:"【支線】廣場一角的告示欄上，貼著一張字詞小卡：「怯生生」",
     q:"課文用「怯生生」來形容老太太初次與作者交談時的模樣，這個詞最適合形容下列哪一種神情？", qType:"single",
-    opts:[{id:"A",text:"害羞畏懼，不太敢開口"},{id:"B",text:"自信大方，侃侃而談"},{id:"C",text:"生氣憤怒，怒目相視"},{id:"D",text:"冷漠疏離，不發一語"}],
-    ans:"A", rewardItem:null, givesCandy:true, onClear:"r2_gather"
+    opts:[{id:"A",text:"自信大方，侃侃而談"},{id:"B",text:"生氣憤怒，怒目相視"},{id:"C",text:"冷漠疏離，不發一語"},{id:"D",text:"害羞畏懼，不太敢開口"}],
+    ans:"D", rewardItem:null, givesCandy:true, onClear:"r2_gather"
   },
   "r2_gather": {
     name:"廣場搜查", mapLabel:"廣場搜查", type:"quiz", qIdx:"字音1",
@@ -441,8 +441,8 @@ const rooms = {
     name:"廣場中央（偷拍）", mapLabel:"廣場偷拍", type:"quiz", qIdx:"字音2",
     story:"【喀擦！】廣場中央，老太太忽然拿起相機，對你按下快門。她有些不好意思地笑了笑。告示牌上又浮現一道謎題。",
     q:"羞「赧」的「赧」字注音是？", qType:"single",
-    opts:[{id:"A",text:"ㄋㄢˇ"},{id:"B",text:"ㄈㄢˇ"},{id:"C",text:"ㄗㄢˇ"},{id:"D",text:"ㄉㄢˇ"}],
-    ans:"A", rewardItem:"📷", onClear:"r2c_gift"
+    opts:[{id:"A",text:"ㄈㄢˇ"},{id:"B",text:"ㄋㄢˇ"},{id:"C",text:"ㄗㄢˇ"},{id:"D",text:"ㄉㄢˇ"}],
+    ans:"B", rewardItem:"📷", onClear:"r2c_gift"
   },
   "r2c_gift": {
     name:"獻上花束", mapLabel:"獻上花束", type:"toll",
@@ -481,8 +481,8 @@ const rooms = {
     name:"旅行手札室", mapLabel:"旅遊文學", type:"quiz", qIdx:"旅遊文學",
     story:"【場景】離開廣場前，你在路邊書攤翻到一本「課文補充資料」，上面寫著：\n\n旅行文學又稱「旅遊文學」，是旅行者記錄見聞並抒發情感的一種書寫方式。通常強調要有實際旅行，並以文學手法來敘述。內容包含踏上旅遊前的期盼心情、旅行過程、見聞，以及旅行後的回憶等。文體多樣可以是散文、日記、書信等。",
     q:"根據補充資料，旅行文學強調必須具備什麼的經驗？", qType:"single",
-    opts:[{id:"A",text:"實際旅遊"},{id:"B",text:"想像力"},{id:"C",text:"童年回憶"},{id:"D",text:"旅遊景點歷史"}],
-    ans:"A", rewardItem:null, onClear:"r2g_delphi_gate"
+    opts:[{id:"A",text:"想像力"},{id:"B",text:"童年回憶"},{id:"C",text:"實際旅遊"},{id:"D",text:"旅遊景點歷史"}],
+    ans:"C", rewardItem:null, onClear:"r2g_delphi_gate"
   },
 
   // ---- 德爾菲地名知識（前往神殿前的支線） ----
@@ -524,8 +524,8 @@ const rooms = {
     name:"阿波羅神殿", mapLabel:"神殿石階", type:"quiz", qIdx:"5上",
     story:"【場景】神殿大門開啟，但石階陡峭，老太太爬得氣喘吁吁，最後決定留在山下等你。臨別前，她推了你一把，笑著說：『年輕人！值得用一輩子換的美景呢！』",
     q:"請問老太太這段話是什麼意思？", qType:"single",
-    opts:[{id:"A",text:"為自己無法上去感到遺憾，希望作者不要錯失機會"},{id:"B",text:"認為眼前的風景太過美麗，而感到震撼"},{id:"C",text:"年輕人陪伴他的身影，就像一道美麗的風景"},{id:"D",text:"鼓勵年輕人持續堅持，人生終會有成就"}],
-    ans:"A", rewardItem:null, onClear:"r3a_ruins_gate"
+    opts:[{id:"A",text:"認為眼前的風景太過美麗，而感到震撼"},{id:"B",text:"年輕人陪伴他的身影，就像一道美麗的風景"},{id:"C",text:"鼓勵年輕人持續堅持，人生終會有成就"},{id:"D",text:"為自己無法上去感到遺憾，希望作者不要錯失機會"}],
+    ans:"D", rewardItem:null, onClear:"r3a_ruins_gate"
   },
   "r3a_ruins_gate": {
     name:"神殿遺蹟入口", mapLabel:"神殿遺蹟", type:"nav",
@@ -580,8 +580,8 @@ const rooms = {
     name:"巷弄石壁（續，支線）", mapLabel:"巷弄石壁2", type:"quiz", qIdx:"字音-側3", isSide:true,
     story:"【支線】石壁的另一側，似乎還有殘留的字跡。",
     q:"「拮据」的注音與意思，下列何者正確？", qType:"single",
-    opts:[{id:"A",text:"ㄐㄧㄝˊ ㄐㄩ，經濟困難"},{id:"B",text:"ㄐㄧㄝˊ ㄐㄩˋ，動作敏捷"},{id:"C",text:"ㄐㄧㄝˋ ㄐㄩ，借貸度日"},{id:"D",text:"ㄐㄧㄝˊ ㄍㄨ，緊張不安"}],
-    ans:"A", rewardItem:null, givesCandy:true, onClear:"r4_icecream_pre"
+    opts:[{id:"A",text:"ㄐㄧㄝˊ ㄐㄩˋ，動作敏捷"},{id:"B",text:"ㄐㄧㄝˊ ㄐㄩ，經濟困難"},{id:"C",text:"ㄐㄧㄝˋ ㄐㄩ，借貸度日"},{id:"D",text:"ㄐㄧㄝˊ ㄍㄨ，緊張不安"}],
+    ans:"B", rewardItem:null, givesCandy:true, onClear:"r4_icecream_pre"
   },
   "r4_icecream_pre": {
     name:"小鎮出口（續）", mapLabel:"續行", type:"nav",
@@ -600,8 +600,8 @@ const rooms = {
     name:"冰淇淋車", mapLabel:"冰淇淋車", type:"quiz", qIdx:"字音3",
     story:"【場景】一輛彩色的冰淇淋車安靜地停著。老闆笑咪咪地說：『校正一下招牌上的字，我請你吃冰淇淋！』你想起老太太曾說過，她常常捨不得花錢買正餐，只用一支便宜的冰淇淋打發一頓午餐。",
     q:"「潸潸」的注音與意思，下列何者正確？", qType:"single",
-    opts:[{id:"A",text:"ㄕㄢ ㄕㄢ，流淚的樣子"},{id:"B",text:"ㄕㄢˋ ㄕㄢˋ，閃爍的樣子"},{id:"C",text:"ㄔㄢˊ ㄔㄢˊ，緩慢的樣子"},{id:"D",text:"ㄕㄢ ㄕㄢˇ，搖晃的樣子"}],
-    ans:"A", rewardItem:"🍦", onClear:"r4a_combine"
+    opts:[{id:"A",text:"ㄕㄢˋ ㄕㄢˋ，閃爍的樣子"},{id:"B",text:"ㄔㄢˊ ㄔㄢˊ，緩慢的樣子"},{id:"C",text:"ㄕㄢ ㄕㄢ，流淚的樣子"},{id:"D",text:"ㄕㄢ ㄕㄢˇ，搖晃的樣子"}],
+    ans:"C", rewardItem:"🍦", onClear:"r4a_combine"
   },
 
   // ---- 融合點2 ----
@@ -635,8 +635,8 @@ const rooms = {
     name:"競技場", mapLabel:"競技場", type:"quiz", qIdx:9,
     story:"【場景】你和老太太一起走進空曠的競技場遺址，石階看台層層疊疊，彷彿還能聽見千年前觀眾的歡呼聲。老太太望著場地，緩緩說起這趟旅程帶給她的感受。",
     q:"老太太一路上節省花費、忍受體力的辛苦，仍堅持完成這趟旅程，這樣的堅持最能呼應「競技場」所象徵的精神？", qType:"single",
-    opts:[{id:"A",text:"不畏艱難，全力以赴追求目標的競技精神"},{id:"B",text:"凡事講求排場，重視輸贏的好勝心"},{id:"C",text:"喜愛熱鬧，享受眾人注目的虛榮感"},{id:"D",text:"害怕失敗，因此選擇逃避挑戰"}],
-    ans:"A", rewardItem:null, onClear:"r4d_arena_challenge"
+    opts:[{id:"A",text:"凡事講求排場，重視輸贏的好勝心"},{id:"B",text:"喜愛熱鬧，享受眾人注目的虛榮感"},{id:"C",text:"害怕失敗，因此選擇逃避挑戰"},{id:"D",text:"不畏艱難，全力以赴追求目標的競技精神"}],
+    ans:"D", rewardItem:null, onClear:"r4d_arena_challenge"
   },
   "r4d_arena_challenge": {
     name:"競技場挑戰賽", mapLabel:"競技場挑戰", type:"arenaChallenge", onClear:"r5a_thrifty",
@@ -695,8 +695,8 @@ const rooms = {
     name:"愛琴海船上（再次相逢）", mapLabel:"愛琴海", type:"quiz", qIdx:3,
     story:"【場景】甲板上，你又遇見了老太太，她正安靜地啃著打包的乾麵包和橘子。望著她專注的神情，你想起了一路上她的種種行為。",
     q:"下列哪一項「行為」與「性格特質」的配對是正確的？", qType:"single",
-    opts:[{id:"A",text:"折半條軟糖分給作者 → 慷慨"},{id:"B",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"C",text:"下雪時看照片回憶春天 → 健忘"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
-    ans:"A", rewardItem:null, onClear:"r6b_tears"
+    opts:[{id:"A",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"B",text:"下雪時看照片回憶春天 → 健忘"},{id:"C",text:"折半條軟糖分給作者 → 慷慨"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
+    ans:"C", rewardItem:null, onClear:"r6b_tears"
   },
   "r6b_tears": {
     name:"愛琴海船上（淚水）", mapLabel:"老太太的淚水", type:"itemget",
@@ -709,15 +709,15 @@ const rooms = {
     name:"夕陽港口", mapLabel:"夕陽港口", type:"quiz", qIdx:"字音4", checkpoint:"進度：夕陽港口（約2/3）",
     story:"【場景】巨輪靠岸，碼頭上人群雜沓，金黃色的夕陽灑落。你看見一只古老的黃銅保險箱，上面刻著形音義謎題。",
     q:"人群「雜沓」的「沓」字注音是？", qType:"single",
-    opts:[{id:"A",text:"ㄊㄚˋ"},{id:"B",text:"ㄉㄚˊ"},{id:"C",text:"ㄋㄚˋ"},{id:"D",text:"ㄓㄚˊ"}],
-    ans:"A", rewardItem:null, onClear:"r7a_side3"
+    opts:[{id:"A",text:"ㄉㄚˊ"},{id:"B",text:"ㄋㄚˋ"},{id:"C",text:"ㄓㄚˊ"},{id:"D",text:"ㄊㄚˋ"}],
+    ans:"D", rewardItem:null, onClear:"r7a_side3"
   },
   "r7a_side3": {
     name:"碼頭一隅（支線）", mapLabel:"碼頭石碑", type:"quiz", qIdx:"字音-側4", isSide:true,
     story:"【支線】碼頭邊有一塊小石碑，似乎還留著最後一道謎題。",
     q:"「抑遏」的意思，及「遏」字注音，下列何者正確？", qType:"single",
-    opts:[{id:"A",text:"壓制阻止，ㄜˋ"},{id:"B",text:"歡迎迎接，ㄍㄜˊ"},{id:"C",text:"讚美稱頌，ㄧㄝˋ"},{id:"D",text:"放任縱容，ㄜˊ"}],
-    ans:"A", rewardItem:null, givesCandy:true, onClear:"r7b_safe"
+    opts:[{id:"A",text:"歡迎迎接，ㄍㄜˊ"},{id:"B",text:"壓制阻止，ㄜˋ"},{id:"C",text:"讚美稱頌，ㄧㄝˋ"},{id:"D",text:"放任縱容，ㄜˊ"}],
+    ans:"B", rewardItem:null, givesCandy:true, onClear:"r7b_safe"
   },
   "r7b_safe": {
     name:"記憶的保險箱", mapLabel:"保險箱", type:"combine", target:["🪨","💧"], resIcon:"🔑", resName:"生命熱情之鑰", combineCount:2,
@@ -1167,7 +1167,7 @@ function renderEngine(roomId) {
                 <button type="button" id="icecream-btn" class="action-btn icecream-btn" ${showIcecreamBtn} onclick="useIcecream('${roomId}')">🍦 消耗 1 個冰淇淋刪除一個錯誤選項</button>
                 <div id="interactive-area" style="margin-top:18px;"></div>
                 <div id="word-count-div" class="word-count hidden">字數：0</div>
-                <button type="button" class="action-btn" onclick="submitQuiz('${roomId}')">提交解答</button>
+                <button type="button" id="submit-quiz-btn" class="action-btn" onclick="submitQuiz('${roomId}')">提交解答</button>
                 <div id="msg-box" class="message"></div>
               </div>`;
       contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
@@ -1223,99 +1223,83 @@ function renderEngine(roomId) {
 }
 </script>
 <script>
-// ================= 背景音樂引擎（Web Audio API 程式合成 - 活潑輕快旅行風） =================
-let audioCtx = null;
+// ================= 背景音樂引擎 =================
+// 一般遊玩畫面：播放真實音檔 bgm.mp3
+// 結局畫面：播放真實音檔 ending.mp3
+// 兩個檔案都請確保與 index.html 放在同一層目錄
 let musicPlaying = false;
-let musicScheduler = null;
 let currentMusicMode = "normal"; // normal | ending
-let musicBeatIndex = 0;
+let bgmAudioEl = null;    // 一般畫面音樂
+let endingAudioEl = null; // 結局畫面音樂
 
-// 主旋律：活潑輕快的大調音階旋律句（像輕快的步伐節奏，C大調系）
-const normalMelodyPhrases = [
-  [523.25, 587.33, 659.25, 523.25, 659.25, 783.99],   // C D E C E G  輕快上揚
-  [659.25, 587.33, 523.25, 440.00, 523.25, 659.25],   // E D C A C E  跳躍回旋
-  [523.25, 659.25, 587.33, 698.46, 659.25, 783.99],   // 活潑跳音
-  [440.00, 523.25, 659.25, 587.33, 523.25, 440.00]    // 輕巧下行收束
-];
-// 結局：更明亮、稍快上揚的旋律句，營造甦醒/感動氛圍
-const endingMelodyPhrases = [
-  [659.25, 783.99, 880.00, 783.99, 1046.50, 880.00],
-  [783.99, 880.00, 1046.50, 880.00, 659.25, 783.99],
-  [880.00, 1046.50, 1174.66, 1046.50, 880.00, 659.25]
-];
-// 輕快的低音節奏點，營造「步伐感」
-const bassNotes = [130.81, 196.00]; // C2, G2 交替
-
-function playTone(freq, startTime, duration, vol, type) {
-  if (!audioCtx) return;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = type || 'triangle';
-  osc.frequency.setValueAtTime(freq, startTime);
-  gain.gain.setValueAtTime(0, startTime);
-  gain.gain.linearRampToValueAtTime(vol, startTime + 0.03);
-  gain.gain.linearRampToValueAtTime(vol * 0.5, startTime + duration * 0.5);
-  gain.gain.linearRampToValueAtTime(0, startTime + duration);
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.start(startTime); osc.stop(startTime + duration + 0.05);
+function getBgmAudioEl() {
+  if (!bgmAudioEl) {
+    bgmAudioEl = new Audio("bgm.mp3");
+    bgmAudioEl.loop = true;
+    bgmAudioEl.volume = 0.45;
+  }
+  return bgmAudioEl;
 }
 
-function scheduleMusicLoop() {
-  if (!audioCtx || !musicPlaying) return;
-  const phraseSets = currentMusicMode === "ending" ? endingMelodyPhrases : normalMelodyPhrases;
-  const phrase = phraseSets[Math.floor(Math.random() * phraseSets.length)];
-  const noteGap = 0.24; // 輕快的音符間距，像走路的步伐節奏
-  const noteDuration = 0.34;
-  const now = audioCtx.currentTime;
-
-  // 旋律線：輕快的單音跳躍
-  phrase.forEach((freq, i) => {
-    playTone(freq, now + i * noteGap, noteDuration, 0.07, 'triangle');
-  });
-
-  // 搭配的低音步伐節奏點，每兩個音符墊一個低音，增加「旅行前進感」
-  for (let i = 0; i < phrase.length; i += 2) {
-    playTone(bassNotes[(musicBeatIndex + i/2) % 2], now + i * noteGap, noteGap * 1.8, 0.045, 'sine');
+function getEndingAudioEl() {
+  if (!endingAudioEl) {
+    endingAudioEl = new Audio("ending.mp3");
+    endingAudioEl.loop = true;
+    endingAudioEl.volume = 0.45;
   }
-  musicBeatIndex++;
+  return endingAudioEl;
+}
 
-  musicScheduler = setTimeout(scheduleMusicLoop, phrase.length * noteGap * 1000);
+function getCurrentAudioEl() {
+  return currentMusicMode === "ending" ? getEndingAudioEl() : getBgmAudioEl();
+}
+
+// 依目前模式啟動對應音源（normal播放bgm.mp3，ending播放ending.mp3）
+function startCurrentMusicSource() {
+  // 確保另一個音源是停止的，避免兩首同時播放
+  if (currentMusicMode === "ending") {
+    if (bgmAudioEl) bgmAudioEl.pause();
+  } else {
+    if (endingAudioEl) endingAudioEl.pause();
+  }
+  const audioEl = getCurrentAudioEl();
+  audioEl.play().catch(err => console.error("音樂播放失敗:", err));
+}
+
+function stopCurrentMusicSource() {
+  if (bgmAudioEl) bgmAudioEl.pause();
+  if (endingAudioEl) endingAudioEl.pause();
 }
 
 function toggleMusic() {
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContextClass();
-  }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-
   musicPlaying = !musicPlaying;
   const btn = document.getElementById('music-toggle-btn');
   if (musicPlaying) {
-    btn.innerText = "🔈"; btn.classList.add('playing');
-    scheduleMusicLoop();
+    if (btn) { btn.innerText = "🔈"; btn.classList.add('playing'); }
+    startCurrentMusicSource();
   } else {
-    btn.innerText = "🔇"; btn.classList.remove('playing');
-    if (musicScheduler) { clearTimeout(musicScheduler); musicScheduler = null; }
+    if (btn) { btn.innerText = "🔇"; btn.classList.remove('playing'); }
+    stopCurrentMusicSource();
   }
 }
 
 // 開局自動播放音樂：必須在使用者點擊「開始」按鈕的同一個呼叫鏈中觸發，才符合瀏覽器自動播放政策
 function startMusicAuto() {
   if (musicPlaying) return; // 已經在播放就不重複觸發
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContextClass();
-  }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
   musicPlaying = true;
   const btn = document.getElementById('music-toggle-btn');
   if (btn) { btn.innerText = "🔈"; btn.classList.add('playing'); }
-  scheduleMusicLoop();
+  startCurrentMusicSource();
 }
 
+// 切換音樂模式（normal/ending）：若正在播放，會自動切換音源
 function setMusicMode(mode) {
+  if (currentMusicMode === mode) return;
   currentMusicMode = mode;
+  if (musicPlaying) {
+    stopCurrentMusicSource();
+    startCurrentMusicSource();
+  }
 }
 
 function syncEndMusicBtn() {
@@ -1438,7 +1422,7 @@ function submitAuthorAnswer() {
 // ================= 答題判定 =================
 function submitQuiz(roomId) {
   const room = rooms[roomId]; let isCorrect = false;
-  const submitBtnEl = document.querySelector('#game-content .quiz-card > button.action-btn');
+  const submitBtnEl = document.getElementById('submit-quiz-btn');
   if (submitBtnEl && submitBtnEl.disabled) return; // 防止重複提交
 
   if (room.qType === "single") {
