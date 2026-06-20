@@ -40,6 +40,10 @@ body.bg-badend { background: #2a221a !important; }
 .candy-row, .icecream-row { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; }
 .candy-row { color: var(--olive); }
 .icecream-row { color: var(--sea); }
+.score-row { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; color: var(--sunset); }
+.timer-row { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: bold; color: var(--error-color); }
+.timer-row.warning { animation: timerBlink 1s infinite alternate; }
+@keyframes timerBlink { 0% { opacity: 1; } 100% { opacity: 0.4; } }
 .music-toggle-btn { background: rgba(217,138,108,0.12); border: 1px solid var(--sunset); color: var(--sunset); border-radius: 20px; padding: 5px 10px; font-size: 15px; cursor: pointer; line-height: 1; transition: all .2s; display: flex; align-items: center; }
 .music-toggle-btn:hover { background: rgba(217,138,108,0.22); }
 .music-toggle-btn.playing { background: var(--sunset); color: #fff; }
@@ -168,6 +172,34 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 .ending-quote { font-size: 16px; font-weight: 700; color: #e8c878; margin: 18px 0 6px; letter-spacing: 1px; opacity: 0; animation: lineFadeIn 1.2s forwards; text-shadow: 0 0 18px rgba(232,200,120,0.4); text-align: center; }
 .ending-final-title { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: #f0dca0; margin-top: 18px; opacity: 0; animation: lineFadeIn 1.5s forwards; text-shadow: 0 0 24px rgba(240,220,160,0.5); }
 .ending-sub { font-size: 12.5px; color: #a8987a; margin-top: 10px; opacity: 0; animation: lineFadeIn 1.5s forwards; letter-spacing: 1px; text-align: center; }
+
+/* ===== 答對誇張回饋：彩帶 + 浮動分數 ===== */
+.confetti-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1500; overflow: hidden; }
+.confetti-piece { position: absolute; top: -20px; font-size: 20px; opacity: 0; animation: confettiFall 1.6s ease-in forwards; }
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(420px) rotate(360deg); }
+}
+.float-score { position: fixed; z-index: 1600; font-size: 26px; font-weight: 900; color: var(--sunset); text-shadow: 0 2px 6px rgba(0,0,0,0.2); pointer-events: none; animation: floatScoreUp 1.1s ease-out forwards; left: 50%; top: 40%; }
+@keyframes floatScoreUp { 0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); } 25% { opacity: 1; transform: translate(-50%, -10px) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
+.combo-banner { position: fixed; left: 50%; top: 30%; transform: translateX(-50%); z-index: 1600; background: var(--sunset); color: #fff; font-weight: bold; font-size: 15px; padding: 8px 18px; border-radius: 20px; box-shadow: 0 4px 14px rgba(217,138,108,0.5); pointer-events: none; animation: comboPop 1.3s ease-out forwards; }
+@keyframes comboPop { 0% { opacity: 0; transform: translateX(-50%) scale(0.5); } 20% { opacity: 1; transform: translateX(-50%) scale(1.1); } 35% { transform: translateX(-50%) scale(1); } 100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-20px); } }
+
+/* ===== 模式選擇（首頁） ===== */
+.mode-select { display: flex; gap: 10px; margin-bottom: 18px; }
+.mode-option { flex: 1; border: 2px solid var(--border-color); border-radius: 8px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all .2s; background: rgba(255,255,255,0.4); }
+.mode-option:hover { border-color: var(--sunset); }
+.mode-option.selected { border-color: var(--sunset); background: rgba(217,138,108,0.12); box-shadow: 0 0 0 2px rgba(217,138,108,0.25); }
+.mode-option-title { font-weight: bold; font-size: 14px; margin-bottom: 3px; }
+.mode-option-desc { font-size: 11px; color: var(--ink-soft); }
+
+/* ===== 結局稱號徽章 ===== */
+.title-badge { display: inline-block; background: linear-gradient(135deg, #f0dca0, #d98a6c); color: #2c2520; font-weight: 900; font-size: 20px; padding: 10px 26px; border-radius: 30px; margin-top: 10px; box-shadow: 0 4px 16px rgba(217,138,108,0.4); opacity: 0; animation: lineFadeIn 1.4s forwards; letter-spacing: 2px; }
+.score-summary { font-size: 14px; color: #d8cab0; margin-top: 8px; opacity: 0; animation: lineFadeIn 1.4s forwards; }
+
+/* ===== 限時模式倒數提示彈窗 ===== */
+.time-warning-toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: var(--error-color); color: #fff; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: bold; z-index: 1800; box-shadow: 0 4px 14px rgba(0,0,0,0.25); animation: toastSlide 5s ease forwards; }
+@keyframes toastSlide { 0% { opacity: 0; transform: translateX(-50%) translateY(-20px); } 10% { opacity: 1; transform: translateX(-50%) translateY(0); } 90% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-10px); } }
 </style>
 </head>
 <body>
@@ -179,8 +211,10 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
     <div class="location-badge" id="current-location">📍 載入中...</div>
     <div class="consumables">
       <button type="button" class="music-toggle-btn" id="music-toggle-btn" onclick="toggleMusic()">🔇</button>
+      <div class="score-row">⭐<span id="score-count">0</span></div>
       <div class="candy-row">🍬<span id="candy-count">0</span></div>
       <div class="icecream-row">🍦<span id="icecream-count">0</span></div>
+      <div class="timer-row hidden" id="timer-row">⏱️<span id="timer-display">35:00</span></div>
     </div>
   </div>
 
@@ -192,6 +226,17 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
         【日記扉頁】... 翻開這本舊舊的旅行日記，紙頁卻散落了一地，順序全都亂了。<br><br>
         一位戴著老花眼鏡、背著舊藤袋的老太太，將要帶你走過希臘的春天，也走進她生命裡，那段關於勇氣與熱情的旅程。<br><br>
         ⚠️ 在出發之前，請先把記憶的碎片重新拼回正確的順序，喚醒這段旅程的記憶。
+      </div>
+      <div class="question-text" style="margin-top:18px;">請選擇遊玩模式：</div>
+      <div class="mode-select">
+        <div class="mode-option selected" id="mode-relax" onclick="selectMode('relax')">
+          <div class="mode-option-title">🌿 悠閒模式</div>
+          <div class="mode-option-desc">無時間限制，慢慢探索</div>
+        </div>
+        <div class="mode-option" id="mode-timed" onclick="selectMode('timed')">
+          <div class="mode-option-title">⏱️ 限時模式</div>
+          <div class="mode-option-desc">35分鐘挑戰，更刺激</div>
+        </div>
       </div>
       <div class="question-text">請在日記封面署名（座號＋姓名）：</div>
       <input type="text" id="student-id" class="text-input" placeholder="例如：10301王大明">
@@ -262,7 +307,7 @@ const itemDB = {
   '🍬': { title:"薄荷軟糖", desc:"老太太主動分享給作者的薄荷軟糖，是兩人初遇時善意的起點。", inspect:"糖紙上印著小小的希臘文字，包裝已經有些褪色。" },
   '💐': { title:"野雛菊花束", desc:"廣場上採來的野雛菊，用心包紮成一束花，準備送給老太太。", inspect:"花束雖然樸素，卻是作者表達善意的心意。" },
   '📷': { title:"老太太拍作者的照片", desc:"老太太偷拍作者的照片，翻到背面藏著作者介紹。", inspect:"翻過來看看，背面藏著作者的介紹資料，或許是進入神殿的關鍵。" },
-  '🪨': { title:"塔列斯石刻", desc:"阿波羅神殿深處找到的古老石刻殘片，刻有一句千古箴言。", inspect:"石刻背面刻著：『人需要了解自己。』這正是德爾菲神殿最有名的箴言，也呼應了老太太面對生命的態度。",
+  '🪨': { title:"塔列斯石刻", desc:"阿波羅神殿深處找到的古老石刻殘片，刻有一句千古箴言。", inspect:"石刻背面刻著：『認識你自己。』這正是德爾菲神殿最有名的箴言，也呼應了老太太面對生命的態度。",
           hasQuiz:true, quizQ:"石刻邊緣似乎還刻著另一個詞語，「神采奕奕」的意思是？",
           quizOpts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"}], quizAns:"A" },
   '🍦': { title:"冰淇淋（信物）", desc:"冰淇淋車給的紀念信物，準備拿給山下等待的老太太。", inspect:"冰涼的觸感讓人聯想到希臘夏天的陽光。" },
@@ -293,6 +338,19 @@ const prologueEvents = [
 ];
 const prologueAns = ["A","B","C","D","E","F","G","H"];
 
+// ================= 競技場：可重複挑戰刷糖果的字音字形題庫 =================
+const arenaTrapDB = [
+  { q:"陰「霾」的「霾」字注音是？", opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"}], ans:"A" },
+  { q:"遮「掩」不住的「掩」字注音是？", opts:[{id:"A",text:"ㄧㄢˇ"},{id:"B",text:"ㄧㄢˋ"},{id:"C",text:"ㄢˇ"}], ans:"A" },
+  { q:"羞「赧」的「赧」字注音是？", opts:[{id:"A",text:"ㄋㄢˇ"},{id:"B",text:"ㄈㄢˇ"},{id:"C",text:"ㄉㄢˇ"}], ans:"A" },
+  { q:"「拮据」的意思是？", opts:[{id:"A",text:"經濟困難"},{id:"B",text:"動作敏捷"},{id:"C",text:"緊張不安"}], ans:"A" },
+  { q:"「神采奕奕」的意思是？", opts:[{id:"A",text:"精神飽滿，容光煥發"},{id:"B",text:"愁眉不展，無精打采"},{id:"C",text:"沉默寡言，不發一語"}], ans:"A" },
+  { q:"「潸潸」的意思是？", opts:[{id:"A",text:"流淚的樣子"},{id:"B",text:"閃爍的樣子"},{id:"C",text:"搖晃的樣子"}], ans:"A" },
+  { q:"「抑遏」的意思是？", opts:[{id:"A",text:"壓制阻止"},{id:"B",text:"歡迎迎接"},{id:"C",text:"放任縱容"}], ans:"A" },
+  { q:"人群「雜沓」的「沓」字注音是？", opts:[{id:"A",text:"ㄊㄚˋ"},{id:"B",text:"ㄉㄚˊ"},{id:"C",text:"ㄋㄚˋ"}], ans:"A" },
+  { q:"「怯生生」形容的是？", opts:[{id:"A",text:"害羞畏懼的樣子"},{id:"B",text:"自信大方的樣子"},{id:"C",text:"生氣憤怒的樣子"}], ans:"A" }
+];
+
 // ================= 景點資料 =================
 const rooms = {
   // ---- 序章 ----
@@ -304,6 +362,7 @@ const rooms = {
     story:"【場景】空盪盪的巴士車廂，引擎低鳴。羅盤的指針微微晃動，似乎在引導你選擇方向。",
     exits:[
       { dir:"向東探索", tag:"撞見行李堆（支線）", target:"r1_side" },
+      { dir:"向南查看", tag:"車窗外的告示（支線）", target:"r1_side2" },
       { dir:"向北深入", tag:"走向前座（主線）", target:"r1b_meet" }
     ]
   },
@@ -312,6 +371,13 @@ const rooms = {
     story:"【支線】你撞上後座的行李堆，灰塵揚起。行李箱上貼著一張褪色的小紙條，寫著形音義謎題。",
     q:"陰「霾」的「霾」字注音是？", qType:"single",
     opts:[{id:"A",text:"ㄇㄞˊ"},{id:"B",text:"ㄌㄧˊ"},{id:"C",text:"ㄇㄟˊ"},{id:"D",text:"ㄋㄞˊ"}],
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
+  },
+  "r1_side2": {
+    name:"車窗外的告示（支線）", mapLabel:"東德背景", type:"quiz", qIdx:"字音-側東德", isSide:true,
+    story:"【支線】車窗外掠過一塊褪色的歷史告示牌，上面寫著一段關於老太太家鄉的小知識：\n\n「東德」原指二次世界大戰以後成立的共產極權國家，但東德與西德已於一九九〇年統一，因此在課文中指的是德國東部。",
+    q:"根據告示牌內容，課文中提到的「東德」，現在指的是？", qType:"single",
+    opts:[{id:"A",text:"德國東部"},{id:"B",text:"一個仍然獨立存在的國家"},{id:"C",text:"希臘的一個地區"},{id:"D",text:"奧地利的舊稱"}],
     ans:"A", rewardItem:null, givesCandy:true, onClear:"r1b_meet"
   },
   "r1b_meet": {
@@ -333,8 +399,16 @@ const rooms = {
     story:"【場景】陽光灑落的歐洲小鎮廣場。羅盤又開始晃動，廣場上似乎有不只一個角落值得探索。",
     exits:[
       { dir:"向西搜尋", tag:"廣場長椅與草叢（主線）", target:"r2_gather" },
+      { dir:"向南查看", tag:"廣場告示欄（支線）", target:"r2_side" },
       { dir:"向北深入", tag:"廣場中央（後續劇情）", target:"r2_gather" }
     ]
+  },
+  "r2_side": {
+    name:"廣場告示欄（支線）", mapLabel:"怯生生", type:"quiz", qIdx:"字音-側怯", isSide:true,
+    story:"【支線】廣場一角的告示欄上，貼著一張字詞小卡：「怯生生：害羞畏懼的樣子。」",
+    q:"課文用「怯生生」來形容老太太初次與作者交談時的模樣，這個詞最適合形容下列哪一種神情？", qType:"single",
+    opts:[{id:"A",text:"害羞畏懼，不太敢開口"},{id:"B",text:"自信大方，侃侃而談"},{id:"C",text:"生氣憤怒，怒目相視"},{id:"D",text:"冷漠疏離，不發一語"}],
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r2_gather"
   },
   "r2_gather": {
     name:"廣場搜查", mapLabel:"廣場搜查", type:"quiz", qIdx:"字音1",
@@ -357,9 +431,22 @@ const rooms = {
     onUnlock:"r2d_author"
   },
   "r2d_author": {
-    name:"作者書房", mapLabel:"作者書房", type:"author",
-    story:"【場景】老太太收下花束，笑得燦爛。她從藤袋裡又拿出那張偷拍的照片遞給你。你翻到背面，似乎藏著什麼——",
+    name:"作者書房", mapLabel:"作者書房", type:"nav",
+    story:"【場景】老太太收下花束，笑得燦爛。她從藤袋裡又拿出那張偷拍的照片遞給你。你翻到背面，似乎藏著什麼——書房的角落，還擺著一台老舊的播放器。",
+    exits:[
+      { dir:"翻開照片", tag:"作者介紹（主線）", target:"r2d_author_main" },
+      { dir:"查看播放器", tag:"音樂卡帶小知識（支線）", target:"r2d_side" }
+    ]
+  },
+  "r2d_author_main": {
+    name:"作者書房（照片）", mapLabel:"作者書房", type:"author",
+    story:"【場景】你拿起那張偷拍的照片，準備翻到背面看看寫了什麼——",
     onClear:"r2e_kindness"
+  },
+  "r2d_side": {
+    name:"老舊播放器（支線）", mapLabel:"音樂卡帶", type:"flavorRead", mapBack:"r2d_author",
+    story:"【支線知識】播放器旁放著一張小卡片，介紹著這台機器的搭檔——音樂卡帶：\n\n「音樂卡帶」是一種裝在小盒子裡的磁帶，使用錄音機播放，是上個世代人們攜帶音樂、保存聲音記憶的重要媒介，如今已經非常少見了。\n\n你彷彿能想像，老太太收到這份禮物時，會是多麼驚喜。",
+    onClear:"r2d_author"
   },
   "r2e_kindness": {
     name:"德爾菲廣場（善意）", mapLabel:"善意行為", type:"quiz", qIdx:4,
@@ -369,32 +456,86 @@ const rooms = {
     ans:["A","B","C"], rewardItem:"📼", onClear:"r2f_litreview"
   },
 
-  // ---- 新增：旅行文學知識房（主線必經） ----
+  // ---- 旅行文學知識房（主線必經） ----
   "r2f_litreview": {
     name:"旅行手札室", mapLabel:"旅遊文學", type:"quiz", qIdx:"旅遊文學",
     story:"【場景】離開廣場前，你在路邊書攤翻到一本「課文補充資料」，上面寫著：\n\n旅行文學是一種書寫方式，又稱「旅遊文學」，是旅行者記錄見聞並抒發情感的書寫。通常有旅行時間、自然或人文景觀的描述、個人的自敘等元素。雖是經過想像與整理，但不能因此而消除旅行本身的記實性，因而曾有作家稱自己的旅行書寫，為旅行的再創作或再現。\n\n本課可歸屬於「旅行文學」之中，兼有「行動」和「文學」，亦即有實際旅行，並以文學手法敘述。內容包括踏上旅途前的期盼心情、旅行過程、見聞，以及旅行後的回憶等，其文體可以是散文、日記、書信、詩歌、歌詞等。",
     q:"根據補充資料，旅行文學強調必須具備「實際旅遊」的＿＿？", qType:"single",
     opts:[{id:"A",text:"行動／旅行經驗"},{id:"B",text:"想像力"},{id:"C",text:"文學修辭技巧"},{id:"D",text:"旅遊景點知名度"}],
-    ans:"A", rewardItem:null, onClear:"r3_temple_gate"
+    ans:"A", rewardItem:null, onClear:"r2g_delphi_gate"
+  },
+
+  // ---- 德爾菲地名知識（前往神殿前的支線） ----
+  "r2g_delphi_gate": {
+    name:"前往神殿之路", mapLabel:"前往神殿", type:"nav",
+    story:"【場景】離開市集，腳下的石板路通往山丘上的神殿。羅盤指針又開始晃動。",
+    exits:[
+      { dir:"查看路標", tag:"德爾菲地名小知識（支線）", target:"r2g_side" },
+      { dir:"繼續前行", tag:"前往阿波羅神殿（主線）", target:"r3_temple_gate" }
+    ]
+  },
+  "r2g_side": {
+    name:"路標前（支線）", mapLabel:"德爾菲地名", type:"flavorRead", mapBack:"r2g_delphi_gate",
+    story:"【支線知識】山路旁立著一塊石刻路標，介紹著這座小鎮的名字由來：\n\n「德爾菲」是希臘古城 Delphi 的譯名，為阿波羅神殿遺蹟的所在地，自古以來就是希臘人心目中極為神聖的宗教中心。",
+    onClear:"r2g_delphi_gate"
   },
 
   // ---- 景點3：阿波羅神殿（道具門票） ----
   "r3_temple_gate": {
-    name:"阿波羅神殿（神像守衛）", mapLabel:"神像守衛", type:"toll", checkpoint:"進度：阿波羅神殿（約1/3）",
-    story:"【❌ 限制區域】陡峭的石階山腳下，一尊巨大的阿波羅神像擋住去路。神像低語：『要進入聖殿，需出示能證明你身分的信物。』",
+    name:"阿波羅神殿（神像守衛）", mapLabel:"神像守衛", type:"nav", checkpoint:"進度：阿波羅神殿（約1/3）",
+    story:"【❌ 限制區域】陡峭的石階山腳下，一尊巨大的阿波羅神像擋住去路。神像低語：『要進入聖殿，需出示能證明你身分的信物。』一旁的石碑上，似乎還刻著關於這尊神像的介紹。",
+    exits:[
+      { dir:"查看石碑", tag:"阿波羅是誰（支線）", target:"r3_side_apollo" },
+      { dir:"出示信物", tag:"通過神像守衛（主線）", target:"r3_temple_gate_main" }
+    ]
+  },
+  "r3_side_apollo": {
+    name:"神像前的石碑（支線）", mapLabel:"阿波羅是誰", type:"flavorRead", mapBack:"r3_temple_gate",
+    story:"【支線知識】石碑上刻著這尊巨像的身世：\n\n「阿波羅」（Apollo）是希臘神話中的太陽神，以年輕俊美著稱，也是音樂、預言、醫藥與光明之神，是希臘神話中最重要的神祇之一。",
+    onClear:"r3_temple_gate"
+  },
+  "r3_temple_gate_main": {
+    name:"神像守衛（出示信物）", mapLabel:"出示信物", type:"toll",
+    story:"【❌ 限制區域】神像低語：『要進入聖殿，需出示能證明你身分的信物。』",
     tollItem:"📷", tollPrompt:"請從背包中點選【老太太拍作者的照片】，出示給神像作為通行證",
     onUnlock:"r3_temple_in"
   },
   "r3_temple_in": {
     name:"阿波羅神殿", mapLabel:"神殿石階", type:"quiz", qIdx:"5上",
-    story:"【場景】神殿大門開啟，但石階陡峭，老太太爬得氣喘吁吁，最後決定留在山下等你。臨別前，她推了你一把，笑著說：『年輕人！值得用一輩子換的美景呢！』",
+    story:"【場景】神殿大門開啟，但石階陡峭，老太太爬得氣喘吁吁，最後決定留在山下等你。臨別前，她推了你一把，笑著說：『年輕人！值得用一輩子換的美景呢！我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！』",
     q:"老太太這段話，最能呼應她怎樣的人生態度？", qType:"single",
     opts:[{id:"A",text:"及時行樂，把握當下，積極樂觀地面對人生"},{id:"B",text:"凡事小心謹慎，避免犯錯"},{id:"C",text:"金錢至上，旅行只是炫耀的方式"},{id:"D",text:"消極悲觀，認為人生苦短不值得努力"}],
-    ans:"A", rewardItem:null, onClear:"r3b_stone"
+    ans:"A", rewardItem:null, onClear:"r3a_ruins_gate"
+  },
+  "r3a_ruins_gate": {
+    name:"神殿遺蹟入口", mapLabel:"神殿遺蹟", type:"nav",
+    story:"【場景】你獨自走進神殿廢墟，斷裂的石柱矗立在午後陽光下，散發著千年的滄桑感。",
+    exits:[
+      { dir:"查看解說牌", tag:"神殿遺蹟小知識（支線）", target:"r3a_side_ruins" },
+      { dir:"繼續探索", tag:"前往廢墟角落（主線）", target:"r3b_stone" }
+    ]
+  },
+  "r3a_side_ruins": {
+    name:"遺蹟解說牌（支線）", mapLabel:"神殿遺蹟", type:"flavorRead", mapBack:"r3a_ruins_gate",
+    story:"【支線知識】解說牌上寫著：\n\n阿波羅神殿遺蹟是古希臘最重要的宗教聖地之一，相傳這裡曾是「德爾菲神諭」的所在地——人們會千里迢迢前來，向祭司詢問神明對未來的啟示。如今神殿雖已傾頹，殘存的石柱仍見證著古希臘人對信仰與智慧的追求。",
+    onClear:"r3a_ruins_gate"
   },
   "r3b_stone": {
-    name:"神殿廢墟（石刻）", mapLabel:"塔列斯石刻", type:"itemget",
-    story:"【拾獲】你獨自走進神殿廢墟的角落，發現一片古老的石刻殘片，輕輕拂去塵土，上面浮現一行字：『人需要了解自我。』\n\n💡 小提示：之後可以在背包中點擊這個信物，仔細端詳，或許還能發現額外的謎題。",
+    name:"神殿廢墟（石刻）", mapLabel:"塔列斯石刻", type:"nav",
+    story:"【場景】你走進神殿廢墟的角落，發現一片古老的石刻殘片，輕輕拂去塵土，上面浮現一行字：『人需要了解自我。』石刻旁，還立著一塊小小的人物介紹牌。",
+    exits:[
+      { dir:"查看介紹牌", tag:"塔列斯是誰（支線）", target:"r3b_side_thales" },
+      { dir:"拾起石刻", tag:"收下塔列斯石刻（主線）", target:"r3b_stone_main" }
+    ]
+  },
+  "r3b_side_thales": {
+    name:"石刻旁的介紹牌（支線）", mapLabel:"塔列斯是誰", type:"flavorRead", mapBack:"r3b_stone",
+    story:"【支線知識】介紹牌上寫著：\n\n「塔列斯」（Thales，約西元前624～544）是古代希臘著名的哲學家，被譽為「哲學之父」，也是「認識你自己」這句千古箴言的重要傳承者之一，主張人應該透過理性思考來認識世界與自身。",
+    onClear:"r3b_stone"
+  },
+  "r3b_stone_main": {
+    name:"神殿廢墟（拾起石刻）", mapLabel:"拾起石刻", type:"itemget",
+    story:"【拾獲】你輕輕拾起這片古老的石刻殘片，上面的字跡清晰可見：『人需要了解自我。』\n\n💡 小提示：之後可以在背包中點擊這個信物，仔細端詳，或許還能發現額外的謎題。",
     rewardItem:"🪨", onClear:"r4_icecream_gate"
   },
 
@@ -419,7 +560,20 @@ const rooms = {
     story:"【支線】石壁的另一側，似乎還有殘留的字跡。",
     q:"「拮据」的注音與意思，下列何者正確？", qType:"single",
     opts:[{id:"A",text:"ㄐㄧㄝˊ ㄐㄩ，經濟困難"},{id:"B",text:"ㄐㄧㄝˊ ㄐㄩˋ，動作敏捷"},{id:"C",text:"ㄐㄧㄝˋ ㄐㄩ，借貸度日"},{id:"D",text:"ㄐㄧㄝˊ ㄍㄨ，緊張不安"}],
-    ans:"A", rewardItem:null, givesCandy:true, onClear:"r4_icecream"
+    ans:"A", rewardItem:null, givesCandy:true, onClear:"r4_icecream_pre"
+  },
+  "r4_icecream_pre": {
+    name:"小鎮出口（續）", mapLabel:"續行", type:"nav",
+    story:"【場景】穿過巷弄，眼前出現一塊地名告示牌，指向小鎮的另一端。",
+    exits:[
+      { dir:"查看告示牌", tag:"德爾菲地名小知識（支線）", target:"r4_side_delphi" },
+      { dir:"繼續前行", tag:"前往冰淇淋車（主線）", target:"r4_icecream" }
+    ]
+  },
+  "r4_side_delphi": {
+    name:"地名告示牌（支線）", mapLabel:"德爾菲地名", type:"flavorRead", mapBack:"r4_icecream_pre",
+    story:"【支線知識】告示牌上寫著：\n\n「德爾菲」是希臘古城 Delphi 的譯名，為阿波羅神殿遺蹟的所在地，是古希臘人心目中最神聖的地點之一，也是這趟旅程的重要轉折地。",
+    onClear:"r4_icecream_pre"
   },
   "r4_icecream": {
     name:"冰淇淋車", mapLabel:"冰淇淋車", type:"quiz", qIdx:"字音3",
@@ -429,7 +583,7 @@ const rooms = {
     ans:"A", rewardItem:"🍦", onClear:"r4a_combine"
   },
 
-  // ---- 新增：融合點2 ----
+  // ---- 融合點2 ----
   "r4a_combine": {
     name:"清涼提神包", mapLabel:"融合：提神包", type:"combine", target:["🍬","🍦"], resIcon:"🧊", resName:"清涼提神包", combineCount:2,
     story:"【小機關】你想到老太太爬山時氣喘吁吁的模樣，决定把手邊的薄荷軟糖和冰淇淋融合成清涼提神包，準備帶給她解暑提神。",
@@ -439,7 +593,33 @@ const rooms = {
     name:"獻上冰淇淋", mapLabel:"獻上提神包", type:"toll",
     story:"【關鍵行動】你拿著清涼提神包，快步走回山下，老太太正在等你。",
     tollItem:"🧊", tollPrompt:"請從背包中點選【清涼提神包】，出示給山下等待的老太太",
-    onUnlock:"r5_restaurant"
+    onUnlock:"r4c_arena_gate"
+  },
+
+  // ---- 新增景點：競技場 ----
+  "r4c_arena_gate": {
+    name:"前往競技場", mapLabel:"前往競技場", type:"nav",
+    story:"【場景】老太太吃完清涼提神包後，精神恢復不少，提議再走訪附近的競技場遺址，順便休息一下。",
+    exits:[
+      { dir:"查看遺址解說", tag:"競技場小知識（支線）", target:"r4c_side_arena" },
+      { dir:"踏入競技場", tag:"進入競技場（主線）", target:"r4c_arena" }
+    ]
+  },
+  "r4c_side_arena": {
+    name:"競技場解說牌（支線）", mapLabel:"競技場知識", type:"flavorRead", mapBack:"r4c_arena_gate",
+    story:"【支線知識】解說牌上寫著：\n\n「競技場」是古代希臘舉行體能競賽的場地，常用於賽跑、摔角等運動項目，也是古希臘奧林匹克運動會的重要場地形式之一，展現了古希臘人對體魄與競技精神的重視。",
+    onClear:"r4c_arena_gate"
+  },
+  "r4c_arena": {
+    name:"競技場", mapLabel:"競技場", type:"quiz", qIdx:9,
+    story:"【場景】你和老太太一起走進空曠的競技場遺址，石階看台層層疊疊，彷彿還能聽見千年前觀眾的歡呼聲。老太太望著場地，緩緩說起這趟旅程帶給她的感受。",
+    q:"老太太一路上節省花費、忍受體力的辛苦，仍堅持完成這趟旅程，這樣的堅持最能呼應「競技場」所象徵的精神？", qType:"single",
+    opts:[{id:"A",text:"不畏艱難，全力以赴追求目標的競技精神"},{id:"B",text:"凡事講求排場，重視輸贏的好勝心"},{id:"C",text:"喜愛熱鬧，享受眾人注目的虛榮感"},{id:"D",text:"害怕失敗，因此選擇逃避挑戰"}],
+    ans:"A", rewardItem:null, onClear:"r4d_arena_challenge"
+  },
+  "r4d_arena_challenge": {
+    name:"競技場挑戰賽", mapLabel:"競技場挑戰", type:"arenaChallenge", onClear:"r5_restaurant",
+    story:"【額外挑戰】老太太笑著說：『年輕人，既然來到競技場，不如再挑戰幾回合，當作熱身吧！每答對一題，就送你一顆薄荷軟糖！』\n\n你可以自由選擇要挑戰幾次，想離開的時候隨時可以前往下一站。"
   },
 
   // ---- 景點5：旅店餐廳 ----
@@ -448,13 +628,26 @@ const rooms = {
     story:"【場景】傍晚時分，陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，老太太正打包著簡單的午餐——乾麵包和橘子。",
     q:"老太太旅行的核心夢想是什麼？", qType:"single",
     opts:[{id:"A",text:"成為知名的旅遊作家"},{id:"B",text:"在有限的生命裡，盡可能看看廣大的世界"},{id:"C",text:"找到一份穩定的工作"},{id:"D",text:"證明自己比年輕人更厲害"}],
-    ans:"B", rewardItem:"🍞", onClear:"r6_ferry"
+    ans:"B", rewardItem:"🍞", onClear:"r6_ferry_gate"
   },
 
   // ---- 景點6：愛琴海船上 ----
+  "r6_ferry_gate": {
+    name:"渡輪甲板入口", mapLabel:"渡輪甲板", type:"nav",
+    story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。甲板上有一塊地理解說牌，吸引了你的目光。",
+    exits:[
+      { dir:"查看解說牌", tag:"愛琴海小知識（支線）", target:"r6_side_aegean" },
+      { dir:"走向甲板", tag:"與老太太再次相逢（主線）", target:"r6_ferry" }
+    ]
+  },
+  "r6_side_aegean": {
+    name:"地理解說牌（支線）", mapLabel:"愛琴海", type:"flavorRead", mapBack:"r6_ferry_gate",
+    story:"【支線知識】解說牌上寫著：\n\n「愛琴海」（Aegean Sea）位於希臘境內，海上島嶼星羅棋布，有「多島海」之稱，是希臘文明的重要發源地之一，也孕育了豐富的航海與貿易歷史。",
+    onClear:"r6_ferry_gate"
+  },
   "r6_ferry": {
     name:"愛琴海船上（再次相逢）", mapLabel:"愛琴海", type:"quiz", qIdx:3,
-    story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。甲板上，你又遇見了老太太，她正安靜地啃著打包的乾麵包和橘子。望著她專注的神情，你想起了一路上她的種種行為。",
+    story:"【場景】甲板上，你又遇見了老太太，她正安靜地啃著打包的乾麵包和橘子。望著她專注的神情，你想起了一路上她的種種行為。",
     q:"下列哪一項「行為」與「性格特質」的配對是正確的？", qType:"single",
     opts:[{id:"A",text:"折半條軟糖分給作者 → 慷慨"},{id:"B",text:"撫摸石刻反覆端詳 → 冷漠"},{id:"C",text:"下雪時看照片回憶春天 → 健忘"},{id:"D",text:"獨自出國旅行 → 膽怯"}],
     ans:"A", rewardItem:null, onClear:"r6b_tears"
@@ -511,12 +704,15 @@ const rooms = {
 };
 
 const mapLayoutOrder = [
-  "r0_prologue","r1_bus","r1_side","r1b_meet","r1c_reward",
-  "r2_plaza","r2_gather","r2b_photo","r2c_gift","r2d_author",
-  "r2e_kindness","r2f_litreview","r3_temple_gate","r3_temple_in","r3b_stone",
-  "r4_icecream_gate","r4_side","r4a_side2","r4_icecream","r4a_combine",
-  "r4b_deliver","r5_restaurant","r6_ferry","r6b_tears","r7_port_gate",
-  "r7a_side3","r7b_safe","r7c_final1","r7d_final2","r8_final","r_end"
+  "r0_prologue","r1_bus","r1_side","r1_side2","r1b_meet","r1c_reward",
+  "r2_plaza","r2_side","r2_gather","r2b_photo","r2c_gift","r2d_author",
+  "r2d_author_main","r2d_side","r2e_kindness","r2f_litreview","r2g_delphi_gate","r2g_side",
+  "r3_temple_gate","r3_side_apollo","r3_temple_gate_main","r3_temple_in","r3a_ruins_gate","r3a_side_ruins",
+  "r3b_stone","r3b_side_thales","r3b_stone_main","r4_icecream_gate","r4_side","r4a_side2",
+  "r4_icecream_pre","r4_side_delphi","r4_icecream","r4a_combine","r4b_deliver","r4c_arena_gate",
+  "r4c_side_arena","r4c_arena","r4d_arena_challenge","r5_restaurant","r6_ferry_gate","r6_side_aegean","r6_ferry",
+  "r6b_tears","r7_port_gate","r7a_side3","r7b_safe","r7c_final1","r7d_final2",
+  "r8_final","r_end"
 ];
 </script>
 <script>
@@ -593,6 +789,109 @@ let pendingBadEndRoom = null;
 let authorSolved = false;
 let selectedTollItem = null;
 let authorNameVerified = false;
+
+// ---- 計分與模式系統 ----
+let score = 0;
+let comboCount = 0;
+let gameMode = "relax"; // relax | timed
+let timeLeft = 35 * 60; // 35分鐘（秒）
+let timerInterval = null;
+let timeWarningsShown = { ten:false, five:false, one:false };
+
+function selectMode(mode) {
+  gameMode = mode;
+  document.getElementById('mode-relax').classList.toggle('selected', mode === 'relax');
+  document.getElementById('mode-timed').classList.toggle('selected', mode === 'timed');
+}
+
+function addScore(points, isStreak) {
+  score += points;
+  document.getElementById('score-count').innerText = score;
+  showFloatScore(points);
+  if (isStreak) {
+    comboCount++;
+    if (comboCount >= 2) showComboBanner(comboCount);
+  } else {
+    comboCount = 0;
+  }
+}
+
+function deductScore(points) {
+  score = Math.max(0, score - points);
+  document.getElementById('score-count').innerText = score;
+}
+
+function showFloatScore(points) {
+  const el = document.createElement('div');
+  el.className = 'float-score';
+  el.innerText = '+' + points;
+  el.style.left = (45 + Math.random()*10) + '%';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1150);
+}
+
+function showComboBanner(n) {
+  const el = document.createElement('div');
+  el.className = 'combo-banner';
+  el.innerText = '🔥 連續答對 ' + n + ' 題！';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1350);
+}
+
+function fireConfetti() {
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  document.body.appendChild(layer);
+  const emojis = ['🎉','✨','🌼','🎊','⭐','🍬'];
+  for (let i = 0; i < 18; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+    piece.style.left = (Math.random()*100) + '%';
+    piece.style.animationDelay = (Math.random()*0.3) + 's';
+    piece.style.fontSize = (16 + Math.random()*14) + 'px';
+    layer.appendChild(piece);
+  }
+  setTimeout(() => layer.remove(), 2000);
+}
+
+// ---- 限時模式倒數計時 ----
+function startTimer() {
+  if (gameMode !== 'timed') return;
+  document.getElementById('timer-row').classList.remove('hidden');
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      showTimeToast("⏰ 時間到囉！請加快腳步完成旅程～");
+    } else if (timeLeft === 600 && !timeWarningsShown.ten) {
+      timeWarningsShown.ten = true; showTimeToast("⏳ 還剩 10 分鐘，加油！");
+    } else if (timeLeft === 300 && !timeWarningsShown.five) {
+      timeWarningsShown.five = true; showTimeToast("⏳ 還剩 5 分鐘囉！");
+    } else if (timeLeft === 60 && !timeWarningsShown.one) {
+      timeWarningsShown.one = true; showTimeToast("⏳ 最後 1 分鐘，衝刺一下！");
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.max(0, Math.floor(timeLeft / 60)).toString().padStart(2,'0');
+  const s = Math.max(0, timeLeft % 60).toString().padStart(2,'0');
+  const display = document.getElementById('timer-display');
+  if (display) display.innerText = m + ':' + s;
+  const row = document.getElementById('timer-row');
+  if (row) row.classList.toggle('warning', timeLeft <= 300 && timeLeft > 0);
+}
+
+function showTimeToast(text) {
+  const el = document.createElement('div');
+  el.className = 'time-warning-toast';
+  el.innerText = text;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 5000);
+}
 
 const shortAnswerHints = {
   "r8_final": [
@@ -691,6 +990,15 @@ function renderEngine(roomId) {
       return;
     }
 
+    // ---- 純閱讀知識房（flavorRead，背景知識支線，不用答題） ----
+    if (room.type === "flavorRead") {
+      html = `<div class="story-box" style="border-left-color: var(--olive);">📖 背景知識</div>
+              <div class="story-text">${room.story}</div>
+              <button type="button" class="action-btn" style="border-color: var(--olive); color: var(--olive);" onclick="renderEngine('${room.onClear || room.mapBack}')">收穫了這份知識，返回</button>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      return;
+    }
+
     // ---- 道具出示機關（toll） ----
     if (room.type === "toll") {
       authorNameVerified = false;
@@ -744,6 +1052,18 @@ function renderEngine(roomId) {
       return;
     }
 
+    // ---- 競技場挑戰賽（可重複答題刷糖果） ----
+    if (room.type === "arenaChallenge") {
+      html = `<div class="story-box">${room.story}</div>
+              <div class="quiz-card">
+                <div id="arena-quiz-area"></div>
+              </div>
+              <button type="button" class="action-btn" style="border-color:var(--olive); color:var(--olive);" onclick="renderEngine('${room.onClear}')">離開競技場，繼續前行</button>`;
+      contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
+      renderArenaQuestion();
+      return;
+    }
+
     // ---- 答題（quiz） ----
     if (room.type === "quiz") {
       let progress = roomHintsProgress[roomId] || 0;
@@ -788,8 +1108,11 @@ function renderEngine(roomId) {
       document.getElementById('map-ui').classList.add('hidden');
       document.getElementById('satchel-ui').classList.add('hidden');
       document.getElementById('main-journal').classList.add('ending-fullscreen');
-      uploadProgress("完成通關");
+      uploadProgress("完成通關（總分：" + score + "）");
       setMusicMode("ending");
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+      let titleInfo = getEndingTitle(score);
 
       html = `
         <div class="ending-stage">
@@ -801,7 +1124,10 @@ function renderEngine(roomId) {
           <div class="ending-line" style="animation-delay:4s;">但正一步步堅定地走向準備起飛的客機，迎向世界的下一個角落。</div>
           <div class="ending-quote" style="animation-delay:5.3s;">「年輕人，我沒有時間流淚，也沒有時間悲傷，這就是我的哲學！」</div>
           <div class="ending-final-title" style="animation-delay:6.6s;">另一個春天</div>
-          <div class="ending-sub" style="animation-delay:7.4s;">恭喜你，勇敢的旅人 ${studentId ? '「'+studentId+'」' : ''}<br>你不僅走過了希臘的春天，更在老太太的身影中，<br>找到了屬於自己、永不老去的「另一個春天」。</div>
+          <div class="title-badge" style="animation-delay:7.2s;">${titleInfo.icon} ${titleInfo.title}</div>
+          <div class="score-summary" style="animation-delay:7.6s;">總分：${score} 分</div>
+          <div class="ending-sub" style="animation-delay:7.9s;">恭喜你，勇敢的旅人 ${studentId ? '「'+studentId+'」' : ''}<br>你不僅走過了希臘的春天，更在老太太的身影中，<br>找到了屬於自己、永不老去的「另一個春天」。</div>
+          <div class="ending-sub" style="animation-delay:8.2s; font-size:11px; opacity:0;">${titleInfo.msg}</div>
         </div>`;
       contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
       return;
@@ -909,7 +1235,8 @@ function submitPrologue() {
   const isCorrect = ids.every((val, i) => val === prologueAns[i]);
   if (isCorrect) {
     showMsg('prologue-msg', "🟢 記憶喚醒了！手札緩緩合攏，旅程正式開始……", true);
-    if (!itemCollection.includes('🧺')) {}
+    addScore(10, true);
+    fireConfetti();
     setTimeout(() => { renderEngine(rooms['r0_prologue'].onClear); }, 1500);
   } else {
     showMsg('prologue-msg', "❌ 順序似乎不太對，再仔細想想故事發生的先後吧！", false);
@@ -1023,6 +1350,18 @@ function submitQuiz(roomId) {
         showMsg('msg-box', "❌ 答案不正確，再想想看！", false);
         return;
       }
+      // 限時模式：答錯先扣糖果（血量），糖果歸零才觸發 Bad End；悠閒模式維持原本直接觸發 Bad End
+      if (gameMode === 'timed') {
+        if (candies > 0) {
+          candies--; updateInventoryUI();
+          showMsg('msg-box', "❌ 答錯了，扣 1 顆糖果！（剩餘 " + candies + " 顆）請重新作答。", false);
+          return;
+        } else {
+          showMsg('msg-box', "❌ 糖果耗盡了……", false);
+          triggerBadEnd(roomId);
+          return;
+        }
+      }
       triggerBadEnd(roomId);
       return;
     }
@@ -1034,6 +1373,11 @@ function submitQuiz(roomId) {
   if (room.givesIcecream) { icecreams++; }
   updateInventoryUI();
   if (submitBtnEl) submitBtnEl.disabled = true;
+
+  // 計分：字音字形題 +5分，其他主線題目 +10分；支線/隱藏謎題不重複計分（由其他函式處理）
+  let isPhonics = typeof room.qIdx === 'string' && room.qIdx.indexOf('字音') !== -1;
+  addScore(isPhonics ? 5 : 10, true);
+  fireConfetti();
 
   if (room.rewardItem) {
     setTimeout(() => { showItemReward(roomId); }, 1200);
@@ -1072,6 +1416,7 @@ function useCandy(roomId) {
   let progress = roomHintsProgress[roomId] || 0;
   if (candies > 0 && progress < hints.length) {
     candies--; updateInventoryUI();
+    deductScore(2);
     let hintBox = document.getElementById('hint-box');
     hintBox.innerHTML += `<div class="msg-hint">${hints[progress]}</div>`;
     hintBox.classList.remove('hidden');
@@ -1089,6 +1434,7 @@ function useIcecream(roomId) {
   let toDisable = wrongOpts[Math.floor(Math.random() * wrongOpts.length)];
   disabledOptions[roomId] = [toDisable.id];
   icecreams--; updateInventoryUI();
+  deductScore(2);
   document.getElementById('icecream-btn').style.display = 'none';
   const labels = document.querySelectorAll('#interactive-area .option-item');
   labels.forEach(label => {
@@ -1138,6 +1484,7 @@ function submitItemQuiz(choiceId, correctId) {
   if (choiceId === correctId) {
     itemQuizSolved[inspectingItem] = true;
     candies++; updateInventoryUI();
+    addScore(5, false);
     showMsg('item-quiz-msg', "🟢 答對了！額外獲得【🍬 軟糖 x 1】", true);
     setTimeout(() => { inspectItem(); }, 1300);
   } else {
@@ -1214,6 +1561,55 @@ function updateInventoryUI() {
   document.getElementById('candy-count').innerText = candies;
   document.getElementById('icecream-count').innerText = icecreams;
 }
+function getEndingTitle(finalScore) {
+  if (finalScore >= 90) return { icon:"🏆", title:"希臘旅行大師", msg:"完美掌握了文本每一處細節，你就是最厲害的旅伴！" };
+  if (finalScore >= 70) return { icon:"🌟", title:"用心的旅伴", msg:"你細心讀懂了老太太的心情，旅程因你而豐富。" };
+  if (finalScore >= 50) return { icon:"🚶", title:"認真的旅人", msg:"你努力完成了整趟旅程，已經很棒了！" };
+  return { icon:"📖", title:"初心者旅人", msg:"旅程的意義不在分數，而在你願意走完全程的心。下次再來挑戰更高分吧！" };
+}
+
+// ================= 競技場挑戰賽（可重複答題刷糖果） =================
+function renderArenaQuestion() {
+  const area = document.getElementById('arena-quiz-area');
+  if (!area) return;
+  let pool = [...arenaTrapDB];
+  shuffleArray(pool);
+  const qData = pool[0];
+  let opts = [...qData.opts];
+  shuffleArray(opts);
+
+  let html = `<div class="question-text">${qData.q}</div><div id="arena-opts"></div>
+              <div id="arena-msg" class="message"></div>`;
+  area.innerHTML = html;
+  const optsDiv = document.getElementById('arena-opts');
+  opts.forEach(opt => {
+    const label = document.createElement('label');
+    label.className = "option-item";
+    label.innerHTML = `<input type="radio" name="arena-choice" value="${opt.id}"><span>${opt.text}</span>`;
+    optsDiv.appendChild(label);
+  });
+  const btn = document.createElement('button');
+  btn.type = "button"; btn.className = "action-btn";
+  btn.style.cssText = "border-color:var(--sunset); color:var(--sunset);";
+  btn.innerText = "提交解答";
+  btn.onclick = () => submitArenaAnswer(qData.ans);
+  area.appendChild(btn);
+}
+
+function submitArenaAnswer(correctId) {
+  const selected = document.querySelector('input[name="arena-choice"]:checked');
+  if (!selected) { showMsg('arena-msg', "⚠️ 請先選擇一個答案！", false); return; }
+  if (selected.value === correctId) {
+    candies++; updateInventoryUI();
+    addScore(3, false);
+    showMsg('arena-msg', "🟢 答對了！獲得【🍬 軟糖 x 1】", true);
+    setTimeout(() => { renderArenaQuestion(); }, 1100);
+  } else {
+    showMsg('arena-msg', "❌ 答錯了，再試一次！", false);
+    setTimeout(() => { renderArenaQuestion(); }, 1300);
+  }
+}
+
 function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
 function updateWordCount(t) { document.getElementById('word-count-div').innerText = `字數：${t.value.length}`; }
 function showMsg(boxId, text, isSuccess) {
@@ -1244,8 +1640,10 @@ function startGame() {
   document.getElementById('status-ui').classList.remove('hidden');
   document.getElementById('map-ui').classList.remove('hidden');
   document.getElementById('satchel-ui').classList.remove('hidden');
+  if (gameMode === 'timed') { candies += 3; } // 限時模式：開局額外給3顆糖果當生命值
   updateInventoryUI();
-  uploadProgress("開始遊戲"); // 簡化模式：只回傳開始與完成通關兩個關鍵節點
+  uploadProgress("開始遊戲（" + (gameMode === 'timed' ? '限時模式' : '悠閒模式') + "）");
+  startTimer();
   renderEngine("r0_prologue");
 }
 </script>
