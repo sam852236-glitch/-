@@ -179,6 +179,8 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 .ending-quote { font-size: 16px; font-weight: 700; color: #e8c878; margin: 18px 0 6px; letter-spacing: 1px; opacity: 0; animation: lineFadeIn 1.2s forwards; text-shadow: 0 0 18px rgba(232,200,120,0.4); text-align: center; }
 .ending-final-title { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: #f0dca0; margin-top: 18px; opacity: 0; animation: lineFadeIn 1.5s forwards; text-shadow: 0 0 24px rgba(240,220,160,0.5); }
 .ending-sub { font-size: 12.5px; color: #a8987a; margin-top: 10px; opacity: 0; animation: lineFadeIn 1.5s forwards; letter-spacing: 1px; text-align: center; }
+.restart-btn { width: auto; min-width: 180px; margin-top: 26px; opacity: 0; animation: lineFadeIn 1.5s forwards; border-color: #d4a85a; color: #f0dca0; background: rgba(217,138,108,0.1); }
+.restart-btn:hover { background: #d4a85a; color: #2c2520; }
 
 /* ===== 答對誇張回饋：彩帶 + 浮動分數 ===== */
 .confetti-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1500; overflow: hidden; }
@@ -1183,6 +1185,7 @@ function renderEngine(roomId) {
           <div class="score-summary" style="animation-delay:7.6s;">總分：${score} 分</div>
           <div class="ending-sub" style="animation-delay:7.9s;">恭喜你，勇敢的旅人 ${studentId ? '「'+studentId+'」' : ''}<br>你不僅走過了希臘的春天，更在老太太的身影中，<br>找到了屬於自己、永不老去的「另一個春天」。</div>
           <div class="ending-sub" style="animation-delay:8.2s; font-size:11px; opacity:0;">${titleInfo.msg}</div>
+          <button type="button" class="action-btn restart-btn" style="animation-delay:8.6s;" onclick="restartGame()">再玩一次 ↺</button>
         </div>`;
       contentDiv.innerHTML = html; contentDiv.classList.remove('hidden');
       return;
@@ -1700,5 +1703,49 @@ function startGame() {
   uploadProgress("開始遊戲（" + (gameMode === 'timed' ? '限時模式' : '悠閒模式') + "）");
   startTimer();
   renderEngine("r0_prologue");
+}
+
+// ================= 重新開始（回到首頁，重置所有遊戲狀態） =================
+function restartGame() {
+  // 重置核心進度狀態
+  currentRoom = "";
+  itemCollection = []; candies = 0; icecreams = 0; visitedNodes = new Set();
+  currentSortOrder = []; prologueOrder = [];
+  activeCombineSlot = null; combineSelected = [];
+  roomHintsProgress = {};
+  inspectingItem = "";
+  disabledOptions = {};
+  pendingBadEndRoom = null;
+  mapJumpSourceRoom = null;
+  authorSolved = false;
+  selectedTollItem = null;
+  authorNameVerified = false;
+  itemQuizSolved = {};
+
+  // 重置計分與計時
+  score = 0; comboCount = 0;
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  timeLeft = 35 * 60;
+  timeWarningsShown = { ten:false, five:false, one:false };
+
+  // 遊戲模式重置為悠閒，讓玩家在首頁重新選擇
+  gameMode = "relax";
+  const modeRelax = document.getElementById('mode-relax');
+  const modeTimed = document.getElementById('mode-timed');
+  if (modeRelax) modeRelax.classList.add('selected');
+  if (modeTimed) modeTimed.classList.remove('selected');
+
+  // 重置音樂模式回一般氛圍（不強制關閉音樂本身，保留使用者的播放偏好）
+  setMusicMode("normal");
+
+  // 畫面切回首頁（姓名欄位保留上次輸入內容，不清空）
+  document.getElementById('main-journal').classList.remove('ending-fullscreen');
+  document.body.className = "";
+  document.getElementById('status-ui').classList.add('hidden');
+  document.getElementById('map-ui').classList.add('hidden');
+  document.getElementById('satchel-ui').classList.add('hidden');
+  document.getElementById('game-content').classList.add('hidden');
+  document.getElementById('game-content').innerHTML = "";
+  document.getElementById('login-section').classList.remove('hidden');
 }
 </script>
