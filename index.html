@@ -50,9 +50,11 @@ body.bg-badend { background: #2a221a !important; }
 
 .travel-map { background: linear-gradient(135deg, #ece0c4, #e3d4ab); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 6px; margin: 0 0 18px; box-shadow: inset 0 0 24px rgba(139,111,71,0.16); position: relative; }
 .travel-map::before { content: ""; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 14px 4px rgba(139,111,71,0.22); pointer-events: none; }
-.map-title-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+.map-title-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
 .map-title { font-size: 11px; color: var(--ink-soft); font-weight: bold; letter-spacing: 1px; text-align: center; }
-.map-compass { font-size: 16px; animation: pinWiggle 2.4s infinite ease-in-out; }
+.compass-rose { position: relative; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--ink-soft); flex-shrink: 0; }
+.compass-needle { position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 11px solid var(--sunset); transform: translate(-50%, -3px); }
+.compass-label-n { position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); font-size: 7px; color: var(--ink-soft); font-weight: bold; }
 .map-scroll-wrap { overflow-x: auto; padding-bottom: 4px; }
 .map-grid { display: grid; grid-template-columns: repeat(9, 56px); grid-auto-rows: 44px; gap: 4px; min-width: max-content; }
 .map-cell { background: rgba(255,255,255,0.3); border: 1px dashed var(--ink-soft); border-radius: 5px; text-align: center; font-size: 8.5px; line-height: 1.25; color: var(--ink-soft); cursor: not-allowed; transition: all 0.25s; padding: 3px 2px; display: flex; align-items: center; justify-content: center; word-break: break-all; overflow: hidden; }
@@ -260,8 +262,8 @@ button.icecream-btn:hover { background: var(--sea); color: #fff; }
 
   <div id="map-ui" class="travel-map hidden">
     <div class="map-title-row">
-      <span class="map-compass">🧭</span>
-      <div class="map-title">旅程地圖（9×6 棋盤，可橫向捲動，可回顧已造訪之地）</div>
+      <div class="compass-rose"><div class="compass-needle"></div><div class="compass-label-n">北</div></div>
+      <div class="map-title">旅程地圖（9×6 棋盤，指北針朝下＝故事推進方向，可橫向捲動）</div>
     </div>
     <div class="map-scroll-wrap">
       <div class="map-grid" id="dynamic-map-grid"></div>
@@ -372,8 +374,8 @@ const rooms = {
     story:"【場景】空盪盪的巴士車廂，引擎低鳴。羅盤的指針微微晃動，似乎在引導你選擇方向。",
     exits:[
       { dir:"向東探索", tag:"撞見行李堆（支線）", target:"r1_side" },
-      { dir:"向南查看", tag:"車窗外的告示（支線）", target:"r1_side2" },
-      { dir:"向北深入", tag:"走向前座（主線）", target:"r1b_meet" }
+      { dir:"向東探索", tag:"車窗外的告示（支線）", target:"r1_side2" },
+      { dir:"向東前進", tag:"走向前座（主線）", target:"r1b_meet" }
     ]
   },
   "r1_side": {
@@ -408,9 +410,8 @@ const rooms = {
     name:"德爾菲廣場", mapLabel:"德爾菲廣場", type:"nav",
     story:"【場景】陽光灑落的歐洲小鎮廣場。羅盤又開始晃動，廣場上似乎有不只一個角落值得探索。",
     exits:[
-      { dir:"向西搜尋", tag:"廣場長椅與草叢（主線）", target:"r2_gather" },
-      { dir:"向南查看", tag:"廣場告示欄（支線）", target:"r2_side" },
-      { dir:"向北深入", tag:"廣場中央（後續劇情）", target:"r2_gather" }
+      { dir:"向東探索", tag:"廣場告示欄（支線）", target:"r2_side" },
+      { dir:"向東前進", tag:"廣場長椅與草叢（主線）", target:"r2_gather" }
     ]
   },
   "r2_side": {
@@ -444,8 +445,8 @@ const rooms = {
     name:"作者書房", mapLabel:"作者書房", type:"nav",
     story:"【場景】老太太收下花束，笑得燦爛。她從藤袋裡又拿出那張偷拍的照片遞給你。你翻到背面，似乎藏著什麼——書房的角落，還擺著一台老舊的播放器。",
     exits:[
-      { dir:"翻開照片", tag:"作者介紹（主線）", target:"r2d_author_main" },
-      { dir:"查看播放器", tag:"音樂卡帶小知識（支線）", target:"r2d_side" }
+      { dir:"向東前進", tag:"作者介紹（主線）", target:"r2d_author_main" },
+      { dir:"向東探索", tag:"音樂卡帶小知識（支線）", target:"r2d_side" }
     ]
   },
   "r2d_author_main": {
@@ -480,8 +481,8 @@ const rooms = {
     name:"前往神殿之路", mapLabel:"前往神殿", type:"nav",
     story:"【場景】離開市集，腳下的石板路通往山丘上的神殿。羅盤指針又開始晃動。",
     exits:[
-      { dir:"查看路標", tag:"德爾菲地名小知識（支線）", target:"r2g_side" },
-      { dir:"繼續前行", tag:"前往阿波羅神殿（主線）", target:"r3_temple_gate" }
+      { dir:"向東探索", tag:"德爾菲地名小知識（支線）", target:"r2g_side" },
+      { dir:"向東前進", tag:"前往阿波羅神殿（主線）", target:"r3_temple_gate" }
     ]
   },
   "r2g_side": {
@@ -495,8 +496,8 @@ const rooms = {
     name:"阿波羅神殿（神像守衛）", mapLabel:"神像守衛", type:"nav", checkpoint:"進度：阿波羅神殿（約1/3）",
     story:"【❌ 限制區域】陡峭的石階山腳下，一尊巨大的阿波羅神像擋住去路。神像低語：『要進入聖殿，需出示能證明你身分的信物。』一旁的石碑上，似乎還刻著關於這尊神像的介紹。",
     exits:[
-      { dir:"查看石碑", tag:"阿波羅是誰（支線）", target:"r3_side_apollo" },
-      { dir:"出示信物", tag:"通過神像守衛（主線）", target:"r3_temple_gate_main" }
+      { dir:"向東探索", tag:"阿波羅是誰（支線）", target:"r3_side_apollo" },
+      { dir:"向東前進", tag:"通過神像守衛（主線）", target:"r3_temple_gate_main" }
     ]
   },
   "r3_side_apollo": {
@@ -521,8 +522,8 @@ const rooms = {
     name:"神殿遺蹟入口", mapLabel:"神殿遺蹟", type:"nav",
     story:"【場景】你獨自走進神殿廢墟，斷裂的石柱矗立在午後陽光下，散發著千年的滄桑感。",
     exits:[
-      { dir:"查看解說牌", tag:"神殿遺蹟小知識（支線）", target:"r3a_side_ruins" },
-      { dir:"繼續探索", tag:"前往廢墟角落（主線）", target:"r3b_stone" }
+      { dir:"向東探索", tag:"神殿遺蹟小知識（支線）", target:"r3a_side_ruins" },
+      { dir:"向北深入", tag:"前往廢墟角落（主線）", target:"r3b_stone" }
     ]
   },
   "r3a_side_ruins": {
@@ -534,8 +535,8 @@ const rooms = {
     name:"神殿廢墟（石刻）", mapLabel:"塔列斯石刻", type:"nav",
     story:"【場景】你走進神殿廢墟的角落，發現一片古老的石刻殘片，輕輕拂去塵土，上面浮現一行字：『人需要了解自我。』石刻旁，還立著一塊小小的人物介紹牌。",
     exits:[
-      { dir:"查看介紹牌", tag:"塔列斯是誰（支線）", target:"r3b_side_thales" },
-      { dir:"拾起石刻", tag:"收下塔列斯石刻（主線）", target:"r3b_stone_main" }
+      { dir:"向東探索", tag:"塔列斯是誰（支線）", target:"r3b_side_thales" },
+      { dir:"向東前進", tag:"收下塔列斯石刻（主線）", target:"r3b_stone_main" }
     ]
   },
   "r3b_side_thales": {
@@ -554,7 +555,7 @@ const rooms = {
     name:"小鎮出口", mapLabel:"小鎮出口", type:"nav",
     story:"【場景】下山後，你來到德爾菲小鎮的出口。羅盤又開始晃動。",
     exits:[
-      { dir:"向北深入", tag:"彩色冰淇淋車（主線）", target:"r4_icecream" },
+      { dir:"向東前進", tag:"彩色冰淇淋車（主線）", target:"r4_icecream" },
       { dir:"向東探索", tag:"巷弄裡的石壁（支線）", target:"r4_side" }
     ]
   },
@@ -576,8 +577,8 @@ const rooms = {
     name:"小鎮出口（續）", mapLabel:"續行", type:"nav",
     story:"【場景】穿過巷弄，眼前出現一塊地名告示牌，指向小鎮的另一端。",
     exits:[
-      { dir:"查看告示牌", tag:"德爾菲地名小知識（支線）", target:"r4_side_delphi" },
-      { dir:"繼續前行", tag:"前往冰淇淋車（主線）", target:"r4_icecream" }
+      { dir:"向東探索", tag:"德爾菲地名小知識（支線）", target:"r4_side_delphi" },
+      { dir:"向東前進", tag:"前往冰淇淋車（主線）", target:"r4_icecream" }
     ]
   },
   "r4_side_delphi": {
@@ -611,8 +612,8 @@ const rooms = {
     name:"前往競技場", mapLabel:"前往競技場", type:"nav",
     story:"【場景】老太太吃完清涼提神包後，精神恢復不少，提議再走訪附近的競技場遺址，順便休息一下。",
     exits:[
-      { dir:"查看遺址解說", tag:"競技場小知識（支線）", target:"r4c_side_arena" },
-      { dir:"踏入競技場", tag:"進入競技場（主線）", target:"r4c_arena" }
+      { dir:"向東探索", tag:"競技場小知識（支線）", target:"r4c_side_arena" },
+      { dir:"向東前進", tag:"進入競技場（主線）", target:"r4c_arena" }
     ]
   },
   "r4c_side_arena": {
@@ -646,8 +647,8 @@ const rooms = {
     name:"渡輪甲板入口", mapLabel:"渡輪甲板", type:"nav",
     story:"【場景】渡輪緩緩航行在愛琴海上，海風帶著鹹味。甲板上有一塊地理解說牌，吸引了你的目光。",
     exits:[
-      { dir:"查看解說牌", tag:"愛琴海小知識（支線）", target:"r6_side_aegean" },
-      { dir:"走向甲板", tag:"與老太太再次相逢（主線）", target:"r6_ferry" }
+      { dir:"向東探索", tag:"愛琴海小知識（支線）", target:"r6_side_aegean" },
+      { dir:"向北深入", tag:"與老太太再次相逢（主線）", target:"r6_ferry" }
     ]
   },
   "r6_side_aegean": {
@@ -723,9 +724,8 @@ const rooms = {
 
 // ================= 地圖座標系統（9欄×6列棋盤，用於視覺呈現方向關係） =================
 const roomCoords = {
-  "r0_prologue": { x:0, y:0 }, "r1_bus": { x:1, y:0 }, "r1_side": { x:2, y:0 }, "r1_side2": { x:3, y:0 }, "r1b_meet": { x:4, y:0 }, "r1c_reward": { x:5, y:0 },
-  "rx_empty1": { x:6, y:0 }, "rx_empty2": { x:7, y:0 }, "rx_empty3": { x:8, y:0 },
-  "r2_plaza": { x:0, y:1 }, "r2_side": { x:1, y:1 }, "r2_gather": { x:2, y:1 }, "r2b_photo": { x:3, y:1 }, "r2c_gift": { x:4, y:1 }, "r2d_author": { x:5, y:1 }, "r2d_author_main": { x:6, y:1 }, "r2d_side": { x:7, y:1 }, "r2e_kindness": { x:8, y:1 },
+  "r0_prologue": { x:0, y:0 }, "r1_bus": { x:1, y:0 }, "r1_side": { x:2, y:0 }, "r1_side2": { x:3, y:0 }, "r1b_meet": { x:4, y:0 }, "r1c_reward": { x:5, y:0 }, "rx_empty1": { x:6, y:0 }, "rx_empty2": { x:7, y:0 }, "rx_empty3": { x:8, y:0 },
+  "r2_plaza": { x:0, y:1 }, "r2_side": { x:1, y:1 }, "r2_gather": { x:2, y:1 }, "r2b_photo": { x:3, y:1 }, "r2c_gift": { x:4, y:1 }, "r2d_author": { x:5, y:1 }, "r2d_side": { x:6, y:1 }, "r2e_kindness": { x:7, y:1 }, "r2d_author_main": { x:8, y:1 },
   "r2f_litreview": { x:0, y:2 }, "r2g_delphi_gate": { x:1, y:2 }, "r2g_side": { x:2, y:2 }, "r3_temple_gate": { x:3, y:2 }, "r3_side_apollo": { x:4, y:2 }, "r3_temple_gate_main": { x:5, y:2 }, "r3_temple_in": { x:6, y:2 }, "r3a_ruins_gate": { x:7, y:2 }, "r3a_side_ruins": { x:8, y:2 },
   "r3b_stone": { x:0, y:3 }, "r3b_side_thales": { x:1, y:3 }, "r3b_stone_main": { x:2, y:3 }, "r4_icecream_gate": { x:3, y:3 }, "r4_side": { x:4, y:3 }, "r4a_side2": { x:5, y:3 }, "r4_icecream_pre": { x:6, y:3 }, "r4_side_delphi": { x:7, y:3 }, "r4_icecream": { x:8, y:3 },
   "r4a_combine": { x:0, y:4 }, "r4b_deliver": { x:1, y:4 }, "r4c_arena_gate": { x:2, y:4 }, "r4c_side_arena": { x:3, y:4 }, "r4c_arena": { x:4, y:4 }, "r4d_arena_challenge": { x:5, y:4 }, "r5_restaurant": { x:6, y:4 }, "r6_ferry_gate": { x:7, y:4 }, "r6_side_aegean": { x:8, y:4 },
