@@ -559,8 +559,7 @@ const rooms = {
     story:"【場景】下山後，你來到德爾菲小鎮的出口。羅盤又開始晃動。",
     exits:[
       { dir:"向東前進", tag:"彩色冰淇淋車（主線）", target:"r4_icecream" },
-      { dir:"向東探索", tag:"巷弄裡的石壁（支線）", target:"r4_side" },
-      { dir:"向東漫步", tag:"路旁的長椅（支線）", target:"rx_empty2" }
+      { dir:"向東探索", tag:"巷弄裡的石壁（支線）", target:"r4_side" }
     ]
   },
   "r4_side": {
@@ -592,7 +591,7 @@ const rooms = {
   },
   "r4_icecream": {
     name:"冰淇淋車", mapLabel:"冰淇淋車", type:"quiz", qIdx:"字音3",
-    story:"【場景】一輛彩色的冰淇淋車安靜地停著。老闆笑咪咪地說：『校正一下招牌上的字，我請你吃冰淇淋！』",
+    story:"【場景】一輛彩色的冰淇淋車安靜地停著。老闆笑咪咪地說：『校正一下招牌上的字，我請你吃冰淇淋！』你想起老太太曾說過，她常常捨不得花錢買正餐，只用一支便宜的冰淇淋打發一頓午餐。",
     q:"「潸潸」的注音與意思，下列何者正確？", qType:"single",
     opts:[{id:"A",text:"ㄕㄢ ㄕㄢ，流淚的樣子"},{id:"B",text:"ㄕㄢˋ ㄕㄢˋ，閃爍的樣子"},{id:"C",text:"ㄔㄢˊ ㄔㄢˊ，緩慢的樣子"},{id:"D",text:"ㄕㄢ ㄕㄢˇ，搖晃的樣子"}],
     ans:"A", rewardItem:"🍦", onClear:"r4a_combine"
@@ -617,7 +616,6 @@ const rooms = {
     story:"【場景】老太太吃完清涼提神包後，精神恢復不少，提議再走訪附近的競技場遺址，順便休息一下。",
     exits:[
       { dir:"向東探索", tag:"競技場小知識（支線）", target:"r4c_side_arena" },
-      { dir:"向北查看", tag:"安靜的轉角（支線）", target:"rx_empty3" },
       { dir:"向東前進", tag:"進入競技場（主線）", target:"r4c_arena" }
     ]
   },
@@ -634,14 +632,39 @@ const rooms = {
     ans:"A", rewardItem:null, onClear:"r4d_arena_challenge"
   },
   "r4d_arena_challenge": {
-    name:"競技場挑戰賽", mapLabel:"競技場挑戰", type:"arenaChallenge", onClear:"r5_restaurant",
+    name:"競技場挑戰賽", mapLabel:"競技場挑戰", type:"arenaChallenge", onClear:"r5a_thrifty",
     story:"【額外挑戰】老太太笑著說：『年輕人，既然來到競技場，不如再挑戰幾回合，當作熱身吧！每答對一題，就送你一顆薄荷軟糖！』\n\n你可以自由選擇要挑戰幾次，想離開的時候隨時可以前往下一站。"
   },
 
   // ---- 景點5：旅店餐廳 ----
+  "r5a_thrifty": {
+    name:"旅店餐廳（節儉的痕跡）", mapLabel:"節儉行為", type:"quiz", qIdx:"6前",
+    story:"【場景】傍晚時分，陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，老太太正打包著簡單的午餐。回想這趟旅程，你發現她在很多地方都過得十分節省。",
+    q:"從老太太的哪些行為中，可以看出她節儉？（複選）", qType:"multi",
+    opts:[
+      {id:"A",text:"買冰淇淋當作午餐"},
+      {id:"B",text:"從袋裡拿出幾片乾麵包和一顆橘子，安靜地啃了起來"},
+      {id:"C",text:"每天都包些剩菜，省下午餐錢"},
+      {id:"D",text:"主動分享薄荷軟糖給作者"},
+      {id:"E",text:"入住昂貴的星級飯店"}
+    ],
+    ans:["A","B","C"], rewardItem:null, onClear:"r5b_thrifty_why"
+  },
+  "r5b_thrifty_why": {
+    name:"旅店餐廳（節儉的原因）", mapLabel:"節儉原因", type:"quiz", qIdx:"6中",
+    story:"【場景】望著老太太打包食物的背影，你不禁好奇——是什麼樣的理由，讓她願意過得如此節省？",
+    q:"老太太節儉的原因為何？", qType:"single",
+    opts:[
+      {id:"A",text:"還要去很多地方旅行，所以要省錢繼續完成夢想"},
+      {id:"B",text:"因為她身上的錢已經花光了，不得不節省"},
+      {id:"C",text:"她覺得希臘的食物不合胃口，所以不想花錢購買"},
+      {id:"D",text:"她想把錢省下來，買禮物送給家人"}
+    ],
+    ans:"A", rewardItem:null, onClear:"r5_restaurant"
+  },
   "r5_restaurant": {
     name:"旅店餐廳", mapLabel:"旅店餐廳", type:"quiz", qIdx:6,
-    story:"【場景】傍晚時分，陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，老太太正打包著簡單的午餐——乾麵包和橘子。",
+    story:"【場景】老太太打包好食物，抬起頭來，眼神堅定地望向遠方。",
     q:"老太太旅行的核心夢想是什麼？", qType:"single",
     opts:[{id:"A",text:"成為知名的旅遊作家"},{id:"B",text:"在有限的生命裡，盡可能看看廣大的世界"},{id:"C",text:"找到一份穩定的工作"},{id:"D",text:"證明自己比年輕人更厲害"}],
     ans:"B", rewardItem:"🍞", onClear:"r6_ferry_gate"
@@ -720,11 +743,7 @@ const rooms = {
 
   // ---- 純風景空地（補滿地圖棋盤格，需透過鄰近房間的方向選項才能走到，增加探索驚喜感） ----
   "rx_empty1": { name:"無人的小巷", mapLabel:"小巷", type:"flavorRead", onClear:"r3a_ruins_gate",
-    story:"【空地】這是一條安靜的小巷，午後陽光斜斜灑落在石板路上，偶爾有微風吹過，捲起幾片落葉。這裡似乎沒有什麼特別的事情發生……" },
-  "rx_empty2": { name:"廢棄的長椅", mapLabel:"長椅", type:"flavorRead", onClear:"r4_icecream_gate",
-    story:"【空地】一張褪色的木製長椅靜靜立在路旁，椅腳爬滿藤蔓。你坐下來歇了一會兒，望著遠方的山丘，心情莫名地平靜下來。" },
-  "rx_empty3": { name:"安靜的轉角", mapLabel:"轉角", type:"flavorRead", onClear:"r4c_arena_gate",
-    story:"【空地】轉過街角，眼前是一片尋常的住宅區，貓咪在牆頭曬著太陽，對你投以好奇又懶洋洋的一瞥。這裡似乎也沒有什麼特別的事情發生……" }
+    story:"【空地】這是一條安靜的小巷，午後陽光斜斜灑落在石板路上，偶爾有微風吹過，捲起幾片落葉。這裡似乎沒有什麼特別的事情發生……" }
 };
 
 // ================= 地圖座標系統（9欄×6列棋盤，用於視覺呈現方向關係） =================
@@ -732,9 +751,9 @@ const roomCoords = {
   "r0_prologue": { x:0, y:0 }, "r1_bus": { x:1, y:0 }, "r1_side": { x:2, y:0 }, "r1_side2": { x:3, y:0 }, "r1b_meet": { x:4, y:0 }, "r1c_reward": { x:5, y:0 }, "r2_plaza": { x:6, y:0 }, "r2_side": { x:7, y:0 }, "r2_gather": { x:8, y:0 },
   "r2b_photo": { x:0, y:1 }, "r2c_gift": { x:1, y:1 }, "r2d_author": { x:2, y:1 }, "r2d_side": { x:3, y:1 }, "r2e_kindness": { x:4, y:1 }, "rx_empty1": { x:5, y:1 }, "r2d_author_main": { x:6, y:1 }, "r2f_litreview": { x:7, y:1 }, "r2g_delphi_gate": { x:8, y:1 },
   "r2g_side": { x:0, y:2 }, "r3_temple_gate": { x:1, y:2 }, "r3_side_apollo": { x:2, y:2 }, "r3_temple_gate_main": { x:3, y:2 }, "r3_temple_in": { x:4, y:2 }, "r3a_ruins_gate": { x:5, y:2 }, "r3a_side_ruins": { x:6, y:2 }, "r3b_stone": { x:7, y:2 }, "r3b_side_thales": { x:8, y:2 },
-  "r3b_stone_main": { x:0, y:3 }, "r4_icecream_gate": { x:1, y:3 }, "r4_side": { x:2, y:3 }, "rx_empty2": { x:3, y:3 }, "r4a_side2": { x:4, y:3 }, "r4_icecream_pre": { x:5, y:3 }, "r4_side_delphi": { x:6, y:3 }, "r4_icecream": { x:7, y:3 }, "r4a_combine": { x:8, y:3 },
+  "r3b_stone_main": { x:0, y:3 }, "r4_icecream_gate": { x:1, y:3 }, "r4_side": { x:2, y:3 }, "r5b_thrifty_why": { x:3, y:3 }, "r4a_side2": { x:4, y:3 }, "r4_icecream_pre": { x:5, y:3 }, "r4_side_delphi": { x:6, y:3 }, "r4_icecream": { x:7, y:3 }, "r4a_combine": { x:8, y:3 },
   "r4b_deliver": { x:0, y:4 }, "r4c_arena_gate": { x:1, y:4 }, "r4c_side_arena": { x:2, y:4 }, "r4c_arena": { x:3, y:4 }, "r4d_arena_challenge": { x:4, y:4 }, "r5_restaurant": { x:5, y:4 }, "r6_ferry_gate": { x:6, y:4 }, "r6_side_aegean": { x:7, y:4 }, "r6_ferry": { x:8, y:4 },
-  "r6b_tears": { x:0, y:5 }, "rx_empty3": { x:1, y:5 }, "r7_port_gate": { x:2, y:5 }, "r7a_side3": { x:3, y:5 }, "r7b_safe": { x:4, y:5 }, "r7c_final1": { x:5, y:5 }, "r7d_final2": { x:6, y:5 }, "r8_final": { x:7, y:5 }, "r_end": { x:8, y:5 }
+  "r6b_tears": { x:0, y:5 }, "r5a_thrifty": { x:1, y:5 }, "r7_port_gate": { x:2, y:5 }, "r7a_side3": { x:3, y:5 }, "r7b_safe": { x:4, y:5 }, "r7c_final1": { x:5, y:5 }, "r7d_final2": { x:6, y:5 }, "r8_final": { x:7, y:5 }, "r_end": { x:8, y:5 }
 };
 const MAP_COLS = 9, MAP_ROWS = 6;
 
@@ -745,7 +764,7 @@ const mapLayoutOrder = [
   "r3_temple_gate","r3_side_apollo","r3_temple_gate_main","r3_temple_in","r3a_ruins_gate","r3a_side_ruins",
   "r3b_stone","r3b_side_thales","r3b_stone_main","r4_icecream_gate","r4_side","r4a_side2",
   "r4_icecream_pre","r4_side_delphi","r4_icecream","r4a_combine","r4b_deliver","r4c_arena_gate",
-  "r4c_side_arena","r4c_arena","r4d_arena_challenge","r5_restaurant","r6_ferry_gate","r6_side_aegean","r6_ferry",
+  "r4c_side_arena","r4c_arena","r4d_arena_challenge","r5a_thrifty","r5b_thrifty_why","r5_restaurant","r6_ferry_gate","r6_side_aegean","r6_ferry",
   "r6b_tears","r7_port_gate","r7a_side3","r7b_safe","r7c_final1","r7d_final2",
   "r8_final","r_end"
 ];
@@ -822,6 +841,7 @@ let inspectingItem = "";
 let disabledOptions = {};
 let pendingBadEndRoom = null;
 let mapJumpSourceRoom = null; // 從地圖直接跳轉到空地等支線時，記錄原本所在房間，方便返回
+let arenaStreakCount = 0; // 競技場連續答對題數，達5題自動離開避免玩家卡關
 let authorSolved = false;
 let selectedTollItem = null;
 let authorNameVerified = false;
@@ -1109,10 +1129,12 @@ function renderEngine(roomId) {
       return;
     }
 
-    // ---- 競技場挑戰賽（可重複答題刷糖果） ----
+    // ---- 競技場挑戰賽（可重複答題刷糖果，連續答對5題自動離開避免卡關） ----
     if (room.type === "arenaChallenge") {
+      arenaStreakCount = 0;
       html = `<div class="story-box">${room.story}</div>
               <div class="quiz-card">
+                <div id="arena-streak-label" style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">連續答對：0 / 5（答對5題會自動帶你離開競技場）</div>
                 <div id="arena-quiz-area"></div>
               </div>
               <button type="button" class="action-btn" style="border-color:var(--olive); color:var(--olive);" onclick="renderEngine('${room.onClear}')">離開競技場，繼續前行</button>`;
@@ -1194,51 +1216,63 @@ function renderEngine(roomId) {
 }
 </script>
 <script>
-// ================= 背景音樂引擎（Web Audio API 程式合成） =================
+// ================= 背景音樂引擎（Web Audio API 程式合成 - 活潑輕快旅行風） =================
 let audioCtx = null;
 let musicPlaying = false;
 let musicScheduler = null;
 let currentMusicMode = "normal"; // normal | ending
+let musicBeatIndex = 0;
 
-// 主旋律：溫暖的大調琶音（C大調系，木箱琴/鋼片琴音色）
-const normalChordSets = [
-  [261.63, 329.63, 392.00, 523.25],   // C E G C
-  [349.23, 440.00, 523.25, 659.25],   // F A C E
-  [392.00, 493.88, 587.33, 783.99],   // G B D G
-  [293.66, 369.99, 440.00, 587.33]    // D F# A D
+// 主旋律：活潑輕快的大調音階旋律句（像輕快的步伐節奏，C大調系）
+const normalMelodyPhrases = [
+  [523.25, 587.33, 659.25, 523.25, 659.25, 783.99],   // C D E C E G  輕快上揚
+  [659.25, 587.33, 523.25, 440.00, 523.25, 659.25],   // E D C A C E  跳躍回旋
+  [523.25, 659.25, 587.33, 698.46, 659.25, 783.99],   // 活潑跳音
+  [440.00, 523.25, 659.25, 587.33, 523.25, 440.00]    // 輕巧下行收束
 ];
-// 結局：明亮、稍微上揚的和弦進行（加入更高音域，營造甦醒/感動氛圍）
-const endingChordSets = [
-  [392.00, 493.88, 587.33, 783.99],   // G B D G
-  [440.00, 554.37, 659.25, 880.00],   // A C# E A
-  [523.25, 659.25, 783.99, 1046.50],  // C E G C(高)
-  [349.23, 440.00, 523.25, 698.46]    // F A C F
+// 結局：更明亮、稍快上揚的旋律句，營造甦醒/感動氛圍
+const endingMelodyPhrases = [
+  [659.25, 783.99, 880.00, 783.99, 1046.50, 880.00],
+  [783.99, 880.00, 1046.50, 880.00, 659.25, 783.99],
+  [880.00, 1046.50, 1174.66, 1046.50, 880.00, 659.25]
 ];
+// 輕快的低音節奏點，營造「步伐感」
+const bassNotes = [130.81, 196.00]; // C2, G2 交替
 
-function playTone(freq, startTime, duration, vol) {
+function playTone(freq, startTime, duration, vol, type) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
-  osc.type = 'sine';
+  osc.type = type || 'triangle';
   osc.frequency.setValueAtTime(freq, startTime);
   gain.gain.setValueAtTime(0, startTime);
-  gain.gain.linearRampToValueAtTime(vol, startTime + 0.6);
-  gain.gain.linearRampToValueAtTime(vol * 0.6, startTime + duration * 0.6);
+  gain.gain.linearRampToValueAtTime(vol, startTime + 0.03);
+  gain.gain.linearRampToValueAtTime(vol * 0.5, startTime + duration * 0.5);
   gain.gain.linearRampToValueAtTime(0, startTime + duration);
   osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.start(startTime); osc.stop(startTime + duration + 0.1);
+  osc.start(startTime); osc.stop(startTime + duration + 0.05);
 }
 
 function scheduleMusicLoop() {
   if (!audioCtx || !musicPlaying) return;
-  const chordSets = currentMusicMode === "ending" ? endingChordSets : normalChordSets;
-  const noteDuration = 3.2;
-  const chord = chordSets[Math.floor(Math.random() * chordSets.length)];
+  const phraseSets = currentMusicMode === "ending" ? endingMelodyPhrases : normalMelodyPhrases;
+  const phrase = phraseSets[Math.floor(Math.random() * phraseSets.length)];
+  const noteGap = 0.24; // 輕快的音符間距，像走路的步伐節奏
+  const noteDuration = 0.34;
   const now = audioCtx.currentTime;
-  chord.forEach((freq, i) => {
-    playTone(freq, now + i * 0.18, noteDuration, 0.045);
+
+  // 旋律線：輕快的單音跳躍
+  phrase.forEach((freq, i) => {
+    playTone(freq, now + i * noteGap, noteDuration, 0.07, 'triangle');
   });
-  musicScheduler = setTimeout(scheduleMusicLoop, noteDuration * 1000 * 0.7);
+
+  // 搭配的低音步伐節奏點，每兩個音符墊一個低音，增加「旅行前進感」
+  for (let i = 0; i < phrase.length; i += 2) {
+    playTone(bassNotes[(musicBeatIndex + i/2) % 2], now + i * noteGap, noteGap * 1.8, 0.045, 'sine');
+  }
+  musicBeatIndex++;
+
+  musicScheduler = setTimeout(scheduleMusicLoop, phrase.length * noteGap * 1000);
 }
 
 function toggleMusic() {
@@ -1257,6 +1291,20 @@ function toggleMusic() {
     btn.innerText = "🔇"; btn.classList.remove('playing');
     if (musicScheduler) { clearTimeout(musicScheduler); musicScheduler = null; }
   }
+}
+
+// 開局自動播放音樂：必須在使用者點擊「開始」按鈕的同一個呼叫鏈中觸發，才符合瀏覽器自動播放政策
+function startMusicAuto() {
+  if (musicPlaying) return; // 已經在播放就不重複觸發
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContextClass();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  musicPlaying = true;
+  const btn = document.getElementById('music-toggle-btn');
+  if (btn) { btn.innerText = "🔈"; btn.classList.add('playing'); }
+  scheduleMusicLoop();
 }
 
 function setMusicMode(mode) {
@@ -1399,6 +1447,8 @@ function submitQuiz(roomId) {
     const field = document.getElementById('short-answer');
     const ansStr = field ? field.value.trim() : "";
     if (ansStr.length < room.minW) { showMsg('msg-box', `⚠️ 寫得還不夠完整（需至少 ${room.minW} 字）！`, false); return; }
+    const validation = validateChineseAnswer(ansStr);
+    if (!validation.ok) { showMsg('msg-box', validation.msg, false); return; }
     isCorrect = true;
   }
 
@@ -1431,6 +1481,13 @@ function submitQuiz(roomId) {
   if (room.givesIcecream) { icecreams++; }
   updateInventoryUI();
   if (submitBtnEl) submitBtnEl.disabled = true;
+
+  // 終極思辨題（另一個春天的涵義）：把學生的作答內容一併回傳後台，方便老師批閱
+  if (roomId === 'r8_final') {
+    const field = document.getElementById('short-answer');
+    const finalAnswerText = field ? field.value.trim() : "";
+    uploadFinalAnswer(finalAnswerText);
+  }
 
   // 計分：字音字形題 +5分，其他主線題目 +10分；支線/隱藏謎題不重複計分（由其他函式處理）
   let isPhonics = typeof room.qIdx === 'string' && room.qIdx.indexOf('字音') !== -1;
@@ -1657,15 +1714,43 @@ function renderArenaQuestion() {
 function submitArenaAnswer(correctId) {
   const selected = document.querySelector('input[name="arena-choice"]:checked');
   if (!selected) { showMsg('arena-msg', "⚠️ 請先選擇一個答案！", false); return; }
+  const streakLabel = document.getElementById('arena-streak-label');
   if (selected.value === correctId) {
     candies++; updateInventoryUI();
     addScore(3, false);
+    arenaStreakCount++;
+    if (streakLabel) streakLabel.innerText = `連續答對：${arenaStreakCount} / 5（答對5題會自動帶你離開競技場）`;
+
+    if (arenaStreakCount >= 5) {
+      showMsg('arena-msg', "🟢 答對了！獲得【🍬 軟糖 x 1】\n🎉 連續答對5題，老太太說該繼續上路囉！", true);
+      const room = rooms[currentRoom];
+      setTimeout(() => { renderEngine(room.onClear); }, 1600);
+      return;
+    }
+
     showMsg('arena-msg', "🟢 答對了！獲得【🍬 軟糖 x 1】", true);
     setTimeout(() => { renderArenaQuestion(); }, 1100);
   } else {
-    showMsg('arena-msg', "❌ 答錯了，再試一次！", false);
+    arenaStreakCount = 0;
+    if (streakLabel) streakLabel.innerText = `連續答對：0 / 5（答對5題會自動帶你離開競技場）`;
+    showMsg('arena-msg', "❌ 答錯了，連續紀錄重新計算，再試一次！", false);
     setTimeout(() => { renderArenaQuestion(); }, 1300);
   }
+}
+
+// ================= 簡答題防亂打驗證 =================
+function validateChineseAnswer(text) {
+  // 抓出文字中所有中文字（含常用字、擴展A區）
+  const chineseChars = text.match(/[\u4e00-\u9fff\u3400-\u4dbf]/g) || [];
+  if (chineseChars.length < 8) {
+    return { ok:false, msg:"⚠️ 請用完整的中文句子回答，目前的中文字數還不夠（至少需要8個中文字）！" };
+  }
+  // 檢查是否只是同一個字／少數幾個字大量重複洗版（例如「我我我我我我我我」）
+  const uniqueChars = new Set(chineseChars);
+  if (uniqueChars.size < 4) {
+    return { ok:false, msg:"⚠️ 請寫出有意義的完整句子，不要只是重複相同的字喔！" };
+  }
+  return { ok:true };
 }
 
 function shuffleArray(arr) { for (let i=arr.length-1;i>0;i--) { const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
@@ -1690,6 +1775,18 @@ async function uploadProgress(roomName) {
   } catch (err) { console.error("後台回傳失敗:", err); }
 }
 
+// 把終極思辨題（另一個春天的涵義）學生作答內容回傳後台，方便老師批閱
+async function uploadFinalAnswer(answerText) {
+  if (!studentId || !WEBAPP_URL || WEBAPP_URL.indexOf("PASTE_YOUR") === 0) return;
+  try {
+    await fetch(WEBAPP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ student: studentId, room: "【最終答案】另一個春天的涵義", time: new Date().toLocaleString(), finalAnswer: answerText })
+    });
+  } catch (err) { console.error("最終答案回傳失敗:", err); }
+}
+
 function startGame() {
   const inputField = document.getElementById('student-id');
   studentId = inputField ? inputField.value.trim() : "";
@@ -1700,6 +1797,7 @@ function startGame() {
   document.getElementById('satchel-ui').classList.remove('hidden');
   if (gameMode === 'timed') { candies += 3; } // 限時模式：開局額外給3顆糖果當生命值
   updateInventoryUI();
+  startMusicAuto(); // 開局自動播放音樂（在使用者點擊按鈕的互動鏈中，符合瀏覽器自動播放政策）
   uploadProgress("開始遊戲（" + (gameMode === 'timed' ? '限時模式' : '悠閒模式') + "）");
   startTimer();
   renderEngine("r0_prologue");
