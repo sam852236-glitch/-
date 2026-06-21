@@ -1194,7 +1194,7 @@ function renderEngine(roomId) {
       document.getElementById('map-ui').classList.add('hidden');
       document.getElementById('satchel-ui').classList.add('hidden');
       document.getElementById('main-journal').classList.add('ending-fullscreen');
-      uploadProgress("完成通關（總分：" + score + "）");
+      uploadGameFinish();
       setMusicMode("ending");
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
 
@@ -1803,29 +1803,43 @@ function showMsg(boxId, text, isSuccess) {
 function hideMsg(boxId) { const b = document.getElementById(boxId); if (b) b.className = "message hidden"; }
 
 // ================= 後台回傳（Google試算表）=================
+// 新格式：以「學生姓名」為主鍵，每位學生只佔一列，依事件類型更新對應欄位
+// eventType 可能的值：start（開始遊戲）｜checkpoint（中途進度）｜finish（完成通關）｜finalAnswer（最終答案）
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwVRw449jqTpHkQbSGhWR-VtyykbN6vlIiK_oxEl1dKqGewC75ToEWfnsnZl4GCE7Ur/exec";
+let gameStartTimestamp = null; // 記錄遊戲開始的時間戳，供計算總遊玩時長使用
 
-async function uploadProgress(roomName) {
+async function uploadEvent(eventType, payload) {
   if (!studentId || !WEBAPP_URL || WEBAPP_URL.indexOf("PASTE_YOUR") === 0) return;
   try {
     await fetch(WEBAPP_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ student: studentId, room: roomName, time: new Date().toLocaleString() })
+      body: JSON.stringify({ student: studentId, eventType: eventType, time: new Date().toLocaleString(), ...payload })
     });
-  } catch (err) { console.error("後台回傳失敗:", err); }
+  } catch (err) { console.error("後台回傳失敗 (" + eventType + "):", err); }
+}
+
+async function uploadProgress(roomName) {
+  await uploadEvent("checkpoint", { room: roomName });
+}
+
+async function uploadGameStart() {
+  gameStartTimestamp = Date.now();
+  await uploadEvent("start", { mode: gameMode === 'timed' ? '限時模式' : '悠閒模式' });
+}
+
+async function uploadGameFinish() {
+  let durationText = "未知";
+  if (gameStartTimestamp) {
+    let durationMin = Math.round((Date.now() - gameStartTimestamp) / 60000);
+    durationText = durationMin + "分鐘";
+  }
+  await uploadEvent("finish", { score: score, duration: durationText });
 }
 
 // 把終極思辨題（另一個春天的涵義）學生作答內容回傳後台，方便老師批閱
 async function uploadFinalAnswer(answerText) {
-  if (!studentId || !WEBAPP_URL || WEBAPP_URL.indexOf("PASTE_YOUR") === 0) return;
-  try {
-    await fetch(WEBAPP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ student: studentId, room: "【最終答案】另一個春天的涵義", time: new Date().toLocaleString(), finalAnswer: answerText })
-    });
-  } catch (err) { console.error("最終答案回傳失敗:", err); }
+  await uploadEvent("finalAnswer", { finalAnswer: answerText });
 }
 
 function startGame() {
@@ -1839,7 +1853,7 @@ function startGame() {
   if (gameMode === 'timed') { candies += 3; } // 限時模式：開局額外給3顆糖果當生命值
   updateInventoryUI();
   startMusicAuto(); // 開局自動播放音樂（在使用者點擊按鈕的互動鏈中，符合瀏覽器自動播放政策）
-  uploadProgress("開始遊戲（" + (gameMode === 'timed' ? '限時模式' : '悠閒模式') + "）");
+  uploadGameStart();
   startTimer();
   renderEngine("r0_prologue");
 }
@@ -1866,6 +1880,7 @@ function restartGame() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   timeLeft = 35 * 60;
   timeWarningsShown = { ten:false, five:false, one:false };
+  gameStartTimestamp = null;
 
   // 遊戲模式重置為悠閒，讓玩家在首頁重新選擇
   gameMode = "relax";
