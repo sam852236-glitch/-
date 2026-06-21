@@ -1805,7 +1805,7 @@ function hideMsg(boxId) { const b = document.getElementById(boxId); if (b) b.cla
 // ================= 後台回傳（Google試算表）=================
 // 新格式：以「學生姓名」為主鍵，每位學生只佔一列，依事件類型更新對應欄位
 // eventType 可能的值：start（開始遊戲）｜checkpoint（中途進度）｜finish（完成通關）｜finalAnswer（最終答案）
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwVRw449jqTpHkQbSGhWR-VtyykbN6vlIiK_oxEl1dKqGewC75ToEWfnsnZl4GCE7Ur/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzF60Z7haPawNyJHz_b-9T12Fh5rjSuON5_IiK2HMhwYeydwsvCtV6HTVVkpnLa9CrO/exec";
 let gameStartTimestamp = null; // 記錄遊戲開始的時間戳，供計算總遊玩時長使用
 
 async function uploadEvent(eventType, payload) {
