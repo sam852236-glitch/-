@@ -480,7 +480,7 @@ const rooms = {
   "r2f_litreview": {
     name:"旅行手札室", mapLabel:"旅遊文學", type:"quiz", qIdx:"旅遊文學",
     story:"【場景】離開廣場前，你在路邊書攤翻到一本「課文補充資料」，上面寫著：\n\n旅行文學又稱「旅遊文學」，是旅行者記錄見聞並抒發情感的一種書寫方式。通常強調要有實際旅行，並以文學手法來敘述。內容包含踏上旅遊前的期盼心情、旅行過程、見聞，以及旅行後的回憶等。文體多樣可以是散文、日記、書信等。",
-    q:"根據補充資料，旅行文學強調必須具備什麼經驗？", qType:"single",
+    q:"根據補充資料，旅行文學強調必須具備什麼的經驗？", qType:"single",
     opts:[{id:"A",text:"想像力"},{id:"B",text:"童年回憶"},{id:"C",text:"實際旅遊"},{id:"D",text:"旅遊景點歷史"}],
     ans:"C", rewardItem:null, onClear:"r2g_delphi_gate"
   },
@@ -647,7 +647,7 @@ const rooms = {
   "r5a_thrifty": {
     name:"旅店餐廳（節儉的痕跡）", mapLabel:"節儉行為", type:"quiz", qIdx:"6前",
     story:"【場景】傍晚時分，陽光灑落卻空無一人的地中海風餐廳。角落的白色餐桌上，老太太正打包著簡單的午餐。回想這趟旅程，你發現她在很多地方都過得十分節省。",
-    q:"從老太太的哪些行為中，可以看出她的節儉？（複選）", qType:"multi",
+    q:"從老太太的哪些行為中，可以看出她節儉？（複選）", qType:"multi",
     opts:[
       {id:"A",text:"買冰淇淋當作午餐"},
       {id:"B",text:"從袋裡拿出幾片乾麵包和一顆橘子，安靜地啃了起來"},
@@ -1232,20 +1232,42 @@ let currentMusicMode = "normal"; // normal | ending
 let bgmAudioEl = null;    // 一般畫面音樂
 let endingAudioEl = null; // 結局畫面音樂
 
+// 動態計算目前網頁所在目錄的絕對路徑，避免相對路徑在不同情境下解析不一致
+function getAudioBasePath() {
+  let path = window.location.href;
+  // 去掉網址列裡可能存在的查詢參數（?后面的部分）與錨點（#后面的部分）
+  path = path.split('?')[0].split('#')[0];
+  // 去掉檔名本身（例如 index.html），只留下所在的目錄路徑
+  if (!path.endsWith('/')) {
+    path = path.substring(0, path.lastIndexOf('/') + 1);
+  }
+  return path;
+}
+
 function getBgmAudioEl() {
   if (!bgmAudioEl) {
-    bgmAudioEl = new Audio("bgm.mp3");
+    const fullUrl = getAudioBasePath() + "bgm.mp3";
+    console.log("嘗試載入背景音樂:", fullUrl);
+    bgmAudioEl = new Audio(fullUrl);
     bgmAudioEl.loop = true;
     bgmAudioEl.volume = 0.45;
+    bgmAudioEl.addEventListener('error', () => {
+      console.error("bgm.mp3 載入失敗，請確認檔案是否與 index.html 放在同一層目錄，網址:", fullUrl);
+    });
   }
   return bgmAudioEl;
 }
 
 function getEndingAudioEl() {
   if (!endingAudioEl) {
-    endingAudioEl = new Audio("ending.mp3");
+    const fullUrl = getAudioBasePath() + "ending.mp3";
+    console.log("嘗試載入結局音樂:", fullUrl);
+    endingAudioEl = new Audio(fullUrl);
     endingAudioEl.loop = true;
     endingAudioEl.volume = 0.45;
+    endingAudioEl.addEventListener('error', () => {
+      console.error("ending.mp3 載入失敗，請確認檔案是否與 index.html 放在同一層目錄，網址:", fullUrl);
+    });
   }
   return endingAudioEl;
 }
@@ -1263,7 +1285,11 @@ function startCurrentMusicSource() {
     if (endingAudioEl) endingAudioEl.pause();
   }
   const audioEl = getCurrentAudioEl();
-  audioEl.play().catch(err => console.error("音樂播放失敗:", err));
+  audioEl.play().then(() => {
+    console.log("音樂播放成功:", audioEl.src);
+  }).catch(err => {
+    console.error("音樂播放失敗:", err.name, err.message, "| 嘗試的網址:", audioEl.src);
+  });
 }
 
 function stopCurrentMusicSource() {
@@ -1613,6 +1639,12 @@ function handleInventoryClick(idx) {
       if (combineSelected.some(sel => sel && cleanStr(sel) === cleanStr(rawIcon))) {
         showMsg('combine-msg', '⚠️ 這個信物已經放入凹槽了！', false); return;
       }
+      // 有些信物藏著隱藏謎題，必須先解開才能用於融合
+      let itemInfo = getItemInfo(rawIcon);
+      if (itemInfo.hasQuiz && !itemQuizSolved[rawIcon]) {
+        showMsg('combine-msg', '🔍 這個信物似乎還藏著秘密，請先在背包中點開它仔細端詳。', false);
+        return;
+      }
       combineSelected[activeCombineSlot-1] = rawIcon;
       let slotElem = document.getElementById('slot-' + activeCombineSlot);
       slotElem.innerText = rawIcon; slotElem.classList.remove('active-slot'); slotElem.classList.add('filled');
@@ -1643,6 +1675,18 @@ function attemptCombine(roomId) {
   let target = room.target.map(cleanStr);
   let selected = combineSelected.map(cleanStr).filter(Boolean);
   let allFilled = combineSelected.every(s => s);
+
+  // 雙重保險：確認凹槽中所有需要解謎的信物都已解開
+  let hasUnsolvedQuizItem = combineSelected.some(icon => {
+    if (!icon) return false;
+    let info = getItemInfo(icon);
+    return info.hasQuiz && !itemQuizSolved[icon];
+  });
+  if (allFilled && hasUnsolvedQuizItem) {
+    showMsg('combine-msg', '🔍 凹槽中有信物還藏著未解開的秘密，請先仔細端詳後再融合。', false);
+    return;
+  }
+
   let allMatch = allFilled && target.length === selected.length && target.every(t => selected.includes(t)) && new Set(selected).size === selected.length;
 
   if (allMatch) {
@@ -1740,6 +1784,12 @@ function validateChineseAnswer(text) {
   const uniqueChars = new Set(chineseChars);
   if (uniqueChars.size < 4) {
     return { ok:false, msg:"⚠️ 請寫出有意義的完整句子，不要只是重複相同的字喔！" };
+  }
+  // 檢查內容是否真的扣合主題，至少要包含2個與「另一個春天」相關的關鍵字
+  const themeKeywords = ["勇敢","生命","熱情","希望","活力","風景","美麗"];
+  const matchedCount = themeKeywords.filter(kw => text.includes(kw)).length;
+  if (matchedCount < 2) {
+    return { ok:false, msg:"⚠️ 請再想想看，試著把答案寫得更貼近這篇文章想傳達的核心意涵。" };
   }
   return { ok:true };
 }
